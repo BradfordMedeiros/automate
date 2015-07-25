@@ -14,15 +14,31 @@ var MessageHandler = function ( ) {
 // returns the enumerated message type based upon message fields 
 
 // checks fields to make sure all required fields are there
-MessageHandler.prototype._isMessageValid = function ( message ) {
-	var messagetype = this.MESSAGETYPES.idToMessageType[message.id];
-	if ( messagetype == undefined ||   message.id == undefined ){
+MessageHandler.prototype._isValidMessage = function ( message ) {
+
+
+	// make sure metadata and body portions are defined properly
+	if ( message.metaData == undefined || message.body == undefined){
 		return false;
 	}
 
+	// ensure all required metadata fields are defined
+	for ( var i = 0 ; i < this.MESSAGETYPES.metaData.length ; i++ ){
+		if (message.metaData[this.MESSAGETYPES.metaData[i] ] == undefined ){
+			return false;
+		}
+	}
+
+	var messagetype = this.MESSAGETYPES.idToMessageType[message.metaData.id];
+	if ( messagetype == undefined ){
+		return false;
+	}
+z
 	var requiredFields = this.MESSAGETYPES.requirements[ messagetype ];
 	for ( var i = 0 ; i < requiredFields.length ; i++ ){
-		if (message[requiredFields[i] == undefined ]){
+
+		if ( message.body[requiredFields[i]] == undefined  ){
+			console.log(message.body[requiredFields[i]]);
 			return false;
 		}
 	}
@@ -34,7 +50,7 @@ MessageHandler.prototype._isMessageValid = function ( message ) {
 
 MessageHandler.prototype.getMessageType = function ( message ){	
 
-	if ( ! this._isMessageValid (message) ){
+	if ( ! this._isValidMessage (message) ){
 		throw (new Error ("MESSAGE NOT DEFINED PROPERLY -- missing fields"));
 	}
 	// check to make sure all required topics are defined
@@ -82,7 +98,9 @@ MessageHandler.prototype.feedMessage = function ( inbound_message ){
 // associate functions to the message type
 MessageHandler.prototype.attachFunctionToMessageType = function ( messagetype, func ){
 
-	if ()
+	if ( this._isValidMessageType (messagetype ) ){
+		throw (new Error ("Invalid Message Type -- cannot attach functionality"));
+	}
 
 	if (this.attachedMessageFunctions[messagetype] = undefined ){
 		this.attachedMessageFunctions[messagetype] = new Array();

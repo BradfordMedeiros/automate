@@ -40,7 +40,12 @@ var MESSAGE_TYPES = {
 		CLIENT_TOPIC_UPDATE			: 'CLIENT TOPIC UPDATE'   ,			// client updates a topic or multiple topics or creates new topic 
 	},
 
+	//fields which should be defined for all messages
+	metaData 						: [ "id" ] ,
+
+	// fields which must be defined in the message content for a message
 	requirements 					: { },
+
 	idToMessageType					: { },
 	messageTypeToID					: { },
 
