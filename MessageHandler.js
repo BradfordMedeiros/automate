@@ -120,5 +120,8 @@ MessageHandler.prototype.clearAllAttachedFunctions  = function ( messagetype ){
 	this.attachedMessageFunctions[messagetype] = undefined;
 }
 
+
+
+
 module.exports = MessageHandler;
 
