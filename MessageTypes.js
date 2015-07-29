@@ -1,3 +1,5 @@
+//** THIS IS A GLORIFIED CONFIG FILE **/
+
 
 var RESERVED_STRING 	= '----------';				// Combo used to uniquely identify messages.  Used to ID the message type.
 var counter  			= 0;						
@@ -26,6 +28,28 @@ var isValidMessageType = function ( messagetype ) {
 	return found;
 }
 
+var createRequirements = function ( messagetype, topics ){
+	if ( !isValidMessageType ( messagetype ) ){
+			throw new Error ('Invalid Message Type');
+	}
+
+	var messageid = MESSAGE_TYPES.messageTypeToID[messagetype];
+	if ( messageid == undefined ){
+		messageid = RESERVED_STRING + counter;
+		counter ++;
+	}
+
+	MESSAGE_TYPES.idToMessageType [ messageid     ] = messagetype;
+	MESSAGE_TYPES.messageTypeToID [ messagetype   ] = messageid;
+
+
+	MESSAGE_TYPES.requirements[ messagetype ] = new Array (); 
+		
+	for ( var i = 1 ; i < arguments.length ; i++ ){
+		MESSAGE_TYPES.requirements[ messagetype ].push(arguments[i]);
+	}	
+}
+
 
 var MESSAGE_TYPES = {
 	
@@ -43,6 +67,9 @@ var MESSAGE_TYPES = {
 	//fields which should be defined for all messages
 	metaData 						: [ "id" ] ,
 
+
+	// ** DO NOT FILL THESE FIELDS IN MANUALLY ** //
+	// use createRequirements to create requirements.  ID to message type, vice versa will be auto-populated
 	// fields which must be defined in the message content for a message
 	requirements 					: { },
 
@@ -51,36 +78,54 @@ var MESSAGE_TYPES = {
 
 	// deletes old requirements for the message type and adds them.  
 	// Call function again w/ all requirements at once w/ one function call for each message type
-	createRequirements : function ( messagetype, topics ) {
-
-		if ( !isValidMessageType ( messagetype ) ){
-			// throw exception here
-			throw new Error ('Invalid Message Type');
-		}
-
-		var messageid = MESSAGE_TYPES.messageTypeToID[messagetype];
-		if ( messageid == undefined ){
-			messageid = RESERVED_STRING + counter;
-			counter ++;
-		}
-
-		MESSAGE_TYPES.idToMessageType [ messageid     ] = messagetype;
-		MESSAGE_TYPES.messageTypeToID [ messagetype   ] = messageid;
-
-
-		MESSAGE_TYPES.requirements[ messagetype ] = new Array (); 
-		
-		for ( var i = 1 ; i < arguments.length ; i++ ){
-			MESSAGE_TYPES.requirements[ messagetype ].push(arguments[i]);
-		}
-
-	}
 	
-};
+	
+}
+
+
+// Call create requirements here to add additional requirements
+// A message must have requirements to be defined
+//////////////////////////////////////////////////////////////
+// To make a new message, add it under server/client message
+// and call createRequirements to define requirements
+//////////////////////////////////////////////////////////////////////
 
 
 
-// @todo:  Create requirements for each message type
+
+
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////
+
+
 
 
 module.exports = MESSAGE_TYPES;
+
+/* Messages look  like this: 
+--------------------------------------
+
+	message : {
+		metaData:{
+			___:  ,
+			___:  ,
+			___:     etc
+		},
+
+		body: {
+			___:  ,
+			___:  ,
+			___:     etc
+		}
+
+	}
+----------------------------------------
+
+*/
