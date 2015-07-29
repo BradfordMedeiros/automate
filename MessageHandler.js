@@ -33,7 +33,7 @@ MessageHandler.prototype._isValidMessage = function ( message ) {
 	if ( messagetype == undefined ){
 		return false;
 	}
-z
+
 	var requiredFields = this.MESSAGETYPES.requirements[ messagetype ];
 	for ( var i = 0 ; i < requiredFields.length ; i++ ){
 
@@ -77,6 +77,8 @@ MessageHandler.prototype._isValidMessageType = function  ( messagetype ){
 // @return message
 // used the fields defined in the topic, and creates a message of type messagetype 
 // tries best to populate the message with fields from topic.  Uses default fields if not defined.  Throws exception if extraneous fields.
+
+//@todo: code
 MessageHandler.prototype.createMessage = function ( messagetype, topic ){
 	if ( ! this._isValidMessageType(messagetype) ){
 		throw (new Error ("MESSAGETYPE NOT VALID -- missing fields"));
