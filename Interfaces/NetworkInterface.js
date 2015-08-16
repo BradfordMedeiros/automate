@@ -1,3 +1,13 @@
+
+var networkInterface = {
+	getNetworkID: [],
+	sendNetworkMessage: ['message', 'config']
+
+}
+
+module.exports = networkInterface;
+
+
 // should define the methods network components will be using
 // 
 

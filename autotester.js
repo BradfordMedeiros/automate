@@ -1,17 +1,14 @@
+// Autotesting code. 
+// Import test suites from root/tests
+// To add new testsuite, just create an add file in test folder.  Will be added automatically.
+// * Tests are partially sandboxes.  Require is nuked between tests, so modifying data resolved from require should be returned to previous state.
+// * However, modifying other globals will screw this up.  Don't depend on that too much then, except for adding listeners.
+// Would be great to add a real sandbox testing module here. 
 
 
 var TEST_FOLDER = './tests/';
-
-
 var _ = require('underscore');
-var deepcopy = require('deepcopy');
 
-// this might be a mistake.
-// I am overriding the require function to make it actually return 
-// a deep copy of the data as opposed to a reference to it.
-// This should limit dependencies between data.  It can be turned on or off
-// on a case by case basis specified by <test>.globalRequire = <true/false>
-// default functionality is true
 
 
 
@@ -25,33 +22,23 @@ var _autotester = function (){
     this.numberTests = 0;
     this.originalRequire = require;
     this.options = require ('./config/options.js');
-
-   
-  
-
-
 }
 
 
-
-
-
-
 _autotester.prototype.runtests = function (){
+
     var length = this.tests.length;
     var passed = 0;
     
     // test every test case
     for (var i = 0 ; i < length; i++){
 
-        var response;
-      
-        //console.log(this.tests[i].rerouteRequire);
-      //  this.tests[i].rerouteRequire();
+        // deletes the cache in require. This partially sandboxes the tests.
+        _.each(_.keys(require.cache), function (key) {
+            delete require.cache[key];
+        })
 
-       // this.rerouteRequire ( this.tests[i] );
- 
-            response = this.tests[i]()
+        var response  = this.tests[i]()
 
         try{
 
@@ -75,7 +62,6 @@ _autotester.prototype.runtests = function (){
 
             this.passed[i] = false;
         }
-
     }
     return (passed/this.numberTests);
 }
@@ -101,7 +87,6 @@ var tester = new _autotester();
 
 
 var fs = require('fs');
-console.log("----------");
 var suites = fs.readdirSync(TEST_FOLDER);
 
 for (var i = 0;i < suites.length; i++){
@@ -113,6 +98,8 @@ var percentPassed = tester.runtests() *100;
 if (tester.options.AUTOTESTER_VERBOSE){
     console.log( "Passed :  " +percentPassed  +" %" )  ;
 }
-//}
 
+
+///////////////////////////////////////////
 module.exports = _autotester;
+
