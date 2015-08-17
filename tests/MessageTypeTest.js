@@ -1,4 +1,3 @@
-//require = GLOBAL.require;
 
 // BASIC ELEMENTARY TESTS
 
@@ -8,10 +7,10 @@ var test0 = { };
 
 
 test0.id = "checks some MessageTypes.js integrity";
-test0.func = function ( getRequire ){
+test0.func = function (  ){
 	var files = require('/home/samantha/.files.js');
 	var messagetypes = require(files.messagetypes);
-	if (messagetypes.metaData == undefined){
+	if (messagetypes.metadata == undefined){
 		return false;
 	}
 

@@ -1,6 +1,5 @@
 //@todonext
 //@todo determine public/private categorization
-
 var FILEFINDER = '/.files';
 
 
@@ -33,16 +32,13 @@ MessageHandler.prototype.getMessageTypeList = function ( ){
 }
 
 
-
-
-
 // creates a message
 // @return message
 // used the fields defined in the topic, and creates a message of type messagetype 
 // tries best to populate the message with fields from topic.  Uses default fields if not defined.  Throws exception if extraneous fields.
 
 //@todo: code
-MessageHandler.prototype.createMessage = function ( messagetype, topicrequirements ){
+MessageHandler.prototype.createMessage = function ( messagetypename, topicrequirements, type){
 	if ( ! this._isValidMessageType(messagetype) ){
 		throw (new Error ("MESSAGETYPE NOT VALID -- missing fields"));
 	}
@@ -51,7 +47,6 @@ MessageHandler.prototype.createMessage = function ( messagetype, topicrequiremen
 
 	
 	var Message = { };
-
 
 }
 
@@ -63,13 +58,14 @@ MessageHandler.prototype.feedMessage = function ( inbound_message ){
 	var functions = this.attachedMessageFunctions[messagetype];
 
 	for ( var i = 0 ; i < functions.length ; i++ ){
-		functions[i]();
+		var result = functions[i].func();
+		functions[i].callback(result);
 	}
 }
 
 
 // associate functions to the message type
-MessageHandler.prototype.attachFunctionToMessageType = function ( messagetype, func ){
+MessageHandler.prototype.attachFunctionToMessageType = function ( messagetype, func , callback ){
 
 	if ( this._isValidMessageType (messagetype ) ){
 		throw (new Error ("Invalid Message Type -- cannot attach functionality"));
@@ -79,8 +75,15 @@ MessageHandler.prototype.attachFunctionToMessageType = function ( messagetype, f
 		this.attachedMessageFunctions[messagetype] = new Array();
 	}
 
+	var funct = func;
+	var callb = callback;
 	for ( var i = 1; i < arguments.length ; i++ ){
-		this.attachedMessageFunctions[messagetype].push(func[i]);
+		var obj = {
+			func: funct,
+			callback: callb
+		};
+
+		this.attachedMessageFunctions[messagetype].push(obj);
 	}
 }
 
@@ -94,45 +97,65 @@ MessageHandler.prototype.clearAllAttachedFunctions  = function ( messagetype ){
 
 //////////////////////////////////////////////////////////////////
 
-// checks if enumerated messagetype is defined
-MessageHandler.prototype._isValidMessageType = function  ( messagetype ){
-	return ( this.MESSAGETYPES.messageTypeToID[messagetype] != undefined );
-}
 
 
+// this is not complete code yet
 // checks fields in message to make sure all required fields are there
 MessageHandler.prototype._isValidMessage = function ( message ) {
 
 
-	// make sure metadata and body portions are defined properly
-	if ( message.metaData == undefined || message.body == undefined){
+	// make sure main fields are defined
+	if ( message.metadata == undefined || message.body == undefined || 
+				message.messagename == undefined || message.type == undefined){
 		return false;
 	}
 
 	// ensure all required metadata fields are defined
-	for ( var i = 0 ; i < this.MESSAGETYPES.metaData.length ; i++ ){
-		if (message.metaData[this.MESSAGETYPES.metaData[i] ] == undefined ){
+	for ( var i = 0 ; i < this.MESSAGETYPES.metadata.length ; i++ ){
+		if (message.metadata[this.MESSAGETYPES.metadata[i] ] == undefined ){
 			return false;
 		}
 	}
 
-	var messagetype = this.MESSAGETYPES.idToMessageType[message.metaData.id];
-	if ( messagetype == undefined ){
+	if (this._isValidMessageType(message.messagename,message.type) == false){
 		return false;
 	}
 
-	var requiredFields = this.MESSAGETYPES.requirements[ messagetype ];
-	for ( var i = 0 ; i < requiredFields.length ; i++ ){
-
-		if ( message.body[requiredFields[i]] == undefined  ){
-			console.log(message.body[requiredFields[i]]);
-			return false;
-		}
+	var type = message.type;
+	if (type != 'client' && type !='server'){
+		return false;
 	}
+
+	var accessor = type =='client'? 'CLIENT_MESSAGES': 'SERVER_MESSAGES';
+ 	var requirements  = this.MESSAGETYPES[accessor][message.messagename].requirements;
+ 	for (var i = 0 ; i < requirements.length ; i++ ){
+ 		if (message.body[requirements[i]] == undefined){
+ 			return false;
+ 		}
+ 	}
 
 	return true;
 }
 
+
+MessageHandler.prototype._isValidMessageType = function ( messagename, type ) {
+	if (type == 'client'){
+		for (messagetype in this.MESSAGETYPES.CLIENT_MESSAGES){
+			message=  this.MESSAGETYPES.CLIENT_MESSAGES[messagetype];
+			if (messagename == message.messagename && type == message.type){
+				return true;
+			}
+		}
+	}else if (type =='server'){
+		for (messagetype in this.MESSAGETYPES.SERVER_MESSAGES){
+			message=  this.MESSAGETYPES.SERVER_MESSAGES[messagetype];
+			if (messagename == message.messagename && type == message.type){
+				return true;
+			}
+		}
+	}
+	return false;
+}
 
 module.exports = MessageHandler;
 
