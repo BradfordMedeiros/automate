@@ -43,7 +43,6 @@ test1.func = function ( ){
 		messagename:  'CLIENT_STATUS',
 		type: 'client',
 		metadata:{
-			id: '093092',
 			timestamp: '1020'
 		},
 		body: {
@@ -57,7 +56,6 @@ test1.func = function ( ){
 		messagename:  'CLIENT_STATUS',
 		type: 'client',
 		metadata:{
-			id: '093092',
 			timestamp: '1020'
 		},
 		body: {
@@ -65,7 +63,10 @@ test1.func = function ( ){
 			'ready': true,
 		}
 	}
-	return (messagehandler._isValidMessage(message1) && !messagehandler._isValidMessage(message2));
+
+	var m1pass = messagehandler._isValidMessage(message1);
+	var m2pass = !messagehandler._isValidMessage(message2)
+	return m1pass && m2pass;
 }
 
 test1.answer = true;
@@ -76,10 +77,15 @@ testsuite.push(test1);
 var test2 = { };
 test2.id = "MessageHandler: _isValidMessage";
 test2.func = function ( ){
-	
+	mh =  require (require (process.env.HOME+FILEFINDER).messagehandler);
+	messagehandler = new mh();
+	messagehandler.createMessage (messagehandler.MESSAGETYPES.SERVER_MESSAGES.SERVER_STATUS.messagename,{
+		mode: 'enabled'
+	});
+	return false;
 }
 
-test2.answer = 'test not coded';
+test2.answer = false;
 testsuite.push(test2);
 
 

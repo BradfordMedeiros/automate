@@ -1,4 +1,4 @@
-//** THIS IS CONFIG FILE used to define the various server and client messages, and the required fields in the messages**/
+//** THIS IS GLORIED CONFIG FILE used to define the various server and client messages, and the required fields in the messages**/
 
 /* Messages look  like this: 
 --------------------------------------
@@ -27,7 +27,9 @@ var MESSAGE_TYPES = {
 	
 
 	//fields which should be defined for all messages
-	metadata 						: [ "id","timestamp" ],
+	// to add metadata, use the provided function above. 
+	// this is necessary so we know how to generate the metadata.
+	metadata 						: [ ],
 
 	SERVER_MESSAGES: {
 																				
@@ -70,7 +72,30 @@ var MESSAGE_TYPES = {
 			requirements : [ 'topics' ]
 		}
 	}
+
 }
+
+var addrequirements = function (message, type, settings){
+
+}
+
+var addrequiredmetadata = function (field, creationFunction){
+	if (MESSAGE_TYPES.createMetadata == undefined){
+		if (MESSAGE_TYPES.metadata.length > 0 ){
+			throw (new Error ("Do not define meta data without calling  add metadata function function"));
+		}
+		MESSAGE_TYPES.createMetadata = { };
+	}
+	MESSAGE_TYPES.metadata.push (field);
+	MESSAGE_TYPES.createMetadata[field] = creationFunction;
+}
+
+addrequiredmetadata ('timestamp', function(){
+	return (new Date())	
+})
+
+
+
 
 module.exports = MESSAGE_TYPES;
 

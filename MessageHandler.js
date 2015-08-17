@@ -15,15 +15,16 @@ var MessageHandler = function ( ) {
 MessageHandler.prototype.getMessageType = function ( message ){	
 
 	if ( ! this._isValidMessage (message) ){
-		throw (new Error ("MESSAGE NOT DEFINED PROPERLY -- missing fields"));
+		throw (new Error ("MESSAGE NOT DEFINED PROPERLY "));
 	}
 	// check to make sure all required topics are defined
 
-	return this.MESSAGETYPES.idToMessageType[messageid];
+	return this.MESSAGETYPES.messagename;
 
 }
 
 
+//@todo -- genericize this to exclude certain fields, so we could add more fields if we wanted
 MessageHandler.prototype.getMessageTypeList = function ( ){
 	return ( {
 		SERVER_MESSAGES: this.MESSAGETYPES.SERVER_MESSAGES,
@@ -37,19 +38,21 @@ MessageHandler.prototype.getMessageTypeList = function ( ){
 // used the fields defined in the topic, and creates a message of type messagetype 
 // tries best to populate the message with fields from topic.  Uses default fields if not defined.  Throws exception if extraneous fields.
 
-//@todo: code
-MessageHandler.prototype.createMessage = function ( messagetypename, topicrequirements, type){
-	if ( ! this._isValidMessageType(messagetype) ){
-		throw (new Error ("MESSAGETYPE NOT VALID -- missing fields"));
-	}
 
-	var requiredFields = this.MESSAGETYPES.requirements[ messagetype ];
 
-	
-	var Message = { };
+// give the options to operate on the message
+MessageHandler.prototype.getMessageBuilder  = function (messagetype){
+	//figure out the type, and get the options you can set for it.
+
+	/*
+		flow should look like this:
+
+		var builder = messagehandler.getMessageBuilder(MESSAGETYPE);
+		var message = builder.setmode('on').setisslave(true).build();
+				
+	*/
 
 }
-
 
 
 // feeds the handler a new message to process by the handler
@@ -156,6 +159,58 @@ MessageHandler.prototype._isValidMessageType = function ( messagename, type ) {
 	}
 	return false;
 }
+
+MessageHandler.prototype.generateMetadata = function (){
+	var metadata = this.MESSAGETYPES.metadata;
+
+	var generatedMetadata =  { };
+	for ( var i = 0 ; i < metadata.length ; i++ ){
+		generatedMetadata[metadata[i]] =  this.MESSAGETYPES.createMetadata[metadata[i]]();
+	}
+
+	return generatedMetadata
+}
+
+//generates a message that contains elements common for every message
+MessageHandler.prototype._generateGenericMessage = function (){
+	var message =  { };
+	message.messagename =  undefined;
+	message.type = undefined;
+	message.metadata = this.generateMetadata();
+	message.body = { }
+	return message;
+}
+
+MessageHandler.prototype._createMessage = function ( messagetypename, body, type){
+	if (body == undefined){
+		throw (new Error("Cannot create message without all required fields"));
+	}
+
+	if (type == undefined){
+		type = 'server';
+	}
+
+	if ( ! this._isValidMessageType(messagetypename, type) ){
+		throw (new Error ("MESSAGETYPE NOT VALID -- undefined"));
+	}
+
+	var message = this._generateGenericMessage();
+	message.messagename = messagetypename;
+	message.type = type;
+
+	var accessor = (type == 'server') ? 'SERVER_MESSAGES' : 'CLIENT_MESSAGES';
+	var requiredFields = this.MESSAGETYPES[accessor][messagetypename].requirements;
+
+	for ( var i = 0 ; i < requiredFields.length ; i++ ){
+		if (body[requiredFields[i]] == undefined){
+			throw (new Error("Cannot create message without all required fields"));
+		}
+
+		message.body[requiredFields[i]] = body[requiredFields[i]];
+	}
+	return message;
+}
+
 
 module.exports = MessageHandler;
 
