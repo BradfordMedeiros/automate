@@ -38,9 +38,9 @@ _autotester.prototype.runtests = function (){
             delete require.cache[key];
         })
 
+          var response  = this.tests[i]()
 
         try{
-          var response  = this.tests[i]()
 
         }catch(error){
             response = "failure";

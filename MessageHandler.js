@@ -1,6 +1,53 @@
 //@todonext
 //@todo determine public/private categorization
+
+
+// notes: -- create default message with DEFAULT_MESSAGE -= 'default',etc
+// make it so it just has blank values for all default fields.  -1, null, etc.
+// finish making .func1().func2(), build();
+// need to do chaining, 
+
+
 var FILEFINDER = '/.files';
+var DEFAULT_MESSAGE = 'default';
+
+var _builder = function( MessageHandler, messagetype , type ){
+
+	if (type == undefined ){
+		type = 'server';
+	}
+
+	this.functions = new Array();
+
+	var that = this;
+	this.message = MessageHandler._createMessage (messagetype, DEFAULT_MESSAGE, type)
+
+	this._public = {
+		build: function (){
+			return that._build();
+		}
+	}
+
+}
+
+_builder.prototype._getBuilder = function  () {
+	return this._public;
+}
+
+//  note:  return values are ignored
+_builder.prototype._addFunctions = function  ( functionames, functions ){
+	for (var i = 0 ; i < functions.length ; i++ ){
+		//this.functions.push(functions[i]);	// REMOVE
+
+		// need something like
+		// this._public[function[i].functioname] = function
+	}
+}
+
+_builder.prototype._build = function (){
+	return this.message;
+}
+
 
 
 var MessageHandler = function ( ) {
@@ -10,20 +57,17 @@ var MessageHandler = function ( ) {
 }
 
 
-// returns the enumerated message type based upon message fields 
 
+// returns the enumerated message type based upon message fields 
 MessageHandler.prototype.getMessageType = function ( message ){	
 
 	if ( ! this._isValidMessage (message) ){
 		throw (new Error ("MESSAGE NOT DEFINED PROPERLY "));
 	}
-	// check to make sure all required topics are defined
-
 	return this.MESSAGETYPES.messagename;
-
 }
 
-
+//@tempcomment - coded
 //@todo -- genericize this to exclude certain fields, so we could add more fields if we wanted
 MessageHandler.prototype.getMessageTypeList = function ( ){
 	return ( {
@@ -41,19 +85,37 @@ MessageHandler.prototype.getMessageTypeList = function ( ){
 
 
 // give the options to operate on the message
-MessageHandler.prototype.getMessageBuilder  = function (messagetype){
+MessageHandler.prototype.getMessageBuilder  = function (messagetype, type) {
 	//figure out the type, and get the options you can set for it.
+	if (type ==  undefined ){
+		type = 'server';
+	}
+	if (type !='server' && type !='client'){
+		throw (new Error('Cannot create builder, invalid type'))
+	}
 
-	/*
-		flow should look like this:
+	var builder = new _builder(this, messagetype, type);
 
-		var builder = messagehandler.getMessageBuilder(MESSAGETYPE);
-		var message = builder.setmode('on').setisslave(true).build();
-				
-	*/
+	var functions = this.getFunctionsForMessageBuilder ();
+	builder._addFunctions ( functions.names, functions.functions );
+	return builder._getBuilder ();
 
 }
 
+// returns the functions that should be publicly accessible for the builder
+// should return a bunch of setters
+MessageHandler.prototype.getFunctionsForMessageBuilder = function (){
+	var names = new Array();
+	var functions = new Array();
+
+	//////////////////////
+	////ADD SOME CODE HERE TO ACTUALLY RIP THE FUNCTIONS
+
+	var fuctionpair = { };
+	functionpair[names] = names;
+	functionpair[functions] = functions;
+	return functionpair;
+}
 
 // feeds the handler a new message to process by the handler
 MessageHandler.prototype.feedMessage = function ( inbound_message ){
@@ -101,7 +163,7 @@ MessageHandler.prototype.clearAllAttachedFunctions  = function ( messagetype ){
 //////////////////////////////////////////////////////////////////
 
 
-
+//@tempcomment - coded
 // this is not complete code yet
 // checks fields in message to make sure all required fields are there
 MessageHandler.prototype._isValidMessage = function ( message ) {
@@ -140,7 +202,7 @@ MessageHandler.prototype._isValidMessage = function ( message ) {
 	return true;
 }
 
-
+//@tempcomment - coded
 MessageHandler.prototype._isValidMessageType = function ( messagename, type ) {
 	if (type == 'client'){
 		for (messagetype in this.MESSAGETYPES.CLIENT_MESSAGES){
@@ -160,7 +222,8 @@ MessageHandler.prototype._isValidMessageType = function ( messagename, type ) {
 	return false;
 }
 
-MessageHandler.prototype.generateMetadata = function (){
+//@tempcomment - coded
+MessageHandler.prototype._generateMetadata = function (){
 	var metadata = this.MESSAGETYPES.metadata;
 
 	var generatedMetadata =  { };
@@ -171,17 +234,22 @@ MessageHandler.prototype.generateMetadata = function (){
 	return generatedMetadata
 }
 
+//@tempcomment - coded
 //generates a message that contains elements common for every message
-MessageHandler.prototype._generateGenericMessage = function (){
+MessageHandler.prototype._createGenericMessage = function (){
 	var message =  { };
 	message.messagename =  undefined;
 	message.type = undefined;
-	message.metadata = this.generateMetadata();
+	message.metadata = this._generateMetadata();
 	message.body = { }
 	return message;
 }
 
+
+//@tempcomment - coded
 MessageHandler.prototype._createMessage = function ( messagetypename, body, type){
+
+	var isDefault =  ( (typeof(body) == 'string') && (body == DEFAULT_MESSAGE) )
 	if (body == undefined){
 		throw (new Error("Cannot create message without all required fields"));
 	}
@@ -194,7 +262,7 @@ MessageHandler.prototype._createMessage = function ( messagetypename, body, type
 		throw (new Error ("MESSAGETYPE NOT VALID -- undefined"));
 	}
 
-	var message = this._generateGenericMessage();
+	var message = this._createGenericMessage();
 	message.messagename = messagetypename;
 	message.type = type;
 
@@ -202,15 +270,30 @@ MessageHandler.prototype._createMessage = function ( messagetypename, body, type
 	var requiredFields = this.MESSAGETYPES[accessor][messagetypename].requirements;
 
 	for ( var i = 0 ; i < requiredFields.length ; i++ ){
+
+		if ( isDefault ){
+			message.body[requiredFields[i]] = undefined
+			continue;
+		}
+
 		if (body[requiredFields[i]] == undefined){
 			throw (new Error("Cannot create message without all required fields"));
 		}
-
 		message.body[requiredFields[i]] = body[requiredFields[i]];
 	}
 	return message;
 }
 
+mh = new MessageHandler();
 
+b = new _builder(mh,mh.MESSAGETYPES.SERVER_MESSAGES.DEVICE_INIT_SETUP.messagename, 'server');
+b._addFunctions ([function(){
+	console.log('hello')
+},function(){
+	console.log("bye")
+}]);
+
+mes = b._public.build();
+//console.log(mes)
 module.exports = MessageHandler;
 

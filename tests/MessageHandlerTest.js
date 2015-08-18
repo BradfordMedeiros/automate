@@ -75,18 +75,45 @@ testsuite.push(test1);
 
 /////////TEST2////////////////////////////////
 var test2 = { };
-test2.id = "MessageHandler: _isValidMessage";
+test2.id = "MessageHandler: _createMessage";
 test2.func = function ( ){
 	mh =  require (require (process.env.HOME+FILEFINDER).messagehandler);
 	messagehandler = new mh();
-	messagehandler.createMessage (messagehandler.MESSAGETYPES.SERVER_MESSAGES.SERVER_STATUS.messagename,{
+	
+	newmessage = messagehandler._createMessage (messagehandler.MESSAGETYPES.SERVER_MESSAGES.SERVER_STATUS.messagename,{
 		mode: 'enabled'
 	});
+	validmessage = messagehandler._isValidMessageType(newmessage.messagename,newmessage.type);
+	newmessage.type = 'client';
+	validafterchange = messagehandler._isValidMessageType(newmessage.messagename,newmessage.type)
+
+	diderror = false;
+	try {
+		messagehandler._createMessage(messagehandler.MESSAGETYPES.SERVER_MESSAGES.SERVER_STATUS.messagename, {
+			forgotfield: 'woops'
+		})
+	}catch(error){
+		diderror = true;
+	}
+	return (validmessage && !validafterchange && diderror );
+}
+
+test2.answer = true;
+testsuite.push(test2);
+
+
+/////////TEST2////////////////////////////////
+var test3 = { };
+test3.id = "MessageHandler: _builder";
+test3.func = function ( ){
+	mh =  require (require (process.env.HOME+FILEFINDER).messagehandler);
+	messagehandler = new mh();
+	
+
 	return false;
 }
 
-test2.answer = false;
-testsuite.push(test2);
-
+test3.answer = true;
+testsuite.push(test3);
 
 module.exports = testsuite;
