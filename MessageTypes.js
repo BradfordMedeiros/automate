@@ -75,9 +75,7 @@ var MESSAGE_TYPES = {
 
 }
 
-var addrequirements = function (message, type, settings){
 
-}
 
 var addrequiredmetadata = function (field, creationFunction){
 	if (MESSAGE_TYPES.createMetadata == undefined){
@@ -93,6 +91,31 @@ var addrequiredmetadata = function (field, creationFunction){
 addrequiredmetadata ('timestamp', function(){
 	return (new Date())	
 })
+
+
+// add anything here to enforce constraints on config style.
+// sacrifice nominal savings in runtime here so we don't have to do this later
+var checkFileIntegrity = function ( ){
+
+	for ( message in MESSAGE_TYPES.SERVER_MESSAGES ){
+		for (var i = 0 ; i < MESSAGE_TYPES.SERVER_MESSAGES[message].requirements.length ;i ++ ){
+			if (MESSAGE_TYPES.SERVER_MESSAGES[message].requirements[i].length == 0){
+				throw (new Error("field length must be > 0"))
+			}
+		}
+	}
+
+	for ( message in MESSAGE_TYPES.CLIENT_MESSAGES ){
+		for (var i = 0 ; i < MESSAGE_TYPES.CLIENT_MESSAGES[message].requirements.length ;i ++ ){
+			if (MESSAGE_TYPES.CLIENT_MESSAGES[message].requirements[i].length == 0){
+				throw (new Error("field length must be > 0"))
+			}
+		}
+	}
+	
+}
+
+checkFileIntegrity();
 
 
 
