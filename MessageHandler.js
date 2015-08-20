@@ -1,6 +1,9 @@
 //@todonext
 //@todo determine public/private categorization
 
+// Should add encrypter in this file.
+// MessageHandler ( EncryptionStrategy )
+// encryption.encrypt ( message )  -->  .build () --> encrypted_message = encrypt(message); return encrypted_message
 
 // notes: -- create default message with DEFAULT_MESSAGE -= 'default',etc
 // make it so it just has blank values for all default fields.  -1, null, etc.
@@ -24,7 +27,7 @@ var _builder = function( MessageHandler, messagetype , type ){
 
 	this._public = {
 		build: function (){
-			return this
+			return that.message;
 		}
 	}
 
@@ -37,10 +40,7 @@ _builder.prototype._getBuilder = function  () {
 //  note:  return values are ignored
 _builder.prototype._addFunctions = function  ( functionames, functions ){
 	for (var i = 0 ; i < functions.length ; i++ ){
-		this.functions[functionames] = functions[i];	// REMOVE
-
-		// need something like
-		// this._public[function[i].functioname] = function
+		this._public[functionames[i]] = functions[i];	// REMOVE
 	}
 }
 
@@ -95,52 +95,12 @@ MessageHandler.prototype.getMessageBuilder  = function (messagetype, type) {
 	}
 
 	var builder = new _builder(this, messagetype, type);
-
-	var functions = this.getFunctionsForMessageBuilder ( messagetype, type, _builder.message);
-
-	console.log('pppp'+functions.functions)
-	builder._addFunctions ( functions.names, functions.functions );
-	console.log("0290239  "+typeof (functions.names));
-	for (thing in builder){
-		if (typeof (builder[thing]) == 'function' ){
-			builder[thing]();
-		}
-	}
+	var functions = this.getFunctionsForMessageBuilder ( messagetype, type, builder);
+	builder._addFunctions(functions.names, functions.functions);
 	return builder._getBuilder ();
 
 }
 
-// returns the functions that should be publicly accessible for the builder
-// should return a bunch of setters
-MessageHandler.prototype.getFunctionsForMessageBuilder = function ( messagetypename, type , message){
-	var names = new Array();
-	var functions = new Array();
-
-	//////////////////////
-	////ADD SOME CODE HERE TO ACTUALLY RIP THE FUNCTIONS
-
-	var accessor = type =='client'? 'CLIENT_MESSAGES': 'SERVER_MESSAGES';
-	var requirements = this.MESSAGETYPES[accessor][messagetypename].requirements;
-
-	for ( var i = 0 ; i < requirements.length ; i++ ){	
-		var functionName = 'set'+requirements[i].charAt(0).toUpperCase()+ requirements[i].slice(1);
-		names.push(functionName);
-
-		// expand this section if we want to add more complicated setters.
-		// this is just going to do basic setValue without check.
-		// might be interesting to define this is MessageTypes.js
-		functions.push (function( value  ){
-			message[requirements[i]] = value;
-		});
-	}
-
-	var functionpair = { };
-	functionpair['names'] = names;
-	functionpair['functions'] = functions;
-	console.log(functionpair['functions'])
-	console.log("------"+JSON.stringify(functionpair))
-	return functionpair;
-}
 
 // feeds the handler a new message to process by the handler
 MessageHandler.prototype.feedMessage = function ( inbound_message ){
@@ -186,6 +146,47 @@ MessageHandler.prototype.clearAllAttachedFunctions  = function ( messagetype ){
 
 
 //////////////////////////////////////////////////////////////////
+
+// returns the functions that should be publicly accessible for the builder
+// should return a bunch of setters
+MessageHandler.prototype.getFunctionsForMessageBuilder = function ( messagetypename, type , builder){
+	var message = builder.message;
+	var names = new Array();
+	var functions = new Array();
+
+	//////////////////////
+	////ADD SOME CODE HERE TO ACTUALLY RIP THE FUNCTIONS
+
+	var accessor = type =='client'? 'CLIENT_MESSAGES': 'SERVER_MESSAGES';
+	var requirements = this.MESSAGETYPES[accessor][messagetypename].requirements;
+
+	
+	// this is hacky dealing to overcome language closure limitation.
+	// replace with something better
+	var getFunction = function (builder, message, fieldvalueName ){
+		return function ( value ){
+			message.body[fieldvalueName] = value;
+			return builder._public;
+		}
+		
+	}
+
+	for (var i = 0 ; i < requirements.length ; i++ ){	
+		var functionName = 'set'+requirements[i].charAt(0).toUpperCase()+ requirements[i].slice(1);
+		names.push(functionName);
+		functions.push (getFunction(builder, message, requirements[i]));
+
+		// expand this section if we want to add more complicated setters.
+		// this is just going to do basic setValue without check.
+		// might be interesting to define this is MessageTypes.js
+
+	}
+
+	var functionpair = { };
+	functionpair['names'] = names;
+	functionpair['functions'] = functions;
+	return functionpair;
+}
 
 
 //@tempcomment - coded
@@ -311,10 +312,10 @@ MessageHandler.prototype._createMessage = function ( messagetypename, body, type
 
 mh = new MessageHandler();
 
-b = new _builder(mh,mh.MESSAGETYPES.SERVER_MESSAGES.DEVICE_INIT_SETUP.messagename, 'server');
-
-//var a = mh.getFunctionsForMessageBuilder ( mh.MESSAGETYPES.SERVER_MESSAGES.DEVICE_INIT_SETUP.messagename, 'server',b.message);
 
 builder = mh.getMessageBuilder(mh.MESSAGETYPES.SERVER_MESSAGES.DEVICE_INIT_SETUP.messagename);
+builder.setConfig(4).setMode('rage').setMode('horrible');
+console.log(builder.build())
+
 module.exports = MessageHandler;
 

@@ -10,14 +10,22 @@ This file details the locations of other files.  It you should read this file to
 var PWD = process.env.HOME + '/Documents/automation/'
 
 var filelocations = {
-	options			: PWD +'config/options.js',
 
-	// the root of the test folder.  
+	// folders
 	tests			: PWD + 'tests/',
+	config  		: PWD + 'config/',
 
+	// files
+	abstractnetwork : PWD + 'abstractNetwork',
 	autotester		: PWD + 'autotester.js',
+	bluetooth		: PWD + 'Bluetooth.js',
+	interface		: PWD + 'Interface.js',
+	internet 		: PWD + 'Internet.js',
 	messagehandler  : PWD + 'messagehandler.js', 	
-	messagetypes	: PWD + 'messagetypes.js'	
+	messagetypes	: PWD + 'messagetypes.js',
+	options			: PWD +'config/options.js',
+	zigbee			: PWD + 'Zigbee.js'
+	
 	
 };
 

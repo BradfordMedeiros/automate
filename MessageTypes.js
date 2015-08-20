@@ -80,7 +80,7 @@ var MESSAGE_TYPES = {
 var addrequiredmetadata = function (field, creationFunction){
 	if (MESSAGE_TYPES.createMetadata == undefined){
 		if (MESSAGE_TYPES.metadata.length > 0 ){
-			throw (new Error ("Do not define meta data without calling  add metadata function function"));
+			throw (new Error ("Do not define meta data without calling  add metadata function"));
 		}
 		MESSAGE_TYPES.createMetadata = { };
 	}
@@ -91,6 +91,7 @@ var addrequiredmetadata = function (field, creationFunction){
 addrequiredmetadata ('timestamp', function(){
 	return (new Date())	
 })
+
 
 
 // add anything here to enforce constraints on config style.
