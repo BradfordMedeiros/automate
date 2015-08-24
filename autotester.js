@@ -87,11 +87,12 @@ var tester = new _autotester();
 
 
 var fs = require('fs');
+
 var suites = fs.readdirSync(TEST_FOLDER);
 
-for (var i = 0;i < suites.length; i++){
+for (var i = 0;i < suites.length; i++)
+{
    tester.addTestSuite(require (TEST_FOLDER+ suites[i] ) );
-
 }
 
 var percentPassed = tester.runtests() *100;

@@ -1,7 +1,13 @@
 
 var networkInterface = {
-	getNetworkID: [],
-	sendNetworkMessage: ['message', 'config']
+	name: 'network_interface',
+
+	functions: {
+		getNetworkID: [ ],
+		sendMessage: ['message', 'config'],
+		setOnMessageReceived: ['func']
+	}
+	
 
 }
 
@@ -33,7 +39,7 @@ sendOverNetwork (message, config ) =>
 */
 
 /*
-	config: {
+	config: 
 	    
 	    device: {
 		identifier,

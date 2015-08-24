@@ -14,13 +14,15 @@
 var FILEFINDER = '/.files';
 var DEFAULT_MESSAGE = 'default';
 
+
+////////////////////// private ////////////////////////////////////////////
+
 var _builder = function( MessageHandler, messagetype , type ){
 
 	if (type == undefined ){
 		type = 'server';
 	}
 
-	this.functions = { };
 
 	var that = this;
 	this.message = MessageHandler._createMessage (messagetype, DEFAULT_MESSAGE, type)
@@ -44,7 +46,11 @@ _builder.prototype._addFunctions = function  ( functionames, functions ){
 	}
 }
 
-_builder.prototype._build = function (){
+
+
+////////////////////// public ////////////////////////////////////////////
+
+_builder.prototype.build = function (){
 	return this.message;
 }
 
@@ -95,7 +101,7 @@ MessageHandler.prototype.getMessageBuilder  = function (messagetype, type) {
 	}
 
 	var builder = new _builder(this, messagetype, type);
-	var functions = this.getFunctionsForMessageBuilder ( messagetype, type, builder);
+	var functions = this._getFunctionsForMessageBuilder ( messagetype, type, builder);
 	builder._addFunctions(functions.names, functions.functions);
 	return builder._getBuilder ();
 
@@ -145,11 +151,11 @@ MessageHandler.prototype.clearAllAttachedFunctions  = function ( messagetype ){
 
 
 
-//////////////////////////////////////////////////////////////////
+////////////////////// private ////////////////////////////////////////////
 
 // returns the functions that should be publicly accessible for the builder
 // should return a bunch of setters
-MessageHandler.prototype.getFunctionsForMessageBuilder = function ( messagetypename, type , builder){
+MessageHandler.prototype._getFunctionsForMessageBuilder = function ( messagetypename, type , builder){
 	var message = builder.message;
 	var names = new Array();
 	var functions = new Array();
@@ -310,12 +316,8 @@ MessageHandler.prototype._createMessage = function ( messagetypename, body, type
 	return message;
 }
 
-mh = new MessageHandler();
 
 
-builder = mh.getMessageBuilder(mh.MESSAGETYPES.SERVER_MESSAGES.DEVICE_INIT_SETUP.messagename);
-builder.setConfig(4).setMode('rage').setMode('horrible');
-console.log(builder.build())
 
 module.exports = MessageHandler;
 

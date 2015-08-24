@@ -78,6 +78,10 @@ var MESSAGE_TYPES = {
 
 
 var addrequiredmetadata = function (field, creationFunction){
+	if (creationFunction == undefined){
+		throw (new Error('must defined a creation function'))
+	}
+
 	if (MESSAGE_TYPES.createMetadata == undefined){
 		if (MESSAGE_TYPES.metadata.length > 0 ){
 			throw (new Error ("Do not define meta data without calling  add metadata function"));
@@ -88,9 +92,16 @@ var addrequiredmetadata = function (field, creationFunction){
 	MESSAGE_TYPES.createMetadata[field] = creationFunction;
 }
 
-addrequiredmetadata ('timestamp', function(){
-	return (new Date())	
-})
+
+
+
+var addRequirementToAllTopics = function( requirement ){
+	for ( type in MESSAGE_TYPES ){
+		for (messagetype in MESSAGE_TYPES[type]){
+			MESSAGE_TYPES[type][messagetype].requirements.push(requirement);
+		}
+	}
+}
 
 
 
@@ -115,6 +126,13 @@ var checkFileIntegrity = function ( ){
 	}
 	
 }
+
+
+addRequirementToAllTopics ('networkInterface');
+addrequiredmetadata ('timestamp', function(){
+	return (new Date())	
+})
+
 
 checkFileIntegrity();
 

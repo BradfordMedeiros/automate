@@ -108,10 +108,30 @@ test3.id = "MessageHandler: _builder";
 test3.func = function ( ){
 	mh =  require (require (process.env.HOME+FILEFINDER).messagehandler);
 	messagehandler = new mh();
-	
+
+	var messagetypes = messagehandler.getMessageTypeList();
+
+	for (messageSource in messagetypes){
+		for (messageType in messagetypes[messageSource]){
+			var messagename = messagetypes[messageSource][messageType].messagename;
+			var messagetype = messagetypes[messageSource][messageType].type;
+			var genMessage = messagehandler.getMessageBuilder(messagename, messagetype).build();
+			// need to write code to make sure setMode, etc. works
+			// and save sand compare.
+		}
+	}
+	//var message = builder.setMode('one').setMode('test mode').build();
+	//console.log(messagetypes);
+
+
+		
 
 	return false;
 }
+
+
+
+
 
 test3.answer = true;
 testsuite.push(test3);

@@ -7,25 +7,29 @@ This file details the locations of other files.  It you should read this file to
 
 */
 
-var PWD = process.env.HOME + '/Documents/automation/'
+var PWD = process.env.HOME + '/Documents/automationGIT/'
 
 var filelocations = {
 
-	// folders
-	tests			: PWD + 'tests/',
-	config  		: PWD + 'config/',
 
-	// files
+	// folders
+	f_config  		: PWD + 'config/',
+
+	// files - main project files
 	abstractnetwork : PWD + 'abstractNetwork',
-	autotester		: PWD + 'autotester.js',
 	bluetooth		: PWD + 'Bluetooth.js',
 	interface		: PWD + 'Interface.js',
 	internet 		: PWD + 'Internet.js',
 	messagehandler  : PWD + 'messagehandler.js', 	
 	messagetypes	: PWD + 'messagetypes.js',
 	options			: PWD +'config/options.js',
-	zigbee			: PWD + 'Zigbee.js'
-	
+	zigbee			: PWD + 'Zigbee.js',
+
+	// files - test project files
+	autotester		: PWD + 'autotester.js',
+
+	// folders - test project files
+	f_tests			: PWD + 'tests/'
 	
 };
 

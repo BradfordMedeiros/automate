@@ -1,40 +1,58 @@
 // Automatically add interfaces in interface folder
 var INTERFACE_FOLDER = './Interfaces/'
+var _ = require('underscore');
 
-var Interface  = function (){
 
-
-	console.log('-----------------');
-	//console.log(interfaces)
-		console.log('-----------------');
-
-/*	for ( interface in interfaces ){
-		this.addInterface ( interface );
-	}*/
+var _Interface  = function (){
+	this.interfaces = {}
 
 }
 
-Interface.prototype.isValidInterface = function (interface){
+
+
+
+_Interface.prototype.getParameterNames = function( func ){
+	var STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
+	var ARGUMENT_NAMES = /([^\s,]+)/g;	
+
+	var fnStr = func.toString().replace(STRIP_COMMENTS, '');
+  	var result = fnStr.slice(fnStr.indexOf('(')+1, fnStr.indexOf(')')).match(ARGUMENT_NAMES);
+  	if(result === null){
+  		result = [];
+  	}
+  	return result;
+}
+
+_Interface.prototype.isValidInterface = function (interface){
 
 	// ensure the file name is not the swap file
 	return ( (interface[interface.length-1] == '~')? false: true);
 }
 
-Interface.prototype.getInterfaceModules = function ( ){
+_Interface.prototype.getInterfaceModules = function ( ){
 	return this.interfaces;
 }
 
 
-Interface.prototype.refreshInterfaceModules = function (){
+_Interface.prototype.refreshInterfaceModules = function (){
+	
 		this.interfaces = { };
-
 		var fs = require('fs');
 		var interfaceNames = fs.readdirSync( INTERFACE_FOLDER );
 		for (var i = 0; i < interfaceNames.length; i ++){
 			if ( this.isValidInterface(interfaceNames[i]) ){
-				this.interfaces[interfaceNames[i]] =(require(INTERFACE_FOLDER+interfaceNames[i]));
+				var module = require(INTERFACE_FOLDER+interfaceNames[i]);
+				//this.interfaces[interfaceNames[i]] =(require(INTERFACE_FOLDER+interfaceNames[i]));
+				if (module.name == undefined){
+					throw (new Error("INTERFACES MUST HAVE NAME VALUE"))
+				}
+
+				this.interfaces[module.name] = module;
+
+				
 			}
 		}
+
 
 }
 
@@ -55,16 +73,25 @@ Interface.prototype.refreshInterfaceModules = function (){
 
 
 
-var interfaces = new Interface();
+var interfaces = new _Interface();
 interfaces.refreshInterfaceModules();
 
-var implementsInterface = function (object, interfaces){
-	for (func in object){
-		if ( typeof (func) ==  'function' ){
-			console.log(func)
+
+var implementsInterface = function (object, interface){
+	objectInst = new object();
+	var interfaceToCheck = interfaces.interfaces[interface]
+	if (interfaceToCheck == undefined){
+		throw (new Error("Interface undefined"))
+	}
+
+	for (element in interfaceToCheck.functions){	// for every function
+		var parameters = interfaces.getParameterNames(objectInst[element]);	// get paramets of function implementing interface
+		if (! _.isEqual(interfaceToCheck.functions[element],parameters)){
+			throw (new Error("does not implement interface properly"))
 		}
 	}
+	delete objectInst;
 }
 
-
+//module.exports = _Interface;
 module.exports = implementsInterface;

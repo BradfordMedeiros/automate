@@ -1,32 +1,37 @@
  
-var AbstractNetwork = function ( ){
+var FILEFINDER = '/.files'
+
+
+
+var AbstractNetwork = function ( onMessageReceived ){
+	if (onMessageReceived == undefined){
+		throw (new Error("must define a function to call when a message is received"))
+	}
+	var internet =  new (require(require(process.env.HOME+FILEFINDER).internet))();
+	this.networkInterfaces = { };
+	this.networkInterfaces[internet.getNetworkID()] = internet;
+	this.onMessageReceived = onMessageReceived;
 
 }
 
-
-// look at the device config, and decide how to send it. 
-
-// look at eventEmitter --> it should send messages to 
-// something this is listening to.  Should send messages, and
-// the device config of where to send it to. 
-
+// sends message to device defined by device config
 AbstractNetwork.prototype.sendMessage = function ( message, deviceconfig ) {
+	var interface = deviceconfig.network_interface
+	if (interface == undefined){
+		throw (new Error('interface must be defined in device config message'));
+	}
+	this.networkInterfaces[deviceconfig.network_interface].sendMessage(message);
+}
 
+// called by attached network interfaces.  They will call this function when they receive a new message.  
+AbstractNetwork.prototype._receivedInboundMessage = function (message){
+	console.log('got message \n  '+message);
 }
 
 
-// these things should probably just call other classes 
-// should be something like:
-// this.Bloothtooth.sendMessage (message, devicename);
-
-AbstractNetwork.prototype.sendHttpMessage = function ( ){
-
+var log = function(x){
+	console.log(x);
 }
+var an = new AbstractNetwork(log);
 
-AbstractNetwork.prototype.sendBluetoothMessage = function ( ){
 
-}
-
-AbstractNetwork.prototype.sendZigbeeMessage = function ( ){
-
-}

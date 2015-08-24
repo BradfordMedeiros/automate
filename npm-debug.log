@@ -1,0 +1,40 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/bin/node', '/usr/bin/npm', 'install', 'buckets-js' ]
+2 info using npm@1.4.28
+3 info using node@v0.10.36
+4 verbose node symlink /usr/bin/node
+5 warn package.json querystring@0.2.0 querystring is also the name of a node core module.
+6 verbose cache add [ 'buckets-js', null ]
+7 verbose cache add name=undefined spec="buckets-js" args=["buckets-js",null]
+8 verbose parsed url { protocol: null,
+8 verbose parsed url   slashes: null,
+8 verbose parsed url   auth: null,
+8 verbose parsed url   host: null,
+8 verbose parsed url   port: null,
+8 verbose parsed url   hostname: null,
+8 verbose parsed url   hash: null,
+8 verbose parsed url   search: null,
+8 verbose parsed url   query: null,
+8 verbose parsed url   pathname: 'buckets-js',
+8 verbose parsed url   path: 'buckets-js',
+8 verbose parsed url   href: 'buckets-js' }
+9 silly lockFile 49f585b6-buckets-js buckets-js
+10 verbose lock buckets-js /home/samantha/.npm/49f585b6-buckets-js.lock
+11 silly lockFile 49f585b6-buckets-js buckets-js
+12 error Error: Attempt to unlock buckets-js, which hasn't been locked
+12 error     at unlock (/usr/lib/node_modules/npm/lib/utils/locker.js:44:11)
+12 error     at cb (/usr/lib/node_modules/npm/lib/cache/add-local.js:30:5)
+12 error     at /usr/lib/node_modules/npm/lib/cache/add-local.js:47:20
+12 error     at /usr/lib/node_modules/npm/lib/utils/locker.js:30:7
+12 error     at cb (/usr/lib/node_modules/npm/node_modules/lockfile/lockfile.js:149:38)
+12 error     at /usr/lib/node_modules/npm/node_modules/lockfile/lockfile.js:177:38
+12 error     at Object.oncomplete (fs.js:108:15)
+13 error If you need help, you may report this *entire* log,
+13 error including the npm and node versions, at:
+13 error     <http://github.com/npm/npm/issues>
+14 error System Linux 3.13.0-32-generic
+15 error command "/usr/bin/node" "/usr/bin/npm" "install" "buckets-js"
+16 error cwd /home/samantha/Documents/automationGIT
+17 error node -v v0.10.36
+18 error npm -v 1.4.28
+19 verbose exit [ 1, true ]

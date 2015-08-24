@@ -1,7 +1,13 @@
-
 var testInterface = {
-	getNetworkID: [],
-	test1: ['number', 'id']
+
+	name: 'test_interface',
+	variables: {
+
+	},
+	functions: {
+		getNetworkID: [],
+		test1: ['number', 'id']	
+	},
 
 }
 

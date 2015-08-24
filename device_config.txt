@@ -1,0 +1,21 @@
+/*
+	device config
+	--------------------
+
+	{
+
+		network_id: ____ ,
+		subscribed_topics: {
+
+		},
+		published_topics: {
+		
+		}
+
+
+
+
+
+	}
+
+*/
