@@ -3,18 +3,28 @@
 	--------------------
 
 	{
-
-		network_id: ____ ,
-		subscribed_topics: {
+		ip: ___
+		network: ____ ,
+		subscriptions: {
 
 		},
-		published_topics: {
+		publications: {
 		
 		}
 
 
 
 
+
+	}
+
+	example:
+
+	{
+		identifier: '192.168.4.223',
+		network: 'bluetooth',
+		subscriptions: ['light', 'event1'],
+		publications: ['humidity']
 
 	}
 

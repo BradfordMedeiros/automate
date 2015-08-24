@@ -12,6 +12,11 @@ var AbstractNetwork = function ( onMessageReceived ){
 	this.networkInterfaces[internet.getNetworkID()] = internet;
 	this.onMessageReceived = onMessageReceived;
 
+	// probably want to refactor so we say something like 
+	// interface = require(interface.js);  
+	// networkmods = interface.network_interfaces;
+	// for (every in network mods)
+
 }
 
 // sends message to device defined by device config
