@@ -3,7 +3,7 @@ var FILEFINDER = '/.files'
 
 
 
-var AbstractNetwork = function ( onMessageReceived ){
+var AbstractNetwork = function ( onMessageReceived  ){
 	if (onMessageReceived == undefined){
 		throw (new Error("must define a function to call when a message is received"))
 	}
@@ -21,7 +21,7 @@ var AbstractNetwork = function ( onMessageReceived ){
 
 // sends message to device defined by device config
 AbstractNetwork.prototype.sendMessage = function ( message, deviceconfig ) {
-	var interface = deviceconfig.network_interface
+	var interface = deviceconfig.network_interface;
 	if (interface == undefined){
 		throw (new Error('interface must be defined in device config message'));
 	}
@@ -31,12 +31,12 @@ AbstractNetwork.prototype.sendMessage = function ( message, deviceconfig ) {
 // called by attached network interfaces.  They will call this function when they receive a new message.  
 AbstractNetwork.prototype._receivedInboundMessage = function (message){
 	console.log('got message \n  '+message);
+	this.onMessageReceived(message);
 }
 
+module.exports = AbstractNetwork;
 
-var log = function(x){
-	console.log(x);
-}
-var an = new AbstractNetwork(log);
+
+
 
 

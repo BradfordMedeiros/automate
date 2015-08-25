@@ -104,31 +104,55 @@ var addRequirementToAllTopics = function( requirement ){
 }
 
 
-
 // add anything here to enforce constraints on config style.
 // sacrifice nominal savings in runtime here so we don't have to do this later
 var checkFileIntegrity = function ( ){
 
+	var s_requirements = { };
+	var c_requirements = { };
+
 	for ( message in MESSAGE_TYPES.SERVER_MESSAGES ){
 		for (var i = 0 ; i < MESSAGE_TYPES.SERVER_MESSAGES[message].requirements.length ;i ++ ){
+
+			if (s_requirements[MESSAGE_TYPES.SERVER_MESSAGES[message].requirements[i]] !=undefined){
+				throw (new Error("cannot have duplicate requirements:\t"+MESSAGE_TYPES.SERVER_MESSAGES[message].requirements[i]))
+			}
+
+			s_requirements[MESSAGE_TYPES.SERVER_MESSAGES[message].requirements[i]] = true;
+
 			if (MESSAGE_TYPES.SERVER_MESSAGES[message].requirements[i].length == 0){
 				throw (new Error("field length must be > 0"))
 			}
 		}
+		s_requirements = { } ;
+
 	}
 
 	for ( message in MESSAGE_TYPES.CLIENT_MESSAGES ){
+
 		for (var i = 0 ; i < MESSAGE_TYPES.CLIENT_MESSAGES[message].requirements.length ;i ++ ){
+
+			if (c_requirements[MESSAGE_TYPES.CLIENT_MESSAGES[message].requirements[i]] !=undefined){
+				throw (new Error("cannot have duplicate requirements:\t"+MESSAGE_TYPES.CLIENT_MESSAGES[message].requirements[i]))
+			}
+
+			c_requirements[MESSAGE_TYPES.CLIENT_MESSAGES[message].requirements[i]] = true;
+
+
 			if (MESSAGE_TYPES.CLIENT_MESSAGES[message].requirements[i].length == 0){
 				throw (new Error("field length must be > 0"))
 			}
 		}
+		c_requirements = { };
 	}
 	
+
 }
 
 
 addRequirementToAllTopics ('networkInterface');
+addRequirementToAllTopics ('identifier');
+
 addrequiredmetadata ('timestamp', function(){
 	return (new Date())	
 })

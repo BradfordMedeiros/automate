@@ -16,7 +16,7 @@ var filelocations = {
 	f_config  		: PWD + 'config/',
 
 	// files - main project files
-	abstractnetwork : PWD + 'abstractNetwork',
+	abstractnetwork : PWD + 'abstractNetwork.js',
 	bluetooth		: PWD + 'Bluetooth.js',
 	interface		: PWD + 'Interface.js',
 	internet 		: PWD + 'Internet.js',

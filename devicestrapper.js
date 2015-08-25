@@ -28,25 +28,30 @@ var _devicestrapper = function (){
 
     this._listenForQuit();                        // start listening to serialize on quit signal
     this._deserializeData();                      // load saved state of the data
-
-
-
-   
     
     
 }
 
+_devicestrapper.prototype.createConfig = function ( identifier, network_interface, subscriptions, publications ) {
+    if (identifier == undefined || network_interface == undefined || subscriptions == undefined || publications == undefined || 
+           !Array.isArray(subscriptions) || !Array.isArray(publications)){
+        throw (new Error('Cannot create config:  arguments defined improperly'))
+    }
+
+    var config = {
+        identifier: identifier,
+        network_interface: network_interface,
+        subscriptions: subscriptions,
+        publications: publications
+    }
+    return config;
+}
+
+
 // BASIC EDIT DEVICE OPERATIONS
 {
 
-/* Add new device.  
- @param:  Config:  
-
- config: ip (required), subscriptions.  // maybe more fields?
- // how about rate?  accepts datra?  etc.
-
-*/  
-_devicestrapper.prototype.addDevice = function ( config ){
+devicestrapper.prototype.addDevice = function ( config ){
     if (this.options.DEVICESTRAPPER_VERBOSE){
         console.log("adding device");
     }
@@ -58,16 +63,19 @@ _devicestrapper.prototype.addDevice = function ( config ){
 
     this.devices = { };
     this.devices[config.identifier] = config;
+
 }
 
 /*
 // removes the device sppecified by the ip address*/
 _devicestrapper.prototype.removeDevice = function ( identifier ){
-   delete this.devices[identifier] ;
-
+   delete this.devices[identifier];
 }
 
 /*
+
+
+
 // adds subscription to the config file of the device.  Subscriptions can be single element or an array*/
 _devicestrapper.prototype.addSubscriptions = function ( identifier , subscriptions ){
 
@@ -104,23 +112,6 @@ _devicestrapper.prototype.addSubscriptions = function ( identifier , subscriptio
 }
 
 
-
-_devicestrapper.prototype._removeSingleSubscription = function ( identifier, subscription ){
-    
-    var config = this.devices[identifier];
-    var i = config.subscriptions.indexOf(subscription);
-    if ( i < 0){
-        throw ( new Error ("INVALID REMOVAL OF SUBSCRIPTIONS (check arguments) removing Subscriptions:  ip = "+ip) );
-    }
-    if ( i > -1 && config.subscriptions.length > 1){
-        config.subscriptions.splice(i,1);
-    }else if (config.subscriptions.length == 1 && i > -1){
-        delete config.subscriptions;
-    }
-
-    
-}
-
 // remove subscription to the config file of the device.  Subscriptions can be single element or an array
 _devicestrapper.prototype.removeSubscriptions = function ( identifier, subscriptions ){
     if ( this.devices[identifier] == undefined ){
@@ -145,19 +136,36 @@ _devicestrapper.prototype.removeSubscriptions = function ( identifier, subscript
 
 }
 
-_devicestrapper.prototype.addTopics = function ( identifier, topics ){
-    throw (new Error ("warning function not defined @todo"));
+_devicestrapper.prototype._removeSingleSubscription = function ( identifier, subscription ){
+    
+    var config = this.devices[identifier];
+    var i = config.subscriptions.indexOf(subscription);
+    if ( i < 0){
+        throw ( new Error ("INVALID REMOVAL OF SUBSCRIPTIONS (check arguments) removing Subscriptions:  ip = "+ip) );
+    }
+    if ( i > -1 && config.subscriptions.length > 1){
+        config.subscriptions.splice(i,1);
+    }else if (config.subscriptions.length == 1 && i > -1){
+        delete config.subscriptions;
+    }
+    
 }
 
+
+/*
+        NEED TO DO SAME FOR PUBLICATIONS
+*/
+
+
+
 }
 
 
 
 
+/////////SERIALIZATION/////////////////////////////////////////////////
 
 
-
-// SERIALIZATION
 {
 
 // Starts listening for the quitsignal.  If it gets it serialized data. 
@@ -205,9 +213,9 @@ _devicestrapper.prototype._deserializeData = function (){
 }
 
 
-
 _devicestrapper.prototype.getString = function (){
     return this.devices;
 }
+
 
 module.exports = _devicestrapper;
