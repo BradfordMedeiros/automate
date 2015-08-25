@@ -5,7 +5,9 @@ var networkInterface = {
 	functions: {
 		getNetworkID: [ ],
 		sendMessage: ['message', 'config'],
-		setOnMessageReceived: ['func']
+		setOnMessageReceived: ['func'],
+		isAvailable: [ ],
+		cleanUp: []
 	}
 	
 

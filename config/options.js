@@ -25,7 +25,9 @@ var OPTIONS = {
     MAX_SENDING_SPEED: 1/0,
     
     // topics which in addition to normaal behavior, will also contain special functionality (such as posting to facebook)
-    SPECIAL_TOPICS: ['facebook','twitter' ]
+    SPECIAL_TOPICS: ['facebook','twitter' ],
+
+    interface_refresh_speed: 5 // check to see if interfaces are alive every X s
 
 
 

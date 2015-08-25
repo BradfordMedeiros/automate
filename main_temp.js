@@ -6,7 +6,11 @@ var func = function(x){
 	console.log(x);
 }
 
+
+var events = require ('events');
+process.eventEmitter = new events.EventEmitter();
 var stuff = {
+
 	messagehandler : new (require(files.messagehandler)),
 	abstractnetwork : new (require(files.abstractnetwork))(func)
 
