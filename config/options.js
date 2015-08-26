@@ -27,8 +27,12 @@ var OPTIONS = {
     // topics which in addition to normaal behavior, will also contain special functionality (such as posting to facebook)
     SPECIAL_TOPICS: ['facebook','twitter' ],
 
-    interface_refresh_speed: 5 // check to see if interfaces are alive every X s
+    network_interfaces: {
+        internet: true
+    },
 
+    interface_refresh_speed: 5, // check to see if interfaces are alive every X s -> calls isAvailable()
+    request_port: 3821      // port used to make message requests
 
 
     

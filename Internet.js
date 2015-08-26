@@ -6,13 +6,47 @@ var Internet = function ( ){
 	this.onMessageReceived = undefined;
 	this.interfaceIsAvailable = undefined;
 	this.checkInterfaceAvailablility();
+	this.request = require('request');
+	this.express = require('express');
+	this.app = this.express();
+	this.app.post('/',function(req,res){
+		res.send('got post');
+	});
+
+	this.port = require(require(process.env.HOME+FILEFINDER).options).request_port;
+	this.server = undefined;
+	
+
 	this.handle = setInterval( this.checkInterfaceAvailablility.bind(this), 1000* networkCheckingFrequency );
 
 }	
 
-Internet.prototype.sendMessage = function(message,config){
 
+Internet.prototype.turnOnServer = function (){
+	var that = this;
+	this.server = this.app.listen(that.port, function (){
+		var host = that.server.address().address;
+  		var port = that.server.address().port;
+		console.log('listening at http://%s:%s', host, port);
+	})
 }
+
+Internet.prototype.sendMessage = function(message,config){
+	var ipaddress = config.identifier+':'+this.port;
+	this.request.post(
+		ipaddress,
+    	{ 
+    		json:  message  
+    	},
+    	function (error, response, body) {
+        	console.log('error:  '+error);				// should figure out what
+        	console.log('response: '+response);			// we want to do here
+        	console.log('body:  '+body);
+    	}
+	);
+}
+
+
 
 Internet.prototype.getNetworkID = function (){
 	return 'internet'
@@ -42,8 +76,12 @@ Internet.prototype.checkInterfaceAvailablility = function (){
 	});
 }
 
+
 Internet.prototype.cleanUp = function (){
 	clearInterval(this.handle);
+	if (this.server){
+		this.server.close();
+	}
 	delete this;
 }
 

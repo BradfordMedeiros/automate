@@ -13,19 +13,6 @@ var AbstractNetwork = function ( onMessageReceived  ){
 	this.onMessageReceived = onMessageReceived;
 
 
-	/*
-		process.eventEmitter.on('network_interface_status', function(isAvailable)){
-			if (isAvailable){
-				add the network interface
-			}else{
-				remove the network interface
-			}
-		}
-	*/
-	// probably want to refactor so we say something like 
-	// interface = require(interface.js);  
-	// networkmods = interface.network_interfaces;
-	// for (every in network mods)
 
 }
 

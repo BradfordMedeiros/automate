@@ -51,7 +51,7 @@ _devicestrapper.prototype.createConfig = function ( identifier, network_interfac
 // BASIC EDIT DEVICE OPERATIONS
 {
 
-devicestrapper.prototype.addDevice = function ( config ){
+_devicestrapper.prototype.addDevice = function ( config ){
     if (this.options.DEVICESTRAPPER_VERBOSE){
         console.log("adding device");
     }
