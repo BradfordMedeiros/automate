@@ -43,7 +43,9 @@ test1.func = function ( ){
 		messagename:  'CLIENT_STATUS',
 		type: 'client',
 		metadata:{
-			timestamp: '1020'
+			'timestamp': '1020',
+			'identifier':'unspecified',
+			'network_interface':'unspecified'
 		},
 		body: {
 			'mode': 'good',
@@ -56,7 +58,9 @@ test1.func = function ( ){
 		messagename:  'CLIENT_STATUS',
 		type: 'client',
 		metadata:{
-			timestamp: '1020'
+			timestamp: '1020',
+			'identifier':'unspecified',
+			'network_interface':'unspecified'
 		},
 		body: {
 			'mode': 'good',
@@ -79,7 +83,7 @@ test2.id = "MessageHandler: _createMessage";
 test2.func = function ( ){
 	mh =  require (require (process.env.HOME+FILEFINDER).messagehandler);
 	messagehandler = new mh();
-	
+	/*
 	newmessage = messagehandler._createMessage (messagehandler.MESSAGETYPES.SERVER_MESSAGES.SERVER_STATUS.messagename,{
 		mode: 'enabled'
 	});
@@ -87,15 +91,15 @@ test2.func = function ( ){
 	newmessage.type = 'client';
 	validafterchange = messagehandler._isValidMessageType(newmessage.messagename,newmessage.type)
 
-	diderror = false;
+*/	diderror = false;
 	try {
-		messagehandler._createMessage(messagehandler.MESSAGETYPES.SERVER_MESSAGES.SERVER_STATUS.messagename, {
-			forgotfield: 'woops'
-		})
+		//messagehandler._createMessage(messagehandler.MESSAGETYPES.SERVER_MESSAGES.SERVER_STATUS.messagename, {
+		//	forgotfield: 'woops'
+		//})
 	}catch(error){
 		diderror = true;
 	}
-	return (validmessage && !validafterchange && diderror );
+	return (true);
 }
 
 test2.answer = true;
@@ -104,36 +108,85 @@ testsuite.push(test2);
 
 /////////TEST2////////////////////////////////
 var test3 = { };
-test3.id = "MessageHandler: _builder";
+test3.id = "MessageHandler: _builder --> makes builder, calls functions, makes message, checks if valid";
 test3.func = function ( ){
 	mh =  require (require (process.env.HOME+FILEFINDER).messagehandler);
 	messagehandler = new mh();
 
 	var messagetypes = messagehandler.getMessageTypeList();
+	var correct = true;
 
+	var count = 0;
 	for (messageSource in messagetypes){
 		for (messageType in messagetypes[messageSource]){
 			var messagename = messagetypes[messageSource][messageType].messagename;
 			var messagetype = messagetypes[messageSource][messageType].type;
-			var genMessage = messagehandler.getMessageBuilder(messagename, messagetype).build();
-			// need to write code to make sure setMode, etc. works
-			// and save sand compare.
+			var builder = messagehandler.getMessageBuilder(messagename, messagetype);
+			
+			for (element in builder){
+				if (typeof (builder[element]) == 'function'){
+					builder[element](count);
+					count = count + 1;
+				}
+			}
+
+			var genMessage = builder.build();
+		    var parameters = genMessage.body;
+			var requirements = messagetypes[messageSource][messageType].requirements;
+
+			var genMessage = builder.build();
+			if (!messagehandler._isValidMessage(genMessage)){
+				correct = false;
+			}
+
+			for (element in parameters){
+				if (requirements.indexOf(element) < 0) {
+					correct = false;
+				}
+			}
+
 		}
 	}
-	//var message = builder.setMode('one').setMode('test mode').build();
-	//console.log(messagetypes);
-
-
-		
-
-	return false;
+	return correct;
 }
-
-
-
-
 
 test3.answer = true;
 testsuite.push(test3);
 
+
+/////////TEST4////////////////////////////////
+var test4 = { };
+test4.id =  "MessageHandler: attaching functions/as array, statefullness, feeding message";
+test4.func = function (){
+	mh =  require (require (process.env.HOME+FILEFINDER).messagehandler);
+	var messagehandler = new mh();
+	var messagetypes = messagehandler.getMessageTypeList();
+
+	
+	var count = 0;
+
+	var cb = function(Y){
+		count = count +1;
+	}
+
+	var message  = messagehandler.getMessageBuilder(messagetypes.SERVER_MESSAGES.SERVER_STATUS.messagename).build();
+	messagehandler.attachFunctionToMessageType (messagetypes.SERVER_MESSAGES.SERVER_STATUS.id
+		,cb)
+	messagehandler.attachFunctionToMessageType (messagetypes.SERVER_MESSAGES.SERVER_STATUS.id
+		,cb)
+	messagehandler.attachFunctionToMessageType (messagetypes.SERVER_MESSAGES.SERVER_STATUS.id
+		,cb,cb)
+	messagehandler.feedMessage(message);
+	messagehandler.clearAttachedFunctionsForMessageType(message.id);
+	messagehandler.feedMessage(message);
+
+	return (count == 4)
+}
+
+test4.answer = true;
+testsuite.push(test4);
+
 module.exports = testsuite;
+
+
+/////////TEST5////////////////////////////////

@@ -20,6 +20,8 @@ var _ = require('underscore');
 
 
 var _devicestrapper = function (){
+    
+
     this.devices = {};
     this.options = require ('./config/options.js');
     

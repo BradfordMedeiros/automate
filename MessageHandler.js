@@ -110,43 +110,52 @@ MessageHandler.prototype.getMessageBuilder  = function (messagetype, type) {
 
 // feeds the handler a new message to process by the handler
 MessageHandler.prototype.feedMessage = function ( inbound_message ){
-	var messagetype = this.getMessageType ( inbound_message );
-	var functions = this.attachedMessageFunctions[messagetype];
-
-	for ( var i = 0 ; i < functions.length ; i++ ){
-		var result = functions[i].func();
-		functions[i].callback(result);
+	if (inbound_message == undefined ){
+		throw (new Error ("message not defined"));
 	}
+	
+	var messagetype = this.getMessageType ( inbound_message );
+	var functions = this.attachedMessageFunctions[inbound_message.id];
+	if (functions !=undefined){
+		for ( var i = 0 ; i < functions.length ; i++ ){
+			var result = functions[i](inbound_message);
+		}
+	}
+
+	
 }
 
 
 // associate functions to the message type
-MessageHandler.prototype.attachFunctionToMessageType = function ( messagetype, func , callback ){
+MessageHandler.prototype.attachFunctionToMessageType = function ( messageid, func ){
+	if (messageid == undefined || func ==undefined){
+		throw (new Error ('undefined parameters'));
+	}
 
 	if ( this._isValidMessageType (messagetype ) ){
 		throw (new Error ("Invalid Message Type -- cannot attach functionality"));
 	}
 
-	if (this.attachedMessageFunctions[messagetype] = undefined ){
-		this.attachedMessageFunctions[messagetype] = new Array();
-	}
+	if (this.attachedMessageFunctions[messageid] == undefined ){
+		this.attachedMessageFunctions[messageid] = new Array();
+	}else if ( Array.isArray(this.attachedMessageFunctions[messageid] == false)){
+		throw (new Error("this.attachedMessageFunctions must be defined as an array"))
+	} 
 
-	var funct = func;
-	var callb = callback;
 	for ( var i = 1; i < arguments.length ; i++ ){
-		var obj = {
-			func: funct,
-			callback: callb
-		};
-
-		this.attachedMessageFunctions[messagetype].push(obj);
+	
+		this.attachedMessageFunctions[messageid].push(arguments[i]);
 	}
+
 }
 
 
 // stop the message handler from calling functions for the message type, and disassociate the functionality
-MessageHandler.prototype.clearAllAttachedFunctions  = function ( messagetype ){
-	this.attachedMessageFunctions[messagetype] = undefined;
+MessageHandler.prototype.clearAttachedFunctionsForMessageType  = function ( messageid ){
+	if (messageid == undefined){
+		throw (new Error ("must define message id parameter"))
+	}
+	this.attachedMessageFunctions[messageid] = undefined;
 }
 
 
@@ -209,7 +218,7 @@ MessageHandler.prototype._isValidMessage = function ( message ) {
 
 	// ensure all required metadata fields are defined
 	for ( var i = 0 ; i < this.MESSAGETYPES.metadata.length ; i++ ){
-		if (message.metadata[this.MESSAGETYPES.metadata[i] ] == undefined ){
+		if (message.metadata[this.MESSAGETYPES.metadata[i] ] === undefined ){
 			return false;
 		}
 	}
@@ -226,7 +235,7 @@ MessageHandler.prototype._isValidMessage = function ( message ) {
 	var accessor = type =='client'? 'CLIENT_MESSAGES': 'SERVER_MESSAGES';
  	var requirements  = this.MESSAGETYPES[accessor][message.messagename].requirements;
  	for (var i = 0 ; i < requirements.length ; i++ ){
- 		if (message.body[requirements[i]] == undefined){
+ 		if (message.body[requirements[i]] === undefined){
  			return false;
  		}
  	}
@@ -270,8 +279,8 @@ MessageHandler.prototype._generateMetadata = function (){
 //generates a message that contains elements common for every message
 MessageHandler.prototype._createGenericMessage = function (){
 	var message =  { };
-	message.messagename =  undefined;
-	message.type = undefined;
+	message.messagename =  null;
+	message.type = null;
 	message.metadata = this._generateMetadata();
 	message.body = { }
 	return message;
@@ -298,13 +307,17 @@ MessageHandler.prototype._createMessage = function ( messagetypename, body, type
 	message.messagename = messagetypename;
 	message.type = type;
 
+
+	// generate required fields
 	var accessor = (type == 'server') ? 'SERVER_MESSAGES' : 'CLIENT_MESSAGES';
 	var requiredFields = this.MESSAGETYPES[accessor][messagetypename].requirements;
+	message.id = this.MESSAGETYPES[accessor][messagetypename].id;
+
 
 	for ( var i = 0 ; i < requiredFields.length ; i++ ){
 
 		if ( isDefault ){
-			message.body[requiredFields[i]] = undefined
+			message.body[requiredFields[i]] = null
 			continue;
 		}
 

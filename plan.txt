@@ -1,0 +1,32 @@
+/*
+	To do next:
+	- Finish Internet.js, Devicestrapper, etc. in terms of functionality to make them work together, write unit tests.
+
+	Future work:
+	- Hardware: Write a library for < Priority: 1) Arduino, 2) Raspberry Pi  3) Mbed >
+		Write supporting code to transfer setup configuration onto the device.
+		So order for this is gonna be:
+		1. Network stack.  Be able to see and send messages.
+		2. Obey messages.   Call functions to startMode(X) when get message
+		3. Support each startMode(X)
+		we want this to look like this at the end
+		4.  Will compile code on the GUI side.  And it outputs the code you need for the devices.   Would be cool to allow field to code the MEAT, and have compiler in the gui, but if not who cares.
+		
+
+
+
+	- Services:  do not exist.  We should just implement any services as a device.  For example, fb might be a 'service' which subscribes to the topic, 'facebook post:toSend'
+
+
+	- Router : make one endpoint node be able to be take responsibility for others.  I say something like this:
+		-> Device: maximum load, desired amount (desired amount will make it take as much load as possible <100%> should take the maximum if it can)
+			- reachability information
+				- should report to the server
+
+	note on format of passed message:
+		the message.body is what will get passed into the "MEAT" functions.  The format of it will be JSON for a platform that would support javascript, otherwise I'd like something
+		like object.get('field').get('deeperfield_within_field1');
+
+	
+
+*/

@@ -3,19 +3,23 @@
 /* Messages look  like this: 
 --------------------------------------
 
+
 	message : {
+
+		id: ,  <----generated through function call don't populate this on own
 		messagename: ,
 		type: ,
 		metaData:{
-			___:  ,
+			___:  ,  <---- call functions to add new stuff
 			___:  ,
 			___:     etc
 		},
 
 		body: {
+
 			___:  ,
-			___:  ,				<---- requirements
-			___:     etc
+			___:  ,				<---- requirements, can defined common ones
+			___:     etc			via function call
 		}
 
 	}
@@ -23,6 +27,8 @@
 
 */
 
+var count = 0;
+var RESERVED_STRING = '000000';
 var MESSAGE_TYPES = {
 	
 
@@ -70,11 +76,37 @@ var MESSAGE_TYPES = {
 			type: 'client',
 			messagename  : 'CLIENT_TOPIC_UPDATE',
 			requirements : [ 'topics' ]
+		},
+
+		SERVICE_REQUEST:{
+			type: 'client',
+			messagename: 'SERVICE_REQUEST',
+			requirements: ['service','parameters']
 		}
+
+
 	}
 
 }
 
+
+var generateId = function (){
+	MESSAGE_TYPES.idToMessageType = { };
+
+	for ( messagetype in MESSAGE_TYPES){
+		for (message in MESSAGE_TYPES[messagetype]){
+			var id = RESERVED_STRING + count;
+			MESSAGE_TYPES[messagetype][message].id = id;
+			count = count + 1 ;
+			MESSAGE_TYPES[id] = {
+ 				type: 		 MESSAGE_TYPES[messagetype][message].type,
+				messagename: MESSAGE_TYPES[messagetype][message].messagename
+			}
+		}
+	}
+
+	
+}
 
 
 var addrequiredmetadata = function (field, creationFunction){
@@ -150,8 +182,17 @@ var checkFileIntegrity = function ( ){
 }
 
 
-addRequirementToAllTopics ('networkInterface');
-addRequirementToAllTopics ('identifier');
+//addRequirementToAllTopics ('networkInterface');
+//addRequirementToAllTopics ('identifier');
+
+generateId();
+addrequiredmetadata ('identifier', function(){
+	return null;
+})
+
+addrequiredmetadata ('network_interface', function(){
+	return  null;
+})
 
 addrequiredmetadata ('timestamp', function(){
 	return (new Date())	
