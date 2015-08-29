@@ -10,6 +10,9 @@
 // finish making .func1().func2(), build();
 // need to do chaining, 
 
+//* This is a singleton.  We will only have one of these.  Instantiate a new one
+// when you want the global
+
 
 var FILEFINDER = '/.files';
 var DEFAULT_MESSAGE = 'default';
@@ -55,8 +58,30 @@ _builder.prototype.build = function (){
 }
 
 
+var instance = undefined;
+
+var getInstance = function (){
+	if (instance ===undefined){
+		instance = new MessageHandler;
+	}
+	return instance;
+}
+
+var MessageFactory = function (){
+
+}
+
+MessageFactory.prototype.getMessageHandlerInstance = function(){
+	 return getInstance();
+}
 
 var MessageHandler = function ( ) {
+	if (instance == undefined){
+		instance = this;
+	}else{
+		throw (new Error("only one instance of message handler can exist, use MessageFactory to retrieve the instance"));
+	}
+
 	this.attachedMessageFunctions  = { };		// the functions to call when you get a certain message type
 	var files = require (process.env.HOME+FILEFINDER);
 	this.MESSAGETYPES = require (files.messagetypes);
@@ -332,5 +357,5 @@ MessageHandler.prototype._createMessage = function ( messagetypename, body, type
 
 
 
-module.exports = MessageHandler;
+module.exports = MessageFactory;
 
