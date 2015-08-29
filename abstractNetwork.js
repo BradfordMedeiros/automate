@@ -12,8 +12,6 @@ var AbstractNetwork = function ( onMessageReceived  ){
 	this.networkInterfaces[internet.getNetworkID()] = internet;
 	this.onMessageReceived = onMessageReceived;
 
-
-
 }
 
 // sends message to device defined by device config

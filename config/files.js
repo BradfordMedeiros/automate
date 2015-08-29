@@ -18,10 +18,11 @@ var filelocations = {
 	// files - main project files
 	abstractnetwork : PWD + 'abstractNetwork.js',
 	bluetooth		: PWD + 'Bluetooth.js',
+	devicestrapper		: PWD + 'devicestrapper.js',
 	interface		: PWD + 'Interface.js',
 	internet 		: PWD + 'Internet.js',
-	messagehandler  : PWD + 'messagehandler.js', 	
-	messagetypes	: PWD + 'messagetypes.js',
+	messagehandler  : PWD + 'MessageHandler.js', 	
+	messagetypes	: PWD + 'MessageTypes.js',
 	options			: PWD +'config/options.js',
 	zigbee			: PWD + 'Zigbee.js',
 

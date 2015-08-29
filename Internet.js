@@ -2,38 +2,45 @@ FILEFINDER = '/.files'
 
 var Internet = function ( ){
 
-	var networkCheckingFrequency = require((require(process.env.HOME+FILEFINDER)).options).interface_refresh_speed;
-	this.onMessageReceived = undefined;
-	this.interfaceIsAvailable = undefined;
-	this.checkInterfaceAvailablility();
-	this.request = require('request');
-	this.express = require('express');
-	this.app = this.express();
-	this.app.post('/',function(req,res){
-		res.send('got post');
-	});
 
-	this.port = require(require(process.env.HOME+FILEFINDER).options).request_port;
-	this.server = undefined;
+	var networkCheckingFrequency = require((require(process.env.HOME+FILEFINDER)).options).interface_refresh_speed;
+	this._onMessageReceived = undefined;
+	this._interfaceIsAvailable = undefined;
+	this._checkInterfaceAvailablility();
+	this._request = require('request');
+	this._express = require('express');
+	this._app = this._express();
+
+	var that = this;
+
 	
 
-	this.handle = setInterval( this.checkInterfaceAvailablility.bind(this), 1000* networkCheckingFrequency );
+
+	this._app.post('/',function(req,res){
+		that._onMessageReceived();
+	});
+	
+
+	this._port = require(require(process.env.HOME+FILEFINDER).options).request_port;
+	console.log('$:  '+this._port)
+	this._server = undefined;
+	this._handle = setInterval( this._checkInterfaceAvailablility.bind(this), 1000* networkCheckingFrequency );
 
 }	
 
 
 Internet.prototype.turnOnServer = function (){
 	var that = this;
-	this.server = this.app.listen(that.port, function (){
-		var host = that.server.address().address;
-  		var port = that.server.address().port;
+	this._server = this._app.listen(that._port, function (){
+		var host = that._server.address().address;
+  		var port = that._server.address()._port;
 		console.log('listening at http://%s:%s', host, port);
 	})
 }
 
 Internet.prototype.sendMessage = function(message,config){
-	var ipaddress = config.identifier+':'+this.port;
-	this.request.post(
+	var ipaddress = config.identifier+':'+this._port;
+	this._request.post(
 		ipaddress,
     	{ 
     		json:  message  
@@ -53,34 +60,35 @@ Internet.prototype.getNetworkID = function (){
 }
 
 Internet.prototype.setOnMessageReceived = function( func ){
-	this.onMessageReceived = func;
+	this._onMessageReceived = func;
+
+
+	
 }
 
 Internet.prototype.isAvailable = function (){
-	return this.interfaceIsAvailable;
-}
-
-Internet.prototype.sendOut = function (message){
-
+	return this._interfaceIsAvailable;
 }
 
 
-Internet.prototype.checkInterfaceAvailablility = function (){
+
+
+Internet.prototype._checkInterfaceAvailablility = function (){
 	var that = this;
 	require('dns').lookup('google.com',function(err){
 		if (err && err.code == 'ENOTFOUND'){
-			that.interfaceIsAvailable = false;
+			that._interfaceIsAvailable = false;
 		}else{
-			that.interfaceIsAvailable = true;
+			that._interfaceIsAvailable = true;
 		}
 	});
 }
 
 
 Internet.prototype.cleanUp = function (){
-	clearInterval(this.handle);
-	if (this.server){
-		this.server.close();
+	clearInterval(this._handle);
+	if (this._server){
+		this._server.close();
 	}
 	delete this;
 }
@@ -88,6 +96,7 @@ Internet.prototype.cleanUp = function (){
 
 checkImplementsInterface = require(require(process.env.HOME+FILEFINDER).interface);
 checkImplementsInterface(Internet,'network_interface');
+
 
 
 

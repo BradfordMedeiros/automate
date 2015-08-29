@@ -104,8 +104,6 @@ var generateId = function (){
 			}
 		}
 	}
-
-	
 }
 
 
@@ -169,8 +167,6 @@ var checkFileIntegrity = function ( ){
 			}
 
 			c_requirements[MESSAGE_TYPES.CLIENT_MESSAGES[message].requirements[i]] = true;
-
-
 			if (MESSAGE_TYPES.CLIENT_MESSAGES[message].requirements[i].length == 0){
 				throw (new Error("field length must be > 0"))
 			}
@@ -178,12 +174,11 @@ var checkFileIntegrity = function ( ){
 		c_requirements = { };
 	}
 	
-
 }
 
 
-//addRequirementToAllTopics ('networkInterface');
-//addRequirementToAllTopics ('identifier');
+
+
 
 generateId();
 addrequiredmetadata ('identifier', function(){
@@ -197,8 +192,6 @@ addrequiredmetadata ('network_interface', function(){
 addrequiredmetadata ('timestamp', function(){
 	return (new Date())	
 })
-
-
 
 checkFileIntegrity();
 

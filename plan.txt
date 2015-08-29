@@ -1,6 +1,8 @@
 /*
 	To do next:
-	- Finish Internet.js, Devicestrapper, etc. in terms of functionality to make them work together, write unit tests.
+	- Finish Internet.js -- fix bug where u only get 4 messages at once.
+	// then make devicestrapper update all subscribers when u publish to it.
+	// one that's done.  we can code up a basic hw stack.
 
 	Future work:
 	- Hardware: Write a library for < Priority: 1) Arduino, 2) Raspberry Pi  3) Mbed >
