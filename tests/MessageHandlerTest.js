@@ -9,7 +9,7 @@ test0.id = "MessageHandler: _isValidMessageType";
 test0.func = function ( ){
 
 	mh =  require (require (process.env.HOME+FILEFINDER).messagehandler);
-	messagehandler = new mh();
+	messagehandler = (new mh()).getMessageHandlerInstance();
 	
 	var isvalid = true;
 	for (message in messagehandler.MESSAGETYPES){
@@ -37,7 +37,7 @@ var test1 = { };
 test1.id = "MessageHandler: _isValidMessage";
 test1.func = function ( ){
 	mh =  require (require (process.env.HOME+FILEFINDER).messagehandler);
-	messagehandler = new mh();
+	messagehandler = (new mh()).getMessageHandlerInstance();
 
 	message1 = {
 		messagename:  'CLIENT_STATUS',
@@ -111,7 +111,7 @@ var test3 = { };
 test3.id = "MessageHandler: _builder --> makes builder, calls functions, makes message, checks if valid";
 test3.func = function ( ){
 	mh =  require (require (process.env.HOME+FILEFINDER).messagehandler);
-	messagehandler = new mh();
+	messagehandler = (new mh()).getMessageHandlerInstance();
 
 	var messagetypes = messagehandler.getMessageTypeList();
 	var correct = true;
@@ -121,7 +121,7 @@ test3.func = function ( ){
 		for (messageType in messagetypes[messageSource]){
 			var messagename = messagetypes[messageSource][messageType].messagename;
 			var messagetype = messagetypes[messageSource][messageType].type;
-			var builder = messagehandler.getMessageBuilder(messagename, messagetype);
+			var builder = messagehandler.getMessageBuilder(messagetypes[messageSource][messageType]);
 			
 			for (element in builder){
 				if (typeof (builder[element]) == 'function'){
@@ -159,7 +159,7 @@ var test4 = { };
 test4.id =  "MessageHandler: attaching functions/as array, statefullness, feeding message";
 test4.func = function (){
 	mh =  require (require (process.env.HOME+FILEFINDER).messagehandler);
-	var messagehandler = new mh();
+	var messagehandler = (new mh()).getMessageHandlerInstance();
 	var messagetypes = messagehandler.getMessageTypeList();
 
 	
@@ -169,17 +169,18 @@ test4.func = function (){
 		count = count +1;
 	}
 
-	var message  = messagehandler.getMessageBuilder(messagetypes.SERVER_MESSAGES.SERVER_STATUS.messagename).build();
-	messagehandler.attachFunctionToMessageType (messagetypes.SERVER_MESSAGES.SERVER_STATUS.id
+	var message  = messagehandler.getMessageBuilder(messagetypes.SERVER_MESSAGES.SERVER_STATUS).build();
+	messagehandler.attachFunctionToMessageType (messagetypes.SERVER_MESSAGES.SERVER_STATUS
 		,cb)
-	messagehandler.attachFunctionToMessageType (messagetypes.SERVER_MESSAGES.SERVER_STATUS.id
+	messagehandler.attachFunctionToMessageType (messagetypes.SERVER_MESSAGES.SERVER_STATUS
 		,cb)
-	messagehandler.attachFunctionToMessageType (messagetypes.SERVER_MESSAGES.SERVER_STATUS.id
+	messagehandler.attachFunctionToMessageType (messagetypes.SERVER_MESSAGES.SERVER_STATUS
 		,cb,cb)
 	messagehandler.feedMessage(message);
-	messagehandler.clearAttachedFunctionsForMessageType(message.id);
+	messagehandler.clearAttachedFunctionsForMessageType(message);
 	messagehandler.feedMessage(message);
 
+	console.log(count)
 	return (count == 4)
 }
 

@@ -2,23 +2,21 @@
 /*    sourceipaddress:
     devicename:
     subscriptions []: 
-    publishers[] : 
+    publishers[] : ooo
     acceptsdata : true/false
     
    */ 
 
 /*
-   This class is used for the general state of the application.  It knows info about what devices are hooked up, and schedules request 
-   for messages to be forwared to the appropriate subscribers.  
-
-   This program is based upon topics.  You can publish to a topic, and/or subscribe to it. PUblishers publish info about a topic (send) and 
-   subscribers listen to that info.  
+   Class to manage the state of devices connected. 
 
 */
    
 var _ = require('underscore');     
 
 
+
+//topicmanager should go in here
 var _devicestrapper = function (){
     
     this.devices = {};
@@ -30,8 +28,8 @@ var _devicestrapper = function (){
     this._listenForQuit();                        // start listening to serialize on quit signal
     this._deserializeData();                      // load saved state of the data
     
-    
 }
+
 
 _devicestrapper.prototype.createConfig = function ( identifier, network_interface, subscriptions, publications ) {
     if (identifier == undefined || network_interface == undefined || subscriptions == undefined || publications == undefined || 

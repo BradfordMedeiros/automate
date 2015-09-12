@@ -7,7 +7,8 @@ var networkInterface = {
 		sendMessage: ['message', 'config'],
 		setOnMessageReceived: ['func'],
 		isAvailable: [ ],
-		cleanUp: []
+		turn_on_interface: [ 'inbound', 'outbound'],
+		deload: []
 	}
 	
 

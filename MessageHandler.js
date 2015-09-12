@@ -116,17 +116,19 @@ MessageHandler.prototype.getMessageTypeList = function ( ){
 
 
 // give the options to operate on the message
-MessageHandler.prototype.getMessageBuilder  = function (messagetype, type) {
+MessageHandler.prototype.getMessageBuilder  = function (messagetype) {	
 	//figure out the type, and get the options you can set for it.
-	if (type ==  undefined ){
+	if (messagetype.type ==  undefined ){
 		type = 'server';
 	}
-	if (type !='server' && type !='client'){
+	if (messagetype.type !='server' && messagetype.type !='client'){
 		throw (new Error('Cannot create builder, invalid type'))
 	}
 
-	var builder = new _builder(this, messagetype, type);
-	var functions = this._getFunctionsForMessageBuilder ( messagetype, type, builder);
+	var builder = new _builder(this, messagetype.messagename, messagetype.type);
+	var functions = this._getFunctionsForMessageBuilder ( messagetype.messagename, messagetype.type, builder);
+
+
 	builder._addFunctions(functions.names, functions.functions);
 	return builder._getBuilder ();
 
@@ -141,46 +143,50 @@ MessageHandler.prototype.feedMessage = function ( inbound_message ){
 	
 	var messagetype = this.getMessageType ( inbound_message );
 	var functions = this.attachedMessageFunctions[inbound_message.id];
+
 	if (functions !=undefined){
 		for ( var i = 0 ; i < functions.length ; i++ ){
 			var result = functions[i](inbound_message);
 		}
 	}
-
 	
 }
 
 
 // associate functions to the message type
-MessageHandler.prototype.attachFunctionToMessageType = function ( messageid, func ){
-	if (messageid == undefined || func ==undefined){
+MessageHandler.prototype.attachFunctionToMessageType = function ( messagetype , func ){
+	if (messagetype == undefined || func ==undefined){
 		throw (new Error ('undefined parameters'));
 	}
 
-	if ( this._isValidMessageType (messagetype ) ){
+	if (typeof (func) !='function'){
+		throw (new Error('parameter func must be of type function'))
+	}
+	if ( this.MESSAGETYPES[messagetype.id] == undefined){
 		throw (new Error ("Invalid Message Type -- cannot attach functionality"));
 	}
 
-	if (this.attachedMessageFunctions[messageid] == undefined ){
-		this.attachedMessageFunctions[messageid] = new Array();
-	}else if ( Array.isArray(this.attachedMessageFunctions[messageid] == false)){
+
+	if (this.attachedMessageFunctions[messagetype.id] == undefined ){
+		this.attachedMessageFunctions[messagetype.id] = new Array();
+	}else if ( Array.isArray(this.attachedMessageFunctions[messagetype.id] == false)){
 		throw (new Error("this.attachedMessageFunctions must be defined as an array"))
 	} 
 
 	for ( var i = 1; i < arguments.length ; i++ ){
 	
-		this.attachedMessageFunctions[messageid].push(arguments[i]);
+		this.attachedMessageFunctions[messagetype.id].push(arguments[i]);
 	}
 
 }
 
 
 // stop the message handler from calling functions for the message type, and disassociate the functionality
-MessageHandler.prototype.clearAttachedFunctionsForMessageType  = function ( messageid ){
-	if (messageid == undefined){
+MessageHandler.prototype.clearAttachedFunctionsForMessageType  = function ( message ){
+	if (message == undefined || message.id == undefined){
 		throw (new Error ("must define message id parameter"))
 	}
-	this.attachedMessageFunctions[messageid] = undefined;
+	this.attachedMessageFunctions[message.id] = undefined;
 }
 
 
@@ -190,6 +196,7 @@ MessageHandler.prototype.clearAttachedFunctionsForMessageType  = function ( mess
 // returns the functions that should be publicly accessible for the builder
 // should return a bunch of setters
 MessageHandler.prototype._getFunctionsForMessageBuilder = function ( messagetypename, type , builder){
+
 	var message = builder.message;
 	var names = new Array();
 	var functions = new Array();
@@ -272,14 +279,14 @@ MessageHandler.prototype._isValidMessage = function ( message ) {
 MessageHandler.prototype._isValidMessageType = function ( messagename, type ) {
 	if (type == 'client'){
 		for (messagetype in this.MESSAGETYPES.CLIENT_MESSAGES){
-			message=  this.MESSAGETYPES.CLIENT_MESSAGES[messagetype];
+			var message=  this.MESSAGETYPES.CLIENT_MESSAGES[messagetype];
 			if (messagename == message.messagename && type == message.type){
 				return true;
 			}
 		}
 	}else if (type =='server'){
 		for (messagetype in this.MESSAGETYPES.SERVER_MESSAGES){
-			message=  this.MESSAGETYPES.SERVER_MESSAGES[messagetype];
+			var message=  this.MESSAGETYPES.SERVER_MESSAGES[messagetype];
 			if (messagename == message.messagename && type == message.type){
 				return true;
 			}

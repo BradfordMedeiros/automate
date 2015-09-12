@@ -90,7 +90,9 @@ var implementsInterface = function (object, interface){
 			throw (new Error("does not implement interface properly"))
 		}
 	}
-	objectInst.cleanUp();;
+	if (objectInst.deload !=undefined){
+		objectInst.deload();
+	}
 }
 
 //module.exports = _Interface;

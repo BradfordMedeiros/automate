@@ -15,8 +15,7 @@ var OPTIONS = {
 
     WEBSERVER_ENABLED: true,
 
-    // the port used for post messages 
-    NETWORK_PORT: 80,
+    
 
     // determines the rate the program will send messages to subscriber devices if no rate is specified
     DEFAULT_SENDING_SPEED: 0.01, 
@@ -32,8 +31,9 @@ var OPTIONS = {
     },
 
     interface_refresh_speed: 5, // check to see if interfaces are alive every X s -> calls isAvailable()
-    request_port: 3821      // port used to make message requests
-
+    request_port: 3821,      // port used to make message requests
+    sends_messages_outbound: true,
+    trigger_eval_period: 0.002 // how often triggers are evaluated
 
     
 }

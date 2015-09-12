@@ -1,5 +1,5 @@
 
-var FILEFINDER = './files';
+var FILEFINDER = '/.files';
 /**
 	This is the warehouse for topics.  It acts as the store for all current topic information.  It knows nothing about the devices.
 	It stores information, and creates triggers to call functions when certain conditions are met.
@@ -16,7 +16,7 @@ var topic_manager = function (){
 	this.topics =  { };
 	this.triggers = new Array();
 
-	setInterval(this.processTriggers, this.trigger_eval_period).bind(this);
+	//setInterval(this.processTriggers, this.trigger_eval_period).bind(this);
 
 }
 
@@ -69,8 +69,6 @@ var _trigger = function (topicname,topic_manager){
 	this.evaluation = new Array();
 	this.topicname = topicname;
 	this.topic_manager = topic_manager;
-	this.handle = count;
-	count = count + 1;
 
 	this.public = {
 		equals:  function (value){
@@ -99,7 +97,7 @@ var _trigger = function (topicname,topic_manager){
 
 		// check to make sure topics are valid
 		equalsTopic: function (topic_name){
-			if (that.topic_manager.managedTopics[topic_name == undefined){
+			if (that.topic_manager.managedTopics[topic_name] == undefined){
 				throw (new Error('topic must be added to monitor list.  Call TopicManager.addTopicsToMonitor if you wish to compare to this field'))
 			}
 			that.evaluation.push({
@@ -110,7 +108,7 @@ var _trigger = function (topicname,topic_manager){
 		},
 
 		greaterThanTopic: function (topic_name){
-			if (that.topic_manager.managedTopics[topic_name == undefined){
+			if (that.topic_manager.managedTopics[topic_name] == undefined){
 				throw (new Error('topic must be added to monitor list.  Call TopicManager.addTopicsToMonitor if you wish to compare to this field'))
 			}
 			that.evaluation.push ({
@@ -121,7 +119,7 @@ var _trigger = function (topicname,topic_manager){
 		},
 
 		lessThanTopic: function (topic_name){
-			if (that.topic_manager.managedTopics[topic_name == undefined){
+			if (that.topic_manager.managedTopics[topic_name] == undefined){
 				throw (new Error('topic must be added to monitor list.  Call TopicManager.addTopicsToMonitor if you wish to compare to this field'))
 			}
 			that.evaluation.push({
@@ -143,11 +141,18 @@ var _trigger = function (topicname,topic_manager){
 		},
 
 		install : function( callback ) {
+			if (callback == undefined){
+				throw (new Error("Callback undefned for trigger "));
+			}
+
+			this.handle = count;
+			count = count + 1;
+
 			that.topic_manager.triggers[this.handle] = {
 				evaluation: that.evaluation,
 				callback: callback
 			};
-			return this.trigger_handle;
+			return this.handle;
 		}
 
 	}
