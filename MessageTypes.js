@@ -78,6 +78,12 @@ var MESSAGE_TYPES = {
 			requirements : [ 'topics' ]
 		},
 
+		CLIENT_DEVICE_INIT: {
+			type: 'client',
+			messagename : 'CLIENT_DEVICE_INIT',
+			requirements : ['subscriptions','publications']
+		},
+
 		SERVICE_REQUEST:{
 			type: 'client',
 			messagename: 'SERVICE_REQUEST',

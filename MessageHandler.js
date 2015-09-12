@@ -136,7 +136,11 @@ MessageHandler.prototype.getMessageBuilder  = function (messagetype) {
 
 
 // feeds the handler a new message to process by the handler
+// if it's client it should go in
+// if it's server it should go out
+// @todo if its not a valid message we should discard it
 MessageHandler.prototype.feedMessage = function ( inbound_message ){
+
 	if (inbound_message == undefined ){
 		throw (new Error ("message not defined"));
 	}

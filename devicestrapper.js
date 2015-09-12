@@ -19,7 +19,7 @@ var _ = require('underscore');
 //topicmanager should go in here
 var _devicestrapper = function (){
     
-    this.devices = {};
+    this.devices = {};  
     this.options = require ('./config/options.js');
     
     var localStorage = require ('node-localstorage').LocalStorage;  // used so we can save/load to file
@@ -27,8 +27,9 @@ var _devicestrapper = function (){
 
     this._listenForQuit();                        // start listening to serialize on quit signal
     this._deserializeData();                      // load saved state of the data
-    
+
 }
+
 
 
 _devicestrapper.prototype.createConfig = function ( identifier, network_interface, subscriptions, publications ) {

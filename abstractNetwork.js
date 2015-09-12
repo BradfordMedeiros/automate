@@ -1,4 +1,4 @@
- 
+
 var FILEFINDER = '/.files'
 
 
@@ -31,6 +31,9 @@ var AbstractNetwork = function ( onMessageReceived ,  inbound_on , outbound_on )
 AbstractNetwork.prototype.sendMessage = function ( message, deviceconfig ) {
 	if (message == undefined || deviceconfig.identifier == undefined || deviceconfig.network_interface == undefined){
 		throw (new Error("paramers incorrectly defined in AbstractNetwork::sendMessage"));
+	}
+	if (message.type != 'server'){
+		throw (new Error ('cannot send client messages outbound'));
 	}
 
 	if (!this.sendsMessagesOutbound){
