@@ -10,11 +10,12 @@ var router = function( message ){
 	console.log('got message on network')
 }
 
-var network 	   = (new (require(FILES.abstractnetwork))(router));
+var network 	   = (new (require(FILES.abstractnetwork))(messagehandler.feedMessage.bind(messagehandler)));
 // we call the function when we get message received
 // and we can call network.sendMessage 
 
 var devicestrapper = (new (require(FILES.devicestrapper)));
+var message_control = (new (require(FILES.messagecontrol))(devicestrapper));
 
 
 // then this will know what to do with incoming messges

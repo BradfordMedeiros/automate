@@ -7,7 +7,7 @@ var message_control = function ( devicestrapper ) {
    
 }
 
-var message_control.prototype.route_devicestrapper = function (){
+message_control.prototype.route_devicestrapper = function (){
 	 messagehandler.attachFunctionToMessageType( messagehandler.MESSAGETYPES.CLIENT_MESSAGES.CLIENT_DEVICE_INIT, function ( message ){
         console.log(message)
         var network_interface = message.metadata.network_interface;
@@ -18,3 +18,5 @@ var message_control.prototype.route_devicestrapper = function (){
         this.devicestrapper.addDevice(config);
     });
 }
+
+module.exports = message_control;

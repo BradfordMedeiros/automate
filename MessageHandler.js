@@ -1,6 +1,5 @@
 //@todonext
-//@todo determine public/private categorization
-
+//@todo determine public/private categorizationo
 // Should add encrypter in this file.
 // MessageHandler ( EncryptionStrategy )
 // encryption.encrypt ( message )  -->  .build () --> encrypted_message = encrypt(message); return encrypted_message
@@ -140,7 +139,6 @@ MessageHandler.prototype.getMessageBuilder  = function (messagetype) {
 // if it's server it should go out
 // @todo if its not a valid message we should discard it
 MessageHandler.prototype.feedMessage = function ( inbound_message ){
-
 	if (inbound_message == undefined ){
 		throw (new Error ("message not defined"));
 	}
