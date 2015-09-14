@@ -2,6 +2,7 @@
 
 var FILES = require(process.env.HOME+'/.files');
 
+process.title = 'automate';
 
 var messagehandler = (new (require(FILES.messagehandler))).getMessageHandlerInstance();
 
@@ -25,5 +26,6 @@ var message_control = (new (require(FILES.messagecontrol))(devicestrapper));
 
 module.exports = {
 	network: network,
-	messagehandler: messagehandler
+	messagehandler: messagehandler,
+	devicestrapper: devicestrapper
 }

@@ -10,6 +10,10 @@ var gpio_interface = {
 
 }
 
+//gpio_interface.prototype.read_pin = function () {
+	
+//}
+
 module.exports = gpio_interface;
 
 

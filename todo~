@@ -1,0 +1,19 @@
+
+1. get rid of java-like interfaces.  Instead do something like:
+
+var network_interface = function (){ }
+network_interface.prototype = {
+	required_func1: function(){
+		
+	},
+
+	required_func2: function(){
+
+	}	
+}
+
+for (func in network_interface.prototype){
+	network_interface.prototype[func] = function(){
+		throw (new Error("MUST DEFINE FUNCTION"))
+	}
+}

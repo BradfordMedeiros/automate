@@ -10,6 +10,7 @@ test0.id = "Devicestapper test |  ";
 test0.func = function (  ){
 	var ds = require((require(process.env.HOME+FILEFINDER)).devicestrapper);
 	var devicestrapper = new ds();
+
 	config1 = devicestrapper.createConfig('192.161.1.2','internet',['temperature','humidity'],['wetness']);
 	config2 = devicestrapper.createConfig('192.161.1.2','internet',['temperature','wetness'],['duh']);
 
@@ -62,6 +63,7 @@ test0.func = function (  ){
 	if (devicestrapper.devices['192.161.1.2'].subscriptions.length > 0) {
 		return false;
 	}
+
 
 	devicestrapper.removePublications('192.161.1.2');
 	if (devicestrapper.devices['192.161.1.2'].publications.length > 0) {

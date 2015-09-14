@@ -19,7 +19,7 @@ var _ = require('underscore');
 //topicmanager should go in here
 var _devicestrapper = function (){
     
-    this.devices = {};  
+    this.devices = { };  
     this.options = require ('./config/options.js');
     
     var localStorage = require ('node-localstorage').LocalStorage;  // used so we can save/load to file
@@ -34,7 +34,7 @@ var _devicestrapper = function (){
 
 _devicestrapper.prototype.createConfig = function ( identifier, network_interface, subscriptions, publications ) {
     if (identifier == undefined || network_interface == undefined || subscriptions == undefined || publications == undefined || 
-           !Array.isArray(subscriptions) || !Array.isArray(publications)){
+           (!Array.isArray(subscriptions) && subscriptions !=null )|| (!Array.isArray(publications) && publications !=null)){
         throw (new Error('Cannot create config:  arguments defined improperly'))
     }
 
@@ -60,8 +60,6 @@ _devicestrapper.prototype.addDevice = function ( config ){
     if (config.identifier == undefined ){
         throw ( new Error ("SOURCE IP NOT DEFINED") );
     }
-
-    this.devices = { };
     this.devices[config.identifier] = config;
 
 }
@@ -199,7 +197,7 @@ _devicestrapper.prototype._listenForQuit = function (){
     
     process.eventEmitter.on('quitsignal', function (){
         that._serializeData();
-    });
+    }.bind(this));
     
     if (this.options.DEVICESTRAPPER_VERBOSE){
         console.log("listen for quit init");
@@ -211,6 +209,7 @@ _devicestrapper.prototype._listenForQuit = function (){
 
 // saves data to file device_config in data folder to restore info about devices 
 _devicestrapper.prototype._serializeData = function (){
+
     this.local.setItem('device_config', JSON.stringify(this.devices) );    
     if (this.options.DEVICESTRAPPER_VERBOSE){
         console.log("Serializing Data: Device Config");
@@ -222,7 +221,7 @@ _devicestrapper.prototype._serializeData = function (){
 _devicestrapper.prototype._deserializeData = function (){
     this.devices = JSON.parse(this.local.getItem('device_config')); 
     if (this.devices == null){
-        delete this.devices;
+        this.devices = { };
     }
     
     if (this.options.DEVICESTRAPPER_VERBOSE){
