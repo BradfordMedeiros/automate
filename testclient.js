@@ -11,8 +11,8 @@ var devicestrapper = (new (require(FILES.devicestrapper)));
 
 messagename = messagehandler.MESSAGETYPES.CLIENT_MESSAGES.CLIENT_DEVICE_INIT;
 message = messagehandler.getMessageBuilder(messagename, 'client').build();
-message.metadata.identifier = 'http://localhost';
-message.metadata.network_interface = 'internet';
+//message.metadata.identifier = 'http://localhost';
+//message.metadata.network_interface = 'internet';
 
 //console.log(messagehandler.feedMessage)
 

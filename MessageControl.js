@@ -12,7 +12,6 @@ message_control.prototype.route_devicestrapper = function (){
 
     var that = this;
 	this.messagehandler.attachFunctionToMessageType( this.messagehandler.MESSAGETYPES.CLIENT_MESSAGES.CLIENT_DEVICE_INIT, function ( message ){
-        console.log(message)
         var network_interface = message.metadata.network_interface;
         var identifier = message.metadata.identifier;
         var subscriptions = message.body.subscriptions;

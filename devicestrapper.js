@@ -33,7 +33,7 @@ var _devicestrapper = function (){
 
 
 _devicestrapper.prototype.createConfig = function ( identifier, network_interface, subscriptions, publications ) {
-    if (identifier == undefined || network_interface == undefined || subscriptions == undefined || publications == undefined || 
+    if (identifier == undefined || network_interface == undefined || subscriptions === undefined || publications === undefined || 
            (!Array.isArray(subscriptions) && subscriptions !=null )|| (!Array.isArray(publications) && publications !=null)){
         throw (new Error('Cannot create config:  arguments defined improperly'))
     }

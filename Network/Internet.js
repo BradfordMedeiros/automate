@@ -31,6 +31,8 @@ var Internet = function ( ){
 
 		console.log('got a request');
 		res.send('OK')
+		req.body.metadata.network_interface = that.getNetworkID();
+		req.body.metadata.identifier = req.connection.remoteAddress;
 		func (req.body);
 	});
 	
