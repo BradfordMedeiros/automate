@@ -72,6 +72,14 @@ var MESSAGE_TYPES = {
 			requirements : ['mode','isSlave','ready']		
 		},
 
+
+		/*
+			looks like:
+			topics: {
+				topic1: x.
+				topic2: y etc
+			}
+		*/
 		CLIENT_TOPIC_UPDATE: {
 			type: 'client',
 			messagename  : 'CLIENT_TOPIC_UPDATE',
@@ -82,6 +90,12 @@ var MESSAGE_TYPES = {
 			type: 'client',
 			messagename : 'CLIENT_DEVICE_INIT',
 			requirements : ['subscriptions','publications']
+		},
+
+		REMOVE_DEVICE: {
+			type: 'client',
+			messagename: 'REMOVE_DEVICE',
+			requirements : [ ]
 		},
 
 		SERVICE_REQUEST:{

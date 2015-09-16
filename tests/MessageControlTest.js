@@ -20,11 +20,18 @@ test0.func = function ( ){
 
 
 	var device_init_message = messagehandler.getMessageBuilder(messagetype).setSubscriptions(['temp','humidity']).setPublications(['width']).build();
+	var device_init_message2 = messagehandler.getMessageBuilder(messagetype).setSubscriptions(['humidity']).setPublications(['width']).build();
+
 	device_init_message.metadata.identifier = '192.158.32.244';
 	device_init_message.metadata.network_interface = 'test_interface';
+
+	device_init_message2.metadata.identifier = '28.29.43.212';
+	device_init_message2.metadata.network_interface = 'test_interface';
+
 	messagehandler.feedMessage(device_init_message);
 	messagehandler.feedMessage(device_init_message);
 	messagehandler.feedMessage(device_init_message);
+	messagehandler.feedMessage(device_init_message2);
 
 	var devices = devicestrapper.devices;
 	var answer = { 
@@ -32,10 +39,42 @@ test0.func = function ( ){
      						network_interface: 'test_interface',
      						subscriptions: [ 'temp', 'humidity' ],
      						publications: [ 'width' ] 
-     					  }
- 	}
+     					  },
+		'28.29.43.212':   { identifier: '28.29.43.212',
+     						network_interface: 'test_interface',
+     						subscriptions: ['humidity'],
+     						publications: [ 'width' ] 
+     					  } 
+   	}
+
+   	var subscriptions_answer = {
+   		temp: { 
+   			'192.158.32.244': { identifier: '192.158.32.244',
+     						network_interface: 'test_interface',
+     						subscriptions: [ 'temp', 'humidity' ],
+     						publications: [ 'width' ] 
+     					  },
+       	 	},
+  		humidity: 
+   			{ '192.158.32.244': { identifier: '192.158.32.244',
+     						network_interface: 'test_interface',
+     						subscriptions: [ 'temp', 'humidity' ],
+     						publications: [ 'width' ] 
+     					  },
+     		   '28.29.43.212':   { identifier: '28.29.43.212',
+     						network_interface: 'test_interface',
+     						subscriptions: ['humidity'],
+     						publications: [ 'width' ] 
+     					  } 
+   			}
+   	}
+
  	var _ = require('underscore');
- 	return (_.isEqual(answer,devices));
+ 	var device_equal = _.isEqual(answer,devices);
+ 	var subscriptions_equal = _.isEqual(subscriptions_answer,devicestrapper.subscriptions); 	
+ 	devicestrapper.subscriptions['temp']['192.158.32.244'].network_interface = 'fake';
+ 	var isreference = _.isEqual(devicestrapper.subscriptions['temp']['192.158.32.244'].network_interface , devicestrapper.devices['192.158.32.244'].network_interface);
+ 	return (device_equal && subscriptions_equal && isreference);
 }
 
 test0.answer = true;

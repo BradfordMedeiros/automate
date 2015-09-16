@@ -19,13 +19,15 @@ var _ = require('underscore');
 //topicmanager should go in here
 var _devicestrapper = function (){
     
-    this.devices = { };  
+    this.devices = { };  // mapping of all the devices to their identifiers, network, subscriptions, publications, etc
+    this.subscriptions  = { }; //  mapping of a subscription to an array of the device identifiers that subscribe to it
+
     this.options = require ('./config/options.js');
     
     var localStorage = require ('node-localstorage').LocalStorage;  // used so we can save/load to file
     this.local = new localStorage('./data');
 
-    this._listenForQuit();                        // start listening to serialize on quit signal
+    this.serialize_on_quit();                        // start listening to serialize on quit signal
     this._deserializeData();                      // load saved state of the data
 
 }
@@ -61,7 +63,10 @@ _devicestrapper.prototype.addDevice = function ( config ){
         throw ( new Error ("SOURCE IP NOT DEFINED") );
     }
     this.devices[config.identifier] = config;
-
+   
+    if (config.subscriptions !=null){
+        this.addSubscriptions(config.identifier,config.subscriptions);
+    }
 }
 
 /*
@@ -74,10 +79,22 @@ _devicestrapper.prototype.removeDevice = function ( identifier ){
 
 
 
-
 // adds subscription to the config file of the device.  Subscriptions can be single element or an array*/
 _devicestrapper.prototype.addSubscriptions = function ( identifier , subscriptions ){
-    this._addGeneric (identifier, subscriptions, 'subscriptions');   
+    if (subscriptions == null){
+        throw (new Error('subscriptions cannot be null'));
+    }  
+    this._addGeneric (identifier, subscriptions, 'subscriptions'); 
+    if (!Array.isArray(subscriptions)){
+        subscriptions = new Array();
+        subscriptions.push(subscriptions);
+    }  
+    for ( var i = 0 ; i < subscriptions.length ; i++ ){
+        if (this.subscriptions[subscriptions[i]] == undefined){
+            this.subscriptions[subscriptions[i]] = { }
+        }
+        this.subscriptions[subscriptions[i]][identifier] = (this.devices[identifier]);
+    }
 }
 
 
@@ -92,9 +109,7 @@ _devicestrapper.prototype.removePublications = function (identifier, publication
     this._removeGeneric (identifier, publications, 'publications');
 }
 
-_devicestrapper.prototype.addSubscriptions = function (identifier, subscriptions){
-    this._addGeneric (identifier, subscriptions, 'subscriptions');
-}
+
 
 _devicestrapper.prototype.removeSubscriptions = function (identifier , subscriptions){
     if (subscriptions == undefined){
@@ -105,8 +120,15 @@ _devicestrapper.prototype.removeSubscriptions = function (identifier , subscript
 }
 
 
+/*
+    
+*/
+_devicestrapper.prototype.updateTopic = function ( topics ){
+    for ( topic in topics){
 
+    }
 
+}
 
 
 ///////////////////////////////////////////////////////////////
@@ -190,7 +212,7 @@ _devicestrapper.prototype._removeArraySubset = function (targetArray, subset){
 
 // Starts listening for the quitsignal.  If it gets it serialized data. 
 // Does not end the program
-_devicestrapper.prototype._listenForQuit = function (){
+_devicestrapper.prototype.serialize_on_quit = function (){
     var events = require ('events');
     process.eventEmitter = new events.EventEmitter();
     var that = this;
