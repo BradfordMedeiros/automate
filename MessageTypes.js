@@ -80,9 +80,9 @@ var MESSAGE_TYPES = {
 				topic2: y etc
 			}
 		*/
-		CLIENT_TOPIC_UPDATE: {
+		TOPIC_UPDATE: {
 			type: 'client',
-			messagename  : 'CLIENT_TOPIC_UPDATE',
+			messagename  : 'TOPIC_UPDATE',
 			requirements : [ 'topics' ]
 		},
 
@@ -202,7 +202,7 @@ var checkFileIntegrity = function ( ){
 
 generateId();
 addrequiredmetadata ('identifier', function(){
-	return null;
+	return 'http://localhost';
 })
 
 addrequiredmetadata ('network_interface', function(){

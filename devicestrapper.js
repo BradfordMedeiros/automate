@@ -72,7 +72,15 @@ _devicestrapper.prototype.addDevice = function ( config ){
 /*
 // removes the device sppecified by the ip address*/
 _devicestrapper.prototype.removeDevice = function ( identifier ){
+   if ( this.devices[identifier] == undefined ){
+    return;
+   }
+   var device_subscriptions = this.devices[identifier].subscriptions;
+
    delete this.devices[identifier];
+   for ( subscription in device_subscriptions ){
+        delete this.subscriptions[device_subscriptions[subscription]][identifier];
+   }
 }
 
 /*

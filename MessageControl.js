@@ -1,5 +1,9 @@
 // if this ever gets complicated we can consider making each function a class
 // and just instantiating a bunch of these classes
+var UNSUPPORTED_OPERATION_EXCEPTION = { 
+    message: 'This message type does not yet have any functionality attached to it'
+};
+
 var message_control = function ( devicestrapper ) {
 	this.messagehandler = (new (new require((require(process.env.HOME+'/.files.js')).messagehandler))).getMessageHandlerInstance();
 	this.devicestrapper = devicestrapper;
@@ -18,6 +22,19 @@ message_control.prototype.route_devicestrapper = function (){
         var publications = message.body.publications;
         var config = that.devicestrapper.createConfig (identifier, network_interface, subscriptions, publications);
         that.devicestrapper.addDevice(config);
+    });
+
+    this.messagehandler.attachFunctionToMessageType( this.messagehandler.MESSAGETYPES.CLIENT_MESSAGES.REMOVE_DEVICE, function ( message ){
+        var identifier = message.metadata.identifier;
+        that.devicestrapper.removeDevice(identifier);
+    });
+
+    this.messagehandler.attachFunctionToMessageType ( this.messagehandler.MESSAGETYPES.CLIENT_MESSAGES.TOPIC_UPDATE,function(){
+        throw (new UNSUPPORTED_OPERATION_EXCEPTION);
+    });
+
+    this.messagehandler.attachFunctionToMessageType ( this.messagehandler.MESSAGETYPES.CLIENT_MESSAGES.SERVICE_REQUEST,function(){
+        throw (new UNSUPPORTED_OPERATION_EXCEPTION);
     });
 }
 

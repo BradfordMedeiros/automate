@@ -82,18 +82,49 @@ testsuite.push(test0);
 
 /////////TEST1/////////////////////////////////
 var test1 = { };
-test1.id = "MessageControl:  CLIENT: Client Topic Update";
+test1.id = "MessageControl:  CLIENT: Remove Device";
 test1.func = function ( ){
+  var mh =  require (require (process.env.HOME+FILEFINDER).messagehandler);
+  var messagehandler = (new mh()).getMessageHandlerInstance();
 
-	return false;
+  var messagetype_add = messagehandler.MESSAGETYPES.CLIENT_MESSAGES.CLIENT_DEVICE_INIT;
+  var ds = require((require(process.env.HOME+FILEFINDER)).devicestrapper);
+  var devicestrapper = new ds();
+
+  var mcpath = (require(process.env.HOME+FILEFINDER)).messagecontrol;
+  var message_control = (new (require(mcpath))(devicestrapper));
+
+  // add device
+  var device_init_message = messagehandler.getMessageBuilder(messagetype_add).setSubscriptions(['temp','humidity']).setPublications(['width']).build();
+  device_init_message.metadata.identifier = '192.158.32.244';
+  device_init_message.metadata.network_interface = 'test_interface';
+  messagehandler.feedMessage(device_init_message);
+  var device_subs = device_init_message.body.subscriptions;
+  //remove device
+  var messagetype_remove = messagehandler.MESSAGETYPES.CLIENT_MESSAGES.REMOVE_DEVICE;
+  var device_remove_message = messagehandler.getMessageBuilder(messagetype_remove).build();
+  device_remove_message.metadata.identifier = '192.158.32.244';
+  device_remove_message.metadata.network_interface = 'test_interface';
+
+  messagehandler.feedMessage(device_remove_message);
+  var device_removed = (devicestrapper.devices['192.158.32.244'] == undefined);
+  var subs_removed = true;
+ for (subscription in device_subs){
+      if (devicestrapper.subscriptions[device_subs[subscription]]['192.158.32.244'] != undefined){
+         console.log(device_subs[subscription]+ 'not removed')
+         subs_removed = false;
+      }
+ }
+
+  return [device_removed,subs_removed]
 }
 
-test1.answer = true;
+test1.answer = [true ,true];
 testsuite.push(test1);
 
 /////////TEST2/////////////////////////////////
 var test2 = { };
-test2.id = "MessageControl:  CLIENT: Client Status";
+test2.id = "MessageControl:  CLIENT: REMOVE DEVICE";
 test2.func = function ( ){
 
 	return false;
