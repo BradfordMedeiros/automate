@@ -19,6 +19,7 @@ var filelocations = {
 	abstractnetwork : PWD + 'Network/abstractNetwork.js',
 	bluetooth		: PWD + 'Bluetooth.js',
 	devicestrapper		: PWD + 'devicestrapper.js',
+	enumerated_interfaces	: PWD + 'enumerated_interfaces.js',
 	interface		: PWD + 'Interface.js',
 	internet 		: PWD + 'Network/Internet.js',
 	messagecontrol	: PWD + 'MessageControl.js',

@@ -72,7 +72,6 @@ AbstractNetwork.prototype.load_network_interfaces = function ( inbound_on, outbo
 	var interfaces = new Array();
 	interfaces.push(internet);
 
-	this.name = "HELLO"
 	for (var i = 0 ;i < interfaces.length; i++){
 		this.network_interfaces[interfaces[i].getNetworkID()] = interfaces[i];
 

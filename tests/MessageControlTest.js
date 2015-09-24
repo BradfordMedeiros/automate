@@ -124,8 +124,23 @@ testsuite.push(test1);
 
 /////////TEST2/////////////////////////////////
 var test2 = { };
-test2.id = "MessageControl:  CLIENT: REMOVE DEVICE";
+test2.id = "MessageControl:  CLIENT: Topic Update";
 test2.func = function ( ){
+var mh =  require (require (process.env.HOME+FILEFINDER).messagehandler);
+  var messagehandler = (new mh()).getMessageHandlerInstance();
+
+  var messagetype_add = messagehandler.MESSAGETYPES.CLIENT_MESSAGES.TOPIC_UPDATE;
+  var ds = require((require(process.env.HOME+FILEFINDER)).devicestrapper);
+  var devicestrapper = new ds();
+
+  var mcpath = (require(process.env.HOME+FILEFINDER)).messagecontrol;
+  var message_control = (new (require(mcpath))(devicestrapper));
+
+  // add device
+  var device_init_message = messagehandler.getMessageBuilder(messagetype_add).setTopics({temperature:20, humidity: 50}).build();
+  device_init_message.metadata.identifier = '192.158.32.244';
+  device_init_message.metadata.network_interface = 'test_interface';
+  messagehandler.feedMessage(device_init_message);
 
 	return false;
 }

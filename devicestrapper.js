@@ -131,9 +131,9 @@ _devicestrapper.prototype.removeSubscriptions = function (identifier , subscript
 /*
     
 */
-_devicestrapper.prototype.updateTopic = function ( topics ){
+_devicestrapper.prototype.update_topics = function ( topics ){
     for ( topic in topics){
-
+        console.log(topics[topic]);
     }
 
 }

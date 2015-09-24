@@ -1,5 +1,5 @@
 // Automatically add interfaces in interface folder
-var INTERFACE_FOLDER = './Interfaces/'
+var INTERFACE_FOLDER = process.env.HOME+'/Documents/automationGIT/Interfaces/'
 var _ = require('underscore');
 
 
@@ -35,7 +35,6 @@ _Interface.prototype.getInterfaceModules = function ( ){
 
 
 _Interface.prototype.refreshInterfaceModules = function (){
-	
 		this.interfaces = { };
 		var fs = require('fs');
 		var interfaceNames = fs.readdirSync( INTERFACE_FOLDER );

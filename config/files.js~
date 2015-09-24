@@ -7,17 +7,32 @@ This file details the locations of other files.  It you should read this file to
 
 */
 
-var PWD = process.env.HOME + '/Documents/IOT2/'
+var PWD = process.env.HOME + '/Documents/automationGIT/'
 
 var filelocations = {
+
+
+	// folders
+	f_config  		: PWD + 'config/',
+
+	// files - main project files
+	abstractnetwork : PWD + 'Network/abstractNetwork.js',
+	bluetooth		: PWD + 'Bluetooth.js',
+	devicestrapper		: PWD + 'devicestrapper.js',
+	enumerated_interfaces	: PWD + 'enumerated_interfaces.js',
+	interface		: PWD + 'Interface.js',
+	internet 		: PWD + 'Network/Internet.js',
+	messagecontrol	: PWD + 'MessageControl.js',
+	messagehandler  : PWD + 'MessageHandler.js', 	
+	messagetypes	: PWD + 'MessageTypes.js',
 	options			: PWD +'config/options.js',
+	zigbee			: PWD + 'Zigbee.js',
 
-	// the root of the test folder.  
-	tests			: PWD + 'tests/',
-
+	// files - test project files
 	autotester		: PWD + 'autotester.js',
-	messagehandler  : PWD + 'messagehandler.js', 	
-	messagetypes	: PWD + 'messagetypes.js'	
+
+	// folders - test project files
+	f_tests			: PWD + 'tests/'
 	
 };
 

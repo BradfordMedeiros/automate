@@ -29,8 +29,9 @@ message_control.prototype.route_devicestrapper = function (){
         that.devicestrapper.removeDevice(identifier);
     });
 
-    this.messagehandler.attachFunctionToMessageType ( this.messagehandler.MESSAGETYPES.CLIENT_MESSAGES.TOPIC_UPDATE,function(){
-        throw (new UNSUPPORTED_OPERATION_EXCEPTION);
+    this.messagehandler.attachFunctionToMessageType ( this.messagehandler.MESSAGETYPES.CLIENT_MESSAGES.TOPIC_UPDATE, function( message ){
+        var topics = message.body;
+        that.devicestrapper.update_topics(topics);
     });
 
     this.messagehandler.attachFunctionToMessageType ( this.messagehandler.MESSAGETYPES.CLIENT_MESSAGES.SERVICE_REQUEST,function(){

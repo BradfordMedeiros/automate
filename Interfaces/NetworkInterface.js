@@ -3,11 +3,11 @@ var networkInterface = {
 	name: 'network_interface',
 
 	functions: {
-		getNetworkID: [ ],
-		sendMessage: ['message', 'config'],
-		setOnMessageReceived: ['func'],
-		isAvailable: [ ],
-		turn_on_interface: [ 'inbound', 'outbound'],
+		getNetworkID: [ ], // identifier of the network interface
+		sendMessage: ['message', 'config'], // sends message outward from this interface
+		setOnMessageReceived: ['func'], // set callback function to be called when inbound message is receieved
+		isAvailable: [ ], // 
+		turn_on_interface: [ 'inbound', 'outbound'], 
 		deload: []
 	}
 	
