@@ -31,7 +31,13 @@ message_control.prototype.route_devicestrapper = function (){
 
     this.messagehandler.attachFunctionToMessageType ( this.messagehandler.MESSAGETYPES.CLIENT_MESSAGES.TOPIC_UPDATE, function( message ){
         var topics = message.body;
-        that.devicestrapper.update_topics(topics);
+
+        that.devicestrapper.is_valid_update(message.identifier);
+        var that.devicestrapper.get_update_messages(topics);
+        for ( identifier in topics ){
+            var network_interface = that.devicestrapper.devices[identifier].network_interface;
+
+        }
     });
 
     this.messagehandler.attachFunctionToMessageType ( this.messagehandler.MESSAGETYPES.CLIENT_MESSAGES.SERVICE_REQUEST,function(){

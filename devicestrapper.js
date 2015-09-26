@@ -18,17 +18,23 @@ var _ = require('underscore');
 
 //topicmanager should go in here
 var _devicestrapper = function (){
-    
+    console.log('changes made');
+    var events = require('events');
+
     this.devices = { };  // mapping of all the devices to their identifiers, network, subscriptions, publications, etc
     this.subscriptions  = { }; //  mapping of a subscription to an array of the device identifiers that subscribe to it
+
+
 
     this.options = require ('./config/options.js');
     
     var localStorage = require ('node-localstorage').LocalStorage;  // used so we can save/load to file
     this.local = new localStorage('./data');
+    this.messagehandler = (new (new require((require(process.env.HOME+'/.files.js')).messagehandler))).getMessageHandlerInstance();
 
     this.serialize_on_quit();                        // start listening to serialize on quit signal
     this._deserializeData();                      // load saved state of the data
+
 
 }
 
@@ -94,8 +100,9 @@ _devicestrapper.prototype.addSubscriptions = function ( identifier , subscriptio
     }  
     this._addGeneric (identifier, subscriptions, 'subscriptions'); 
     if (!Array.isArray(subscriptions)){
+        var single_sub = subscriptions;
         subscriptions = new Array();
-        subscriptions.push(subscriptions);
+        subscriptions.push(single_sub);
     }  
     for ( var i = 0 ; i < subscriptions.length ; i++ ){
         if (this.subscriptions[subscriptions[i]] == undefined){
@@ -131,10 +138,47 @@ _devicestrapper.prototype.removeSubscriptions = function (identifier , subscript
 /*
     
 */
-_devicestrapper.prototype.update_topics = function ( topics ){
-    for ( topic in topics){
-        console.log(topics[topic]);
+
+//@todo right now
+_devicestrapper.prototype.get_update_messages = function ( topics ){
+
+    var client_to_update = { };
+
+    var client_messages = { };  // message to send to each client]
+    var client_topics = { };
+
+    for ( topic in topics ){
+        var subscriptions = this.subscriptions[topic];  // for topic field name
+        console.log('subscriptions is: '+subscriptions);
+        if (subscriptions == undefined){
+            console.log('no subscriptions for topic '+topic);
+            continue;
+        }
+        /*for ( var i = 0 ; i < subscriptions.length ; i++ ){     // add topic content to each device message
+            console.log('added : '+topics[topic]+" to "+subscriptions[i]);
+        }*/
+
+        for ( subscriber in subscriptions ){
+           /* if (client_topics[subscriptions[subscriber]] == undefined){
+                client_topics[subscriptions[subscriber]] = { };
+            }*/
+
+            if (client_topics[subscriber] == undefined ){
+                client_topics[subscriber]= { };
+            }
+
+            client_topics[subscriber][topic] = topics[topic]; // set value in client message for topic field
+            console.log('added:  '+topics[topic] + 'to ' + subscriptions[subscriber]+ '('+subscriber+')');
+        } 
     }
+
+   /* for (topic in client_topics){
+        console.log(client_topics[topic]);
+    }*/
+
+    //var update_message = this.messagehandler.getMessageBuilder(this.messagehandler.MESSAGETYPES.SERVER_MESSAGES.SERVER_TOPIC_UPDATE);
+
+    return client_topics; 
 
 }
 
@@ -182,6 +226,14 @@ _devicestrapper.prototype._removeGeneric = function ( identifier, fields, type )
     
     var config = this.devices[identifier];
     this._removeArraySubset(config[type],fields)
+
+    // remove from the array linking subcriptions to devices
+    if (type == 'subscriptions'){
+        for ( var i = 0 ; i < fields.length ; i++ ){  
+        console.log(fields[i]);  
+            delete this.subscriptions[fields[i]][identifier];
+        }
+    }
 }
 
 _devicestrapper.prototype._removeArraySubset = function (targetArray, subset){

@@ -1,0 +1,11 @@
+{
+  "name": "Network",
+  "version": "1.0.0",
+  "description": "Network components for the automationGIT project",
+  "main": "abstractNetwork.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
