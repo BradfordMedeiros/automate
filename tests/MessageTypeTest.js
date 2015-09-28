@@ -1,35 +1,24 @@
+var assert = require("assert");
+var files = require('/home/samantha/.files.js');
 
-// BASIC ELEMENTARY TESTS
+describe ("sanity check of messagetypes file",function(){
 
-var testsuite = new Array();
-/////////TEST0/////////////////////////////////
-var test0 = { };
-
-
-test0.id = "checks some MessageTypes.js integrity";
-test0.func = function (  ){
-	var files = require('/home/samantha/.files.js');
 	var messagetypes = require(files.messagetypes);
-	if (messagetypes.metadata == undefined){
-		return false;
-	}
 
-	if (messagetypes.SERVER_MESSAGES == undefined){
-		return false;
-	}
+	it ("message metadata defined ",function(){
+		assert.notEqual(messagetypes.metadata, undefined);
+	});
 
-	if (messagetypes.CLIENT_MESSAGES == undefined){
-		return false;
-	}
+	it ("server messages defined", function(){
+		assert.notEqual(messagetypes.SERVER_MESSAGES,undefined);
+	});
 
-	var alldefined = true;
-	for (field in messagetypes.CLIENT_MESSAGES){
-		alldefined = ( (messagetypes.CLIENT_MESSAGES[field].messagename  != undefined )&& (messagetypes.CLIENT_MESSAGES[field].requirements !=undefined ) );
-	}
-	return alldefined;
-}
+	it("each message has required fields defined",function(){
+		var alldefined = true;
+		for (field in messagetypes.CLIENT_MESSAGES){
+			alldefined = ( (messagetypes.CLIENT_MESSAGES[field].messagename  != undefined )&& (messagetypes.CLIENT_MESSAGES[field].requirements !=undefined ) );
+		}
+		assert.equal(alldefined,true);
+	});
 
-test0.answer = true;
-testsuite.push(test0);
-
-module.exports = testsuite;
+});
