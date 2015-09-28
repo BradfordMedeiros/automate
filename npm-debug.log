@@ -1,10 +1,10 @@
 0 info it worked if it ends with ok
-1 verbose cli [ '/usr/bin/node', '/usr/bin/npm', 'install', 'natural' ]
+1 verbose cli [ '/usr/bin/node', '/usr/bin/npm', 'install', '-g', 'instanbul' ]
 2 info using npm@1.4.28
 3 info using node@v0.10.36
 4 verbose node symlink /usr/bin/node
-5 verbose cache add [ 'natural', null ]
-6 verbose cache add name=undefined spec="natural" args=["natural",null]
+5 verbose cache add [ 'instanbul', null ]
+6 verbose cache add name=undefined spec="instanbul" args=["instanbul",null]
 7 verbose parsed url { protocol: null,
 7 verbose parsed url   slashes: null,
 7 verbose parsed url   auth: null,
@@ -14,26 +14,54 @@
 7 verbose parsed url   hash: null,
 7 verbose parsed url   search: null,
 7 verbose parsed url   query: null,
-7 verbose parsed url   pathname: 'natural',
-7 verbose parsed url   path: 'natural',
-7 verbose parsed url   href: 'natural' }
-8 silly lockFile 11e60b0e-natural natural
-9 verbose lock natural /home/samantha/.npm/11e60b0e-natural.lock
-10 silly lockFile 11e60b0e-natural natural
-11 error Error: Attempt to unlock natural, which hasn't been locked
-11 error     at unlock (/usr/lib/node_modules/npm/lib/utils/locker.js:44:11)
-11 error     at cb (/usr/lib/node_modules/npm/lib/cache/add-local.js:30:5)
-11 error     at /usr/lib/node_modules/npm/lib/cache/add-local.js:47:20
-11 error     at /usr/lib/node_modules/npm/lib/utils/locker.js:30:7
-11 error     at cb (/usr/lib/node_modules/npm/node_modules/lockfile/lockfile.js:149:38)
-11 error     at /usr/lib/node_modules/npm/node_modules/lockfile/lockfile.js:177:38
-11 error     at Object.oncomplete (fs.js:108:15)
-12 error If you need help, you may report this *entire* log,
-12 error including the npm and node versions, at:
-12 error     <http://github.com/npm/npm/issues>
-13 error System Linux 3.13.0-32-generic
-14 error command "/usr/bin/node" "/usr/bin/npm" "install" "natural"
-15 error cwd /home/samantha/Documents/automationGIT
-16 error node -v v0.10.36
-17 error npm -v 1.4.28
-18 verbose exit [ 1, true ]
+7 verbose parsed url   pathname: 'instanbul',
+7 verbose parsed url   path: 'instanbul',
+7 verbose parsed url   href: 'instanbul' }
+8 silly lockFile 6a6b0b6e-instanbul instanbul
+9 verbose lock instanbul /home/samantha/.npm/6a6b0b6e-instanbul.lock
+10 silly lockFile 6a6b0b6e-instanbul instanbul
+11 silly lockFile 6a6b0b6e-instanbul instanbul
+12 verbose addNamed [ 'instanbul', '' ]
+13 verbose addNamed [ null, '*' ]
+14 silly lockFile 87d3a985-instanbul instanbul@
+15 verbose lock instanbul@ /home/samantha/.npm/87d3a985-instanbul.lock
+16 silly addNameRange { name: 'instanbul', range: '*', hasData: false }
+17 verbose request where is /instanbul
+18 verbose request registry https://registry.npmjs.org/
+19 verbose request id 7aeedcc1896a8dfe
+20 verbose url raw /instanbul
+21 verbose url resolving [ 'https://registry.npmjs.org/', './instanbul' ]
+22 verbose url resolved https://registry.npmjs.org/instanbul
+23 verbose request where is https://registry.npmjs.org/instanbul
+24 info trying registry request attempt 1 at 20:12:05
+25 http GET https://registry.npmjs.org/instanbul
+26 http 404 https://registry.npmjs.org/instanbul
+27 silly registry.get cb [ 404,
+27 silly registry.get   { 'content-type': 'application/json',
+27 silly registry.get     'cache-control': 'max-age=0',
+27 silly registry.get     'content-length': '2',
+27 silly registry.get     'accept-ranges': 'bytes',
+27 silly registry.get     date: 'Mon, 28 Sep 2015 00:12:05 GMT',
+27 silly registry.get     via: '1.1 varnish',
+27 silly registry.get     age: '0',
+27 silly registry.get     connection: 'keep-alive',
+27 silly registry.get     'x-served-by': 'cache-dfw1824-DFW',
+27 silly registry.get     'x-cache': 'MISS',
+27 silly registry.get     'x-cache-hits': '0',
+27 silly registry.get     'x-timer': 'S1443399125.722115,VS0,VE72' } ]
+28 silly lockFile 87d3a985-instanbul instanbul@
+29 silly lockFile 87d3a985-instanbul instanbul@
+30 error 404 Not Found
+30 error 404
+30 error 404 'instanbul' is not in the npm registry.
+30 error 404 You should bug the author to publish it
+30 error 404
+30 error 404 Note that you can also install from a
+30 error 404 tarball, folder, or http url, or git url.
+31 error System Linux 3.13.0-32-generic
+32 error command "/usr/bin/node" "/usr/bin/npm" "install" "-g" "instanbul"
+33 error cwd /home/samantha/Documents/automationGIT
+34 error node -v v0.10.36
+35 error npm -v 1.4.28
+36 error code E404
+37 verbose exit [ 1, true ]

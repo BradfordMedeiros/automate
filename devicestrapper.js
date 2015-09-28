@@ -135,6 +135,10 @@ _devicestrapper.prototype.removeSubscriptions = function (identifier , subscript
 }
 
 
+_devicestrapper.prototype.is_valid_update = function ( identifier ){
+    console.log("WARNING:  is_valid_update not yet implemented, return default true value");
+    return true;
+}
 /*
     
 */

@@ -4,7 +4,7 @@ var gpio_interface = {
 
 	functions: {
 	    read_pin : ['pin_number'],
-	    write_pin: ['pin_number']
+		write_pin: ['pin_number']
 	}
 	
 

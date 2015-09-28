@@ -1,0 +1,585 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for automationGIT/TopicManager.js</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../prettify.css">
+    <link rel="stylesheet" href="../base.css">
+    <style type='text/css'>
+        div.coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class="header low">
+    <h1>Code coverage report for <span class="entity">automationGIT/TopicManager.js</span></h1>
+    <h2>
+        Statements: <span class="metric">17.24% <small>(10 / 58)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Branches: <span class="metric">0% <small>(0 / 14)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Functions: <span class="metric">0% <small>(0 / 15)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Lines: <span class="metric">17.24% <small>(10 / 58)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Ignored: <span class="metric"><span class="ignore-none">none</span></span> &nbsp;&nbsp;&nbsp;&nbsp;
+    </h2>
+    <div class="path"><a href="../index.html">All files</a> &#187; <a href="index.html">automationGIT/</a> &#187; TopicManager.js</div>
+</div>
+<div class="body">
+<pre><table class="coverage">
+<tr><td class="line-count">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">&nbsp;
+var FILEFINDER = '/.files';
+/**
+	This is the warehouse for topics.  It acts as the store for all current topic information.  It knows nothing about the devices.
+	It stores information, and creates triggers to call functions when certain conditions are met.
+&nbsp;
+	Triggers are called when the evaluation function acts upon the data. 
+**/ 
+var topic_manager = <span class="fstat-no" title="function not covered" >function (){</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >	this.triggerHandleCount = 0;</span>
+<span class="cstat-no" title="statement not covered" >	this.trigger_eval_period = (require((require(process.env.HOME+FILEFINDER)).options)).trigger_eval_period;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >	var collections = require('collection');</span>
+<span class="cstat-no" title="statement not covered" >	this.managedTopics = new collections.Set();</span>
+<span class="cstat-no" title="statement not covered" >	this.topics =  { };</span>
+<span class="cstat-no" title="statement not covered" >	this.triggers = new Array();</span>
+&nbsp;
+	//setInterval(this.processTriggers, this.trigger_eval_period).bind(this);
+&nbsp;
+}
+&nbsp;
+/**
+	We only monitor topics which are added to the topic manager
+**/
+topic_manager.prototype.addTopicsToMonitor = <span class="fstat-no" title="function not covered" >function (topics){</span>
+<span class="cstat-no" title="statement not covered" >	if (Array.isArray(topics)){</span>
+<span class="cstat-no" title="statement not covered" >		for (var i = 0 ; i &lt; topics.length ; i++ ){</span>
+<span class="cstat-no" title="statement not covered" >			this.managedTopics.add(topics[i]);</span>
+		}
+	}else{
+<span class="cstat-no" title="statement not covered" >		this.managedTopics.add(topics);</span>
+	}
+}
+&nbsp;
+/**
+	Call when a new topic is published from a device.  
+	THIS MAYBE SHOULD BE A MESSAGE AND WE JUST MAKE SURE THE MESSAGE TYPE IS RIGHT****************************
+	@todo decide whether to make this a single message (i think so right now but lets decide)
+**/
+topic_manager.prototype.topicReceived = <span class="fstat-no" title="function not covered" >function (topic_name, data){</span>
+<span class="cstat-no" title="statement not covered" >	this.topics[topic_name] = data;</span>
+&nbsp;
+	// we only add if it is a managed topic, otherwise who cares
+<span class="cstat-no" title="statement not covered" >	if (this.managedTopics.has(topic_name)){</span>
+<span class="cstat-no" title="statement not covered" >		this.topics[topic_name] = data;</span>
+	}
+}
+&nbsp;
+// send out triggers for messages which invoke trigger action
+topic_manager.prototype.processTriggers = <span class="fstat-no" title="function not covered" >function (){</span>
+&nbsp;
+}
+&nbsp;
+&nbsp;
+/**
+	Add a new trigger to the manager.  If the evaluation function is true, a callback is called.  
+	Evaluation occurs when a new topic is fed.  
+&nbsp;
+	Return a handle to the trigger back
+**/
+//'humidity:&lt;:undefined&amp;temperature:&gt;:30'
+//topic_manager.createTrigger(humidity).greaterThan(30).do(callback).do(callback2);
+&nbsp;
+&nbsp;
+var count = 0 ;
+var _trigger = <span class="fstat-no" title="function not covered" >function (topicname,topic_manager){</span>
+<span class="cstat-no" title="statement not covered" >	var that  = this;</span>
+<span class="cstat-no" title="statement not covered" >	this.evaluation = new Array();</span>
+<span class="cstat-no" title="statement not covered" >	this.topicname = topicname;</span>
+<span class="cstat-no" title="statement not covered" >	this.topic_manager = topic_manager;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >	this.public = {</span>
+		equals:  <span class="fstat-no" title="function not covered" >function (value){</span>
+<span class="cstat-no" title="statement not covered" >			that.evaluation.push({</span>
+				operator: '==',
+				value: value
+			});
+<span class="cstat-no" title="statement not covered" >			return this;</span>
+		},
+&nbsp;
+		greaterThan: <span class="fstat-no" title="function not covered" >function ( value ){</span>
+<span class="cstat-no" title="statement not covered" >			that.evaluation.push({</span>
+				operator: '&gt;',
+				value: value
+			});
+<span class="cstat-no" title="statement not covered" >			return this;</span>
+		},
+&nbsp;
+		lessThan: <span class="fstat-no" title="function not covered" >function ( value ){</span>
+<span class="cstat-no" title="statement not covered" >			that.evaluation.push({</span>
+				operator: '&lt;',
+				value: value
+			});
+<span class="cstat-no" title="statement not covered" >			return this;</span>
+		},
+&nbsp;
+		// check to make sure topics are valid
+		equalsTopic: <span class="fstat-no" title="function not covered" >function (topic_name){</span>
+<span class="cstat-no" title="statement not covered" >			if (that.topic_manager.managedTopics[topic_name] == undefined){</span>
+<span class="cstat-no" title="statement not covered" >				throw (new Error('topic must be added to monitor list.  Call TopicManager.addTopicsToMonitor if you wish to compare to this field'))</span>
+			}
+<span class="cstat-no" title="statement not covered" >			that.evaluation.push({</span>
+				operator: '==',
+				topic: topic_name
+			});
+<span class="cstat-no" title="statement not covered" >			return this;</span>
+		},
+&nbsp;
+		greaterThanTopic: <span class="fstat-no" title="function not covered" >function (topic_name){</span>
+<span class="cstat-no" title="statement not covered" >			if (that.topic_manager.managedTopics[topic_name] == undefined){</span>
+<span class="cstat-no" title="statement not covered" >				throw (new Error('topic must be added to monitor list.  Call TopicManager.addTopicsToMonitor if you wish to compare to this field'))</span>
+			}
+<span class="cstat-no" title="statement not covered" >			that.evaluation.push ({</span>
+				operator: '&gt;',
+				topic: topic_name
+			});
+<span class="cstat-no" title="statement not covered" >			return this;</span>
+		},
+&nbsp;
+		lessThanTopic: <span class="fstat-no" title="function not covered" >function (topic_name){</span>
+<span class="cstat-no" title="statement not covered" >			if (that.topic_manager.managedTopics[topic_name] == undefined){</span>
+<span class="cstat-no" title="statement not covered" >				throw (new Error('topic must be added to monitor list.  Call TopicManager.addTopicsToMonitor if you wish to compare to this field'))</span>
+			}
+<span class="cstat-no" title="statement not covered" >			that.evaluation.push({</span>
+				operator: '&lt;',
+				topic: topic_name
+			});
+<span class="cstat-no" title="statement not covered" >			return this;</span>
+		},
+&nbsp;
+		do: <span class="fstat-no" title="function not covered" >function (func){</span>
+<span class="cstat-no" title="statement not covered" >			if (typeof(func) != 'function'){</span>
+<span class="cstat-no" title="statement not covered" >				throw (new Error('do must be a function'));</span>
+			}
+<span class="cstat-no" title="statement not covered" >			that.evaluation.push({</span>
+				operator: 'do',
+				func: func
+			});
+<span class="cstat-no" title="statement not covered" >			return this;</span>
+		},
+&nbsp;
+		install : <span class="fstat-no" title="function not covered" >function( callback ) {</span>
+<span class="cstat-no" title="statement not covered" >			if (callback == undefined){</span>
+<span class="cstat-no" title="statement not covered" >				throw (new Error("Callback undefned for trigger "));</span>
+			}
+&nbsp;
+<span class="cstat-no" title="statement not covered" >			this.handle = count;</span>
+<span class="cstat-no" title="statement not covered" >			count = count + 1;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >			that.topic_manager.triggers[this.handle] = {</span>
+				evaluation: that.evaluation,
+				callback: callback
+			};
+<span class="cstat-no" title="statement not covered" >			return this.handle;</span>
+		}
+&nbsp;
+	}
+}
+&nbsp;
+&nbsp;
+&nbsp;
+topic_manager.prototype.createTrigger = <span class="fstat-no" title="function not covered" >function ( topicname ){</span>
+<span class="cstat-no" title="statement not covered" >	return (new _trigger(topicname,this)).public;</span>
+}
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+topic_manager.prototype.removeTrigger = <span class="fstat-no" title="function not covered" >function ( trigger_handle ){</span>
+<span class="cstat-no" title="statement not covered" >	delete this.triggers[trigger_handle];</span>
+}
+&nbsp;
+module.exports = topic_manager;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;</pre></td></tr>
+</table></pre>
+
+</div>
+<div class="footer">
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sun Sep 27 2015 20:24:06 GMT-0400 (EDT)</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

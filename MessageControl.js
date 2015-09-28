@@ -12,6 +12,7 @@ var message_control = function ( devicestrapper ) {
    
 }
 
+
 message_control.prototype.route_devicestrapper = function (){
 
     var that = this;
@@ -32,10 +33,16 @@ message_control.prototype.route_devicestrapper = function (){
     this.messagehandler.attachFunctionToMessageType ( this.messagehandler.MESSAGETYPES.CLIENT_MESSAGES.TOPIC_UPDATE, function( message ){
         var topics = message.body;
 
-        that.devicestrapper.is_valid_update(message.identifier);
-        var that.devicestrapper.get_update_messages(topics);
-        for ( identifier in topics ){
+        if ( that.devicestrapper.is_valid_update(message.identifier)){
+            throw (new Error ("invalid topic update from client "+message.identifier));
+        }
+        // @ todo finish finish this routing + test
+
+        var updates = that.devicestrapper.get_update_messages(topics);
+        for ( identifier in updates ){
             var network_interface = that.devicestrapper.devices[identifier].network_interface;
+            var message_update = that.messagehandler.getMessageBuilder(that.MESSAGETYPES.SERVER_TOPIC_UPDATE).setTopics(updates[identifier]).build();
+            that.messagehandler.feedMessage(message_update);
 
         }
     });

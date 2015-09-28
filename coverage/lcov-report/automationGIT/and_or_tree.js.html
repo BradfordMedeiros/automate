@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for automationGIT/and_or_tree.js</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../prettify.css">
+    <link rel="stylesheet" href="../base.css">
+    <style type='text/css'>
+        div.coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class="header low">
+    <h1>Code coverage report for <span class="entity">automationGIT/and_or_tree.js</span></h1>
+    <h2>
+        Statements: <span class="metric">26.67% <small>(12 / 45)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Branches: <span class="metric">0% <small>(0 / 17)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Functions: <span class="metric">0% <small>(0 / 8)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Lines: <span class="metric">26.67% <small>(12 / 45)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Ignored: <span class="metric"><span class="ignore-none">none</span></span> &nbsp;&nbsp;&nbsp;&nbsp;
+    </h2>
+    <div class="path"><a href="../index.html">All files</a> &#187; <a href="index.html">automationGIT/</a> &#187; and_or_tree.js</div>
+</div>
+<div class="body">
+<pre><table class="coverage">
+<tr><td class="line-count">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span></td><td class="text"><pre class="prettyprint lang-js">&nbsp;
+/* 
+ Usage:
+&nbsp;
+ topics = { 
+ 	humidity: 20,
+ 	temp: 70
+ }
+ var check_temp = function( topics ){
+	return topics.humidity &gt; 30;
+ }
+&nbsp;
+ var send_to_client = function (topics){
+	/// stuff to send message here
+ }
+ node = new atom_node ('temperature &gt; 10 check', check_temp, topics)
+var temperature_atom = and_or_tree.get_atom_node (topics, check_temp, send_to_client, 'temperature_atom');
+and_or_tree.evaluate();
+&nbsp;
+and_or_tree.create_composite_node(callback_function, atoms[], tag);
+&nbsp;
+ex). 
+var close_door = function (){
+	// code to close a door
+}
+and_or_tree.create_composite_node(close_door, [temperature_atom, humidity_atom,composite], 'door_close composite');
+&nbsp;
+callbackfunction ( temperature_reference, humidity_reference, other_composite_references){
+	
+}
+&nbsp;
+&nbsp;
+*/
+&nbsp;
+var DEFAULT_NAME = 'default_name';
+var and_or_tree = <span class="fstat-no" title="function not covered" >function ( ){</span>
+<span class="cstat-no" title="statement not covered" >	this.atom_nodes = { };</span>
+<span class="cstat-no" title="statement not covered" >	this.atom_handle_counter = 0;</span>
+}
+&nbsp;
+var atom_node = <span class="fstat-no" title="function not covered" >function( atom_name, eval_function, reference_data , callback){</span>
+<span class="cstat-no" title="statement not covered" >	if (atom_name == undefined || eval_function == undefined || reference_data == undefined ){</span>
+<span class="cstat-no" title="statement not covered" >		throw (new Error("parameters not defined"));</span>
+	}
+<span class="cstat-no" title="statement not covered" >	this.eval_function = eval_function;</span>
+<span class="cstat-no" title="statement not covered" >	this.reference_data = reference_data;</span>
+<span class="cstat-no" title="statement not covered" >	this.atom_name = atom_name;</span>
+<span class="cstat-no" title="statement not covered" >	this.truth = false;</span>
+<span class="cstat-no" title="statement not covered" >	this.callback = callback;</span>
+}
+&nbsp;
+atom_node.prototype._classname = 'atom_node';
+&nbsp;
+&nbsp;
+&nbsp;
+var composite_node = <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >	this.or_children =  { }; 	</span>
+&nbsp;
+}
+composite_node.prototype._classname = 'composite_node';
+&nbsp;
+&nbsp;
+&nbsp;
+// @ returns a handle to the atom node
+and_or_tree.prototype.get_atom_node = <span class="fstat-no" title="function not covered" >function ( reference_data, eval_function , callback_on_true,atom_name ){</span>
+<span class="cstat-no" title="statement not covered" >	if (eval_function == undefined){</span>
+<span class="cstat-no" title="statement not covered" >		throw (new Error('must have a eval function defined'));</span>
+	}
+&nbsp;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >	if (atom_name == undefined){</span>
+<span class="cstat-no" title="statement not covered" >		atom_name = DEFAULT_NAME+this.atom_handle_counter;</span>
+	}
+<span class="cstat-no" title="statement not covered" >	var atom = new atom_node(atom_name,eval_function,reference_data, callback_on_true);</span>
+<span class="cstat-no" title="statement not covered" >	this.atom_nodes[ this.atom_handle_counter ] = atom;</span>
+<span class="cstat-no" title="statement not covered" >	this.atom_handle_counter ++;</span>
+<span class="cstat-no" title="statement not covered" >	return (this.atom_handle_counter-1);</span>
+}
+&nbsp;
+// callback function will fire 
+and_or_tree.prototype.create_composite_node = <span class="fstat-no" title="function not covered" >function ( callback, atom_node1, atom_node2, atom_noden){</span>
+&nbsp;
+}
+&nbsp;
+and_or_tree.prototype.evaluate_atom_nodes = <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >	for ( atom_handle in this.atom_nodes ){</span>
+<span class="cstat-no" title="statement not covered" >		var atom = this.atom_nodes[atom_handle];</span>
+<span class="cstat-no" title="statement not covered" >		var truth = atom.eval_function(atom.reference_data);</span>
+<span class="cstat-no" title="statement not covered" >		if (truth !=true &amp;&amp; truth !=false){</span>
+<span class="cstat-no" title="statement not covered" >			throw (new Error ('evaluation function for atom node '+atom.atom_name+ ' returned a value that was not true or false, actual value: '+truth));</span>
+		}
+&nbsp;
+<span class="cstat-no" title="statement not covered" >		atom.truth = truth;</span>
+<span class="cstat-no" title="statement not covered" >		if (atom.truth){</span>
+<span class="cstat-no" title="statement not covered" >			if (atom.callback != undefined ){</span>
+<span class="cstat-no" title="statement not covered" >				atom.callback(atom.reference_data);</span>
+			}
+		}
+	}
+}
+&nbsp;
+and_or_tree.prototype.clear_atoms = <span class="fstat-no" title="function not covered" >function (){</span>
+<span class="cstat-no" title="statement not covered" >	this.atom_nodes = { };</span>
+<span class="cstat-no" title="statement not covered" >	this.atom_handle_counter = 0;</span>
+}
+&nbsp;
+and_or_tree.prototype.toString = <span class="fstat-no" title="function not covered" >function(){</span>
+<span class="cstat-no" title="statement not covered" >	string = "";</span>
+<span class="cstat-no" title="statement not covered" >	for (atom in this.atom_nodes){</span>
+<span class="cstat-no" title="statement not covered" >		string +='atom: '+atom;</span>
+<span class="cstat-no" title="statement not covered" >		string +='value:  '+this.atom_nodes[atom];</span>
+	}
+}
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+module.exports = and_or_tree;</pre></td></tr>
+</table></pre>
+
+</div>
+<div class="footer">
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sun Sep 27 2015 20:22:51 GMT-0400 (EDT)</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>
