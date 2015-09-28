@@ -104,10 +104,11 @@ and_or_tree.prototype.clear_atoms = function (){
 	this.atom_handle_counter = 0;
 }
 
-and_or_tree.prototype.print_atoms = function(){
+and_or_tree.prototype.toString = function(){
+	string = "";
 	for (atom in this.atom_nodes){
-		console.log('atom: '+atom);
-		console.log('value:  '+this.atom_nodes[atom]);
+		string +='atom: '+atom;
+		string +='value:  '+this.atom_nodes[atom];
 	}
 }
 
