@@ -1,13 +1,8 @@
 
+var assert = require("assert");
 var FILEFINDER = '/.files';
 
-var testsuite = new Array();
-/////////TEST0/////////////////////////////////
-var test0 = { };
-
-
-test0.id = "Devicestapper test |  ";
-test0.func = function (  ){
+var func = function(){
 	var ds = require((require(process.env.HOME+FILEFINDER)).devicestrapper);
 	var devicestrapper = new ds();
 
@@ -75,16 +70,10 @@ test0.func = function (  ){
 	return true;
 }
 
-test0.answer = true;
-testsuite.push( test0  );
+describe ("devicestrapper test" , function(){
+	it ("general devicestrapper test, consider moving into seperate tests", function(){
+		answer = func();
+		assert.equal(answer, true);
+	});
 
-
-
-
-
-//////////TEST1 //////////////////////////
-
-
-
-
-module.exports = testsuite;
+});
