@@ -95,7 +95,7 @@ var MESSAGE_TYPES = {
 		REMOVE_DEVICE: {
 			type: 'client',
 			messagename: 'REMOVE_DEVICE',
-			requirements : [ ]
+			requirements : [  ]
 		},
 
 		SERVICE_REQUEST:{

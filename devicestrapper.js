@@ -18,7 +18,6 @@ var _ = require('underscore');
 
 //topicmanager should go in here
 var _devicestrapper = function (){
-    console.log('changes made');
     var events = require('events');
 
     this.devices = { };  // mapping of all the devices to their identifiers, network, subscriptions, publications, etc
@@ -98,6 +97,7 @@ _devicestrapper.prototype.addSubscriptions = function ( identifier , subscriptio
     if (subscriptions == null){
         throw (new Error('subscriptions cannot be null'));
     }  
+
     this._addGeneric (identifier, subscriptions, 'subscriptions'); 
     if (!Array.isArray(subscriptions)){
         var single_sub = subscriptions;
@@ -113,6 +113,13 @@ _devicestrapper.prototype.addSubscriptions = function ( identifier , subscriptio
 }
 
 
+_devicestrapper.prototype.get_connected_devices = function (){
+    var device_identifiers=  [];
+    for ( identifier in this.devices ){
+        device_identifiers.push(identifier);
+    }
+    return device_identifiers;
+}
 _devicestrapper.prototype.addPublications = function (identifier , publications ){
     this._addGeneric (identifier, publications, 'publications');
 }
@@ -149,7 +156,7 @@ _devicestrapper.prototype.get_update_messages = function ( topics ){
 
     for ( topic in topics ){
         var subscriptions = this.subscriptions[topic];  // for topic field name
-        console.log('subscriptions is: '+subscriptions);
+
         if (subscriptions == undefined){
             console.log('no subscriptions for topic '+topic);
             continue;
@@ -168,7 +175,7 @@ _devicestrapper.prototype.get_update_messages = function ( topics ){
             }
 
             client_topics[subscriber][topic] = topics[topic]; // set value in client message for topic field
-            console.log('added:  '+topics[topic] + 'to ' + subscriptions[subscriber]+ '('+subscriber+')');
+            //console.log('added:  '+topics[topic] + 'to ' + subscriptions[subscriber]+ '('+subscriber+')');
         } 
     }
 
@@ -225,6 +232,12 @@ _devicestrapper.prototype._removeGeneric = function ( identifier, fields, type )
     }
     
     var config = this.devices[identifier];
+
+    if (!Array.isArray(fields)){
+        var field = fields;
+        fields = new Array();
+        fields.push(field);
+    }
     this._removeArraySubset(config[type],fields)
 
     // remove from the array linking subcriptions to devices

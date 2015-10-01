@@ -64,16 +64,54 @@ var func = function(){
 	if (devicestrapper.devices['192.161.1.2'].publications.length > 0) {
 		return false;
 	}
-	
-
-
 	return true;
 }
 
 describe ("devicestrapper test" , function(){
-	it ("general devicestrapper test, consider moving into seperate tests", function(){
+	it ("general devicestrapper test", function(){
 		answer = func();
 		assert.equal(answer, true);
 	});
 
+	it("get_update_topic -- returns topics, and only the topics, that should be sent out to devices", function(){
+		var ds = require((require(process.env.HOME+FILEFINDER)).devicestrapper);
+		var devicestrapper = new ds();
+		config1 = devicestrapper.createConfig('192.161.1.2','internet',['temperature','ice','humidity'],['wetness']);
+		config2 = devicestrapper.createConfig('192.161.1.3','internet',['temperature','ice','fire','wetness'],['duh']);
+		devicestrapper.addDevice(config1);
+		devicestrapper.addDevice(config2);
+		var updates = devicestrapper.get_update_messages({
+			temperature: 30,
+			ice: 10
+		});
+		
+		var expected_update = { 
+			'192.161.1.2': { temperature: 30, ice: 10 },
+  			'192.161.1.3': { temperature: 30, ice: 10 } 
+  		}
+  		assert.deepEqual(updates, expected_update);
+
+	});
+
+	it ("remove device " , function(){
+		var ds = require((require(process.env.HOME+FILEFINDER)).devicestrapper);
+		var devicestrapper = new ds();
+		config1 = devicestrapper.createConfig('192.161.1.2','internet',['temperature','ice','humidity'],['wetness']);
+		config2 = devicestrapper.createConfig('192.161.1.3','internet',['temperature','ice','fire','wetness'],['duh']);
+		devicestrapper.addDevice(config1);
+		devicestrapper.addDevice(config2);
+		devicestrapper.removeDevice('192.161.1.3'); 
+		var devices = devicestrapper.get_connected_devices();
+  		assert.deepEqual(devices , ['192.161.1.2']);	
+  		devicestrapper.removeDevice('192.161.1.2'); 
+  		devices = devicestrapper.get_connected_devices();
+  		assert.deepEqual(devices, []);
+	});
+
+	
+
+
+
+	
 });
+

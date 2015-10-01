@@ -6,7 +6,7 @@ describe ("MessageHandler.js test",function (){
 	mh =  require (require (process.env.HOME+FILEFINDER).messagehandler);
 	messagehandler = (new mh()).getMessageHandlerInstance();
 
-	it ("valid message function - checks if message type specified is a real message type", function ( ){
+	it ("valid message type function - checks if message type specified is a real message type", function ( ){
 		var isvalid = true;
 		for (message in messagehandler.MESSAGETYPES){
 			var message_groups = messagehandler.MESSAGETYPES[message];

@@ -33,7 +33,7 @@ message_control.prototype.route_devicestrapper = function (){
         var topics = message.body;
 
         that.devicestrapper.is_valid_update(message.identifier);
-        var that.devicestrapper.get_update_messages(topics);
+        that.devicestrapper.get_update_messages(topics);
         for ( identifier in topics ){
             var network_interface = that.devicestrapper.devices[identifier].network_interface;
 
