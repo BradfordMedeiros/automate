@@ -6,17 +6,14 @@ process.title = 'automate';
 
 var messagehandler = (new (require(FILES.messagehandler))).getMessageHandlerInstance();
 
-var router = function( message ){
 
-	console.log('got message on network')
-}
 
 var network 	   = (new (require(FILES.abstractnetwork))(messagehandler.feedMessage.bind(messagehandler)));
 // we call the function when we get message received
 // and we can call network.sendMessage 
 
 var devicestrapper = (new (require(FILES.devicestrapper)));
-var message_control = (new (require(FILES.messagecontrol))(devicestrapper));
+var message_router = (new (require(FILES.message_router))(devicestrapper));
 
 
 // then this will know what to do with incoming messges
@@ -28,4 +25,4 @@ module.exports = {
 	network: network,
 	messagehandler: messagehandler,
 	devicestrapper: devicestrapper
-}
+};

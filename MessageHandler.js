@@ -139,9 +139,12 @@ MessageHandler.prototype.getMessageBuilder  = function (messagetype) {
 // if it's server it should go out
 // @todo if its not a valid message we should discard it
 MessageHandler.prototype.feedMessage = function ( inbound_message ){
+
+	console.log("Feed message called");
 	if (inbound_message == undefined ){
 		throw (new Error ("message not defined"));
 	}
+
 	
 	var messagetype = this.getMessageType ( inbound_message );
 	var functions = this.attachedMessageFunctions[inbound_message.id];
@@ -249,6 +252,9 @@ MessageHandler.prototype._isValidMessage = function ( message ) {
 				message.messagename == undefined || message.type == undefined){
 		return false;
 	}
+
+	// ensure id matches message name
+	if (this.MESSAGETYPES[message.id].messagename !== message.messagename);
 
 	// ensure all required metadata fields are defined
 	for ( var i = 0 ; i < this.MESSAGETYPES.metadata.length ; i++ ){

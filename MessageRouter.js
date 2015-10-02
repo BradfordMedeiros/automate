@@ -13,9 +13,11 @@ var message_control = function ( devicestrapper ) {
 }
 
 message_control.prototype.route_devicestrapper = function (){
+    console.log('routing devicestrapper');
 
     var that = this;
 	this.messagehandler.attachFunctionToMessageType( this.messagehandler.MESSAGETYPES.CLIENT_MESSAGES.CLIENT_DEVICE_INIT, function ( message ){
+        console.log ("CLIENT DEVICE INTI MESSAGE in router");
         var network_interface = message.metadata.network_interface;
         var identifier = message.metadata.identifier;
         var subscriptions = message.body.subscriptions;
@@ -25,19 +27,28 @@ message_control.prototype.route_devicestrapper = function (){
     });
 
     this.messagehandler.attachFunctionToMessageType( this.messagehandler.MESSAGETYPES.CLIENT_MESSAGES.REMOVE_DEVICE, function ( message ){
+        console.log ("REMOVE DEVICE MESSAGE in router");
+
         var identifier = message.metadata.identifier;
         that.devicestrapper.removeDevice(identifier);
     });
 
     this.messagehandler.attachFunctionToMessageType ( this.messagehandler.MESSAGETYPES.CLIENT_MESSAGES.TOPIC_UPDATE, function( message ){
+        console.log ('CLIENT TOPIC UPDATE MESSAGE in router');
+
+
         var topics = message.body;
 
-        that.devicestrapper.is_valid_update(message.identifier);
-        that.devicestrapper.get_update_messages(topics);
-        for ( identifier in topics ){
-            var network_interface = that.devicestrapper.devices[identifier].network_interface;
+        // @todo we should check valid publications, and device what to do on invalid update
+        // initial thoughts are just to discard and send a message saying you did it wrong back
 
+        //that.devicestrapper.is_valid_update(message.identifier);
+        var update_topics =   that.devicestrapper.get_update_messages(topics);
+        for ( identifier in update_topics ){
+            console.log(identifier);
+            console.log(update_topics[identifier]);
         }
+      
     });
 
     this.messagehandler.attachFunctionToMessageType ( this.messagehandler.MESSAGETYPES.CLIENT_MESSAGES.SERVICE_REQUEST,function(){

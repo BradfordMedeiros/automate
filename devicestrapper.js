@@ -189,6 +189,10 @@ _devicestrapper.prototype.get_update_messages = function ( topics ){
 
 }
 
+_devicestrapper.prototype.is_valid_update = function (){
+    console.log("WARNING FUNCTION IS UNCODED.  CODE THIS TO CHECK PUBLICATIONS B4 SENDING");
+    return true;
+}
 
 ///////////////////////////////////////////////////////////////
 // all methods below are private

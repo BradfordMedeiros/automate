@@ -74,38 +74,15 @@ AbstractNetwork.prototype.load_network_interfaces = function ( inbound_on, outbo
 
 	for (var i = 0 ;i < interfaces.length; i++){
 		this.network_interfaces[interfaces[i].getNetworkID()] = interfaces[i];
-
-		this.onMessageReceivedPlu = this.onMessageReceivedPlus.bind(this);
-		//onMessageReceivedPlus();
-		this.onMessageReceivedPlu.append_info = function( message){
-			message.metadata.network_interface = this.getNetworkID();
-			console.log('$'+this.getNetworkID);
-		}
-
-		console.log('%'+this.onMessageReceivedPlu.append_info);
-		this.onMessageReceivedPlu.append_info.bind(this.network_interfaces[interfaces[i]]);
-		//console.log(onMessageReceivedPlu.append_info);
-
-
-
-		//onMessageReceivedPlus.append_info.bind(this.network_interfaces[interfaces[i]]);
-		this.network_interfaces[interfaces[i].getNetworkID()].setOnMessageReceived (this.onMessageReceivedPlu);
+		this.network_interfaces[interfaces[i].getNetworkID()].setOnMessageReceived (this.onMessageReceived);
 		this.network_interfaces[interfaces[i].getNetworkID()].turn_on_interface( inbound_on, outbound_on );
 	}
 
 	this.isLoaded = true;
 }
 
-AbstractNetwork.prototype.onMessageReceivedPlus = function (message ) {
-	console.log('on message called')
-	//this.onMessageReceived(message);
-	
-	this.onMessageReceivedPlu.append_info(message);
-}
 
-/*AbstractNetwork.prototype.onMessageReceivedPlus.append_info = function ( message ){
-	message.metadata.network_interface = this.getNetworkID();
-}*/
+
 
 AbstractNetwork.prototype.deload_network_interfaces = function(){
 	if (!this.isLoaded){

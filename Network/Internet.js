@@ -31,9 +31,15 @@ var Internet = function ( ){
 
 		console.log('got a request');
 		res.send('OK')
-		req.body.metadata.network_interface = that.getNetworkID();
-		req.body.metadata.identifier = req.connection.remoteAddress;
-		func (req.body);
+
+		if (req.body !== undefined && req.body.metadata !==undefined){
+			req.body.metadata.network_interface = that.getNetworkID();
+			req.body.metadata.identifier = req.connection.remoteAddress;
+			func (req.body);
+		}else{
+			console.log("message discarded, invalid");
+		}
+		
 	});
 	
 
@@ -98,9 +104,6 @@ Internet.prototype.setOnMessageReceived = function( func ){
 	console.log('on message receieved:  '+func);
 
 	this._onMessageReceived = func;
-
-
-	
 }
 
 Internet.prototype.isAvailable = function (){
