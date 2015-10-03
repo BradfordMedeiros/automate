@@ -112,6 +112,19 @@ _devicestrapper.prototype.addSubscriptions = function ( identifier , subscriptio
     }
 }
 
+// returns the network identifier associated with an identifier
+_devicestrapper.prototype.get_network_interface = function (identifier){
+    if (identifier == undefined){
+        throw (new Error("cannot get interface for non-existant device identifier: :"+identifier));
+    }
+
+    var network_interface  = this.devices[identifier].network_interface;
+
+    if (network_interface == undefined){
+        throw (new Error("no network interface for valid identifier, this shouldn't happen"));
+    }
+    return network_interface;
+};
 
 _devicestrapper.prototype.get_connected_devices = function (){
     var device_identifiers=  [];
@@ -155,10 +168,11 @@ _devicestrapper.prototype.get_update_messages = function ( topics ){
     var client_topics = { };
 
     for ( topic in topics ){
+        console.log('topic is : '+topic);
         var subscriptions = this.subscriptions[topic];  // for topic field name
 
         if (subscriptions == undefined){
-            console.log('no subscriptions for topic '+topic);
+            console.log('no subscription for topic '+topic);
             continue;
         }
         /*for ( var i = 0 ; i < subscriptions.length ; i++ ){     // add topic content to each device message

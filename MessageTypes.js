@@ -202,7 +202,7 @@ var checkFileIntegrity = function ( ){
 
 generateId();
 addrequiredmetadata ('identifier', function(){
-	return 'http://localhost';
+	return 'localhost';
 })
 
 addrequiredmetadata ('network_interface', function(){

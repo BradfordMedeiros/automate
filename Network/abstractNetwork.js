@@ -38,8 +38,8 @@ var AbstractNetwork = function ( onMessageReceived ,  inbound_on , outbound_on, 
 }
 
 // sends message to device defined by device config
-AbstractNetwork.prototype.sendMessage = function ( message, deviceconfig ) {
-	if (message == undefined || deviceconfig.identifier == undefined || deviceconfig.network_interface == undefined){
+AbstractNetwork.prototype.sendMessage = function ( message, identifier, network_interface ) {
+	if (message == undefined || identifier == undefined || network_interface == undefined){
 		throw (new Error("paramers incorrectly defined in AbstractNetwork::sendMessage"));
 	}
 	if (message.type != 'server' && this.is_client !=true){
@@ -49,7 +49,7 @@ AbstractNetwork.prototype.sendMessage = function ( message, deviceconfig ) {
 	if (!this.sendsMessagesOutbound){
 		return;
 	}
-	this.network_interfaces[deviceconfig.network_interface].sendMessage(message,deviceconfig);
+	this.network_interfaces[network_interface].sendMessage(message, identifier, network_interface);
 }
 
 // called by attached network interfaces.  They will call this function when they receive a new message.  

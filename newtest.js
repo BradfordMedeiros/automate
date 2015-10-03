@@ -13,12 +13,12 @@ var network 	   = (new (require(FILES.abstractnetwork))(messagehandler.feedMessa
 // and we can call network.sendMessage 
 
 var devicestrapper = (new (require(FILES.devicestrapper)));
-var message_router = (new (require(FILES.message_router))(devicestrapper));
+var message_router = new (require(FILES.message_router))(devicestrapper,network);
 
 
 // then this will know what to do with incoming messges
 // @todo **** var message_control  = require messagecontrol  -->  this will make forward messages
-// to classes.  classes do not have to -- and shouldn't --know about messages.
+// to classes.  classes do not have to -- and shouldn't --know about messag,networke.
 
 
 module.exports = {

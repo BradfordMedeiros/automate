@@ -186,6 +186,10 @@ MessageHandler.prototype.attachFunctionToMessageType = function ( messagetype , 
 }
 
 
+// WARNING WARNING WARNING
+// @consider : get rid of this function, and return a handle when you add an attached function
+// this function will end up getting abused.
+
 // stop the message handler from calling functions for the message type, and disassociate the functionality
 MessageHandler.prototype.clearAttachedFunctionsForMessageType  = function ( message ){
 	if (message == undefined || message.id == undefined){

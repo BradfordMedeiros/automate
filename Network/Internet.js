@@ -71,15 +71,15 @@ Internet.prototype.turn_on_interface = function ( inbound, outbound ){
 	})
 }
 
-Internet.prototype.sendMessage = function(message,config){
+Internet.prototype.sendMessage = function(message, identifier ){
 	if ( !this.outbound_on ){
 		return;
 	}
 
-	if (message ==undefined || config == undefined){
+	if (message ==undefined || identifier == undefined){
 		throw (new Error('Parameters incorrectly defined in Internet::sendMessage'));
 	}
-	var ipaddress = config.identifier+':'+this._port;
+	var ipaddress = 'http://'+identifier+':'+this._port;
 	this._request.post(
 		ipaddress,
     	{ 
