@@ -1,6 +1,28 @@
-# automate - WIP 
-The goal of this project is to create a platform to connect networked devices together, especially microcontrollers.  Automate will eliminate the need to write custom boiler-plate configuration code, and to allow focus on the unique functionality of devices through a standard API and platform stack.
+<h1>Welcome to the automate !<h1>
 
-For developers:
+<b>Current Main Functionality </b> <hr> 
 
-For example, imagine having a light sensor and a motor, on two different microcontrollers or devices.  The light sensor only has functionality to tell brightness, and the motor actuates to close a door.   We will then be able to construct statements such as:  When it is dark, close the door.  At 10pm close the door after if is light for 10 minutes. etc.  No need to write networking code.  No need to write "business logic".  
+Main server is built.  Devices may now subscribe to a topic, and they will receive update messages from any other client who publishes to the device automagically. 
+
+<br>
+<b>Next Main Functionality </b> <hr> 
+Work more on the device side.  Make the client API easy to understand and use.  I want to make something like this from a use case perspective (Node.js support first -- other devices/languages later): 
+
+<code>
+var automate = require('automate'); </code> <br> <code>
+var subscriptions = new automate.subscription( <subscription name(s)>, <callback function> ); 
+</code>
+
+and for publishing: 
+<br>
+<br>
+<code>
+var publisher = new automate.publisher( <publication topic name(s)>);
+</code> <br>
+<code>
+publisher.publish ( topic_update );  // will be sent out to all devices
+</code>
+<br> <br>
+So this should be simple enough. This all exists on backend, just needs to be friendly from a programmer perspective. More functionality to come.
+<br> <hr>
+<small><i>The ultimate goal is simpler --> GUI based embedded devices development. <!> It will happen <!> </i></small>
