@@ -10,17 +10,17 @@ Work more on the device side.  Make the client API easy to understand and use.  
 
 <code>
 var automate = require('automate'); </code> <br> <code>
-var subscriptions = new automate.subscription( <subscription name(s)>, <callback function> ); 
+var subscriptions = new automate.subscription( &lt;subscription name(s)&gt;, &lt;callback function&gt; ); 
 </code>
 
 and for publishing: 
 <br>
 <br>
 <code>
-var publisher = new automate.publisher( <publication topic name(s)>);
+var publisher = new automate.publisher( &lt;publication topic name(s)&gt; );
 </code> <br>
 <code>
-publisher.publish ( topic_update );  // will be sent out to all devices
+publisher.publish ( &lt;topic_update&gt; );  // will be sent out to all devices
 </code>
 <br> <br>
 So this should be simple enough. This all exists on backend, just needs to be friendly from a programmer perspective. More functionality to come.
