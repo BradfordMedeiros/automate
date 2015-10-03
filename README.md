@@ -1,4 +1,4 @@
-<h1>Welcome to the automate !<h1>
+<h1>Welcome to the automate !</h1>
 
 <b>Current Main Functionality </b> <hr> 
 
