@@ -5,8 +5,7 @@ var files = require (process.env.HOME+FILEFINDER);
 var messaging = require (files.messaging);
 
 describe ("MessageHandler.js test",function (){
-	mh =  messaging.message_handler;
-	messagehandler = (new mh()).getMessageHandlerInstance();
+	messagehandler = messaging.message_handler.getMessageHandlerInstance();
 	//console.log(messagehandler)
 	it ("valid message type function - checks if message type specified is a real message type", function ( ){
 		var isvalid = true;

@@ -29,7 +29,7 @@ var message_control = function ( devicestrapper , network  ) {
     }
 
     //console.log(messaging)
-    this.messagehandler = (new ( messaging.message_handler )()).getMessageHandlerInstance();
+    this.messagehandler = messaging.message_handler.getMessageHandlerInstance();
     this.event_emitter = new events.EventEmitter;
 
     this.devicestrapper = devicestrapper;

@@ -1,4 +1,5 @@
 this folder has generic network interfaces.  Each file should implement /NetworkInterace.js in the Interfaces folder.
+@TODO: redo the interfaces concept, it's implementation is whack
 
 * abstractNetwork.js is the main loader of the module. It will load files from this folder.  Currently to add a new network interface you do this:
 1. Create your new .js file

@@ -5,12 +5,11 @@
 	var messaging = require (files.messaging);
 
 describe ("MessageControl.js test - note: messagecontrol needs a reference to devicestrapper for these things to hold" , function () {
-    var null_network = require (files.abstractnetwork);
+    var null_network = new (require (files.network)).abstract_network(function(){},"NO_INTERFACE");
  
     
     it ("message control passes CLIENT_DEVICE_INIT message successfully", function(){
-        var mh =  new messaging.message_handler;
-        var messagehandler = mh.getMessageHandlerInstance();
+        var messagehandler = messaging.message_handler.getMessageHandlerInstance();
         var messagetype = messagehandler.MESSAGETYPES.CLIENT_MESSAGES.CLIENT_DEVICE_INIT;
         var ds = require((require(process.env.HOME+FILEFINDER)).devicestrapper);
         var devicestrapper = new ds();
@@ -77,8 +76,7 @@ describe ("MessageControl.js test - note: messagecontrol needs a reference to de
     });
 
     it ("message control pass REMOVE_DEVICE message to devicestrapper", function() {
-        var mh =  new messaging.message_handler;
-        var messagehandler = mh.getMessageHandlerInstance();
+        var messagehandler = messaging.message_handler.getMessageHandlerInstance();
         var messagetype = messagehandler.MESSAGETYPES.CLIENT_MESSAGES.CLIENT_DEVICE_INIT;
         var ds = require((require(process.env.HOME+FILEFINDER)).devicestrapper);
         var devicestrapper = new ds();

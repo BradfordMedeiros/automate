@@ -1,5 +1,5 @@
 
-var FILEFINDER = '/.files'
+
 
 
 
@@ -38,7 +38,7 @@ var AbstractNetwork = function ( onMessageReceived ,  interfaces_request, inboun
 	}
 	this.load_network_interfaces( inbound_on, outbound_on );
 
-	this.sendsMessagesOutbound = (require(require(process.env.HOME+FILEFINDER).options)).sends_messages_outbound;
+	this.sendsMessagesOutbound = outbound_on;
 	
 	// is client allows us to send client messages outbound
 	if (is_client !=undefined){
@@ -87,7 +87,7 @@ AbstractNetwork.prototype.load_network_interfaces = function ( inbound_on, outbo
 	var interfaces  = [ ];
 
         if (this.interfaces_request.indexOf('internet') > -1 ){	
-	    var internet =  new (require(require(process.env.HOME+FILEFINDER).internet))();
+	    var internet =  new (require("./internet.js"))();
 	    interfaces.push(internet);
 	    console.log("Loading Interface: internet");
 	}

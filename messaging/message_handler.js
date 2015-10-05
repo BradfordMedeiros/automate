@@ -13,69 +13,69 @@
 // when you want the global
 
 
-var FILEFINDER = '/.files';
 var DEFAULT_MESSAGE = 'default';
 
 
-////////////////////// private ////////////////////////////////////////////
-
+/**
+	Used to build messages.  Users only access the public portion of the builder.
+**/
 var _builder = function( MessageHandler, messagetype , type ){
 
-	if (type == undefined ){
+	if (type === undefined ){
 		type = 'server';
 	}
 
 
 	var that = this;
-	this.message = MessageHandler._createMessage (messagetype, DEFAULT_MESSAGE, type)
+	this.message = MessageHandler._createMessage (messagetype, DEFAULT_MESSAGE, type);
 
 	this._public = {
 		build: function (){
 			return that.message;
 		}
 	}
+};
 
-}
 
+
+/**
+	private method for the message_handler to access the builder.  
+**/
 _builder.prototype._getBuilder = function  () {
 	return this._public;
-}
+};
+
 
 //  note:  return values are ignored
 _builder.prototype._addFunctions = function  ( functionames, functions ){
 	for (var i = 0 ; i < functions.length ; i++ ){
 		this._public[functionames[i]] = functions[i];	// REMOVE
 	}
-}
+};
 
-
-
-////////////////////// public ////////////////////////////////////////////
 
 _builder.prototype.build = function (){
 	return this.message;
-}
+};
 
 
-var instance = undefined;
-
+var message_handler_instance = undefined;	
 var getInstance = function (){
-	if (instance ===undefined){
-		instance = new MessageHandler;
+	if ( message_handler_instance === undefined ){
+		message_handler_instance = new MessageHandler;
 	}
-	return instance;
-}
+	return message_handler_instance;
+};
 
-var MessageFactory = function (){
 
-}
+var MessageFactory = function (){ };
 
 MessageFactory.prototype.getMessageHandlerInstance = function(){
 	 return getInstance();
-}
+};
 
 var MessageHandler = function ( ) {
-	if (instance == undefined){
+	if (message_handler_instance === undefined){
 		instance = this;
 	}else{
 		throw (new Error("only one instance of message handler can exist, use MessageFactory to retrieve the instance"));
@@ -83,7 +83,7 @@ var MessageHandler = function ( ) {
 
 	this.attachedMessageFunctions  = { };		// the functions to call when you get a certain message type
 	this.MESSAGETYPES = require ("./message_types.js");
-}
+};
 
 
 
@@ -94,7 +94,7 @@ MessageHandler.prototype.getMessageType = function ( message ){
 		throw (new Error ("MESSAGE NOT DEFINED PROPERLY "));
 	}
 	return this.MESSAGETYPES.messagename;
-}
+};
 
 //@tempcomment - coded
 //@todo -- genericize this to exclude certain fields, so we could add more fields if we wanted
@@ -103,7 +103,7 @@ MessageHandler.prototype.getMessageTypeList = function ( ){
 		SERVER_MESSAGES: this.MESSAGETYPES.SERVER_MESSAGES,
 		CLIENT_MESSAGES: this.MESSAGETYPES.CLIENT_MESSAGES
 	});
-}
+};
 
 
 // creates a message
@@ -116,7 +116,7 @@ MessageHandler.prototype.getMessageTypeList = function ( ){
 // give the options to operate on the message
 MessageHandler.prototype.getMessageBuilder  = function (messagetype) {	
 	//figure out the type, and get the options you can set for it.
-	if (messagetype.type ==  undefined ){
+	if (messagetype.type ===  undefined ){
 		type = 'server';
 	}
 	if (messagetype.type !='server' && messagetype.type !='client'){
@@ -130,7 +130,7 @@ MessageHandler.prototype.getMessageBuilder  = function (messagetype) {
 	builder._addFunctions(functions.names, functions.functions);
 	return builder._getBuilder ();
 
-}
+};
 
 
 // feeds the handler a new message to process by the handler
@@ -139,7 +139,7 @@ MessageHandler.prototype.getMessageBuilder  = function (messagetype) {
 // @todo if its not a valid message we should discard it
 MessageHandler.prototype.feedMessage = function ( inbound_message ){
 
-	if (inbound_message == undefined ){
+	if (inbound_message === undefined ){
 		throw (new Error ("message not defined"));
 	}
 
@@ -147,7 +147,7 @@ MessageHandler.prototype.feedMessage = function ( inbound_message ){
 	var messagetype = this.getMessageType ( inbound_message );
 	var functions = this.attachedMessageFunctions[inbound_message.id];
 
-	if (functions !=undefined){
+	if (functions !== undefined){
 		for ( var i = 0 ; i < functions.length ; i++ ){
 			var result = functions[i](inbound_message);
 		}
@@ -158,21 +158,21 @@ MessageHandler.prototype.feedMessage = function ( inbound_message ){
 
 // associate functions to the message type
 MessageHandler.prototype.attachFunctionToMessageType = function ( messagetype , func ){
-	if (messagetype == undefined || func ==undefined){
+	if (messagetype === undefined || func === undefined){
 		throw (new Error ('undefined parameters'));
 	}
 
 	if (typeof (func) !='function'){
 		throw (new Error('parameter func must be of type function'))
 	}
-	if ( this.MESSAGETYPES[messagetype.id] == undefined){
+	if ( this.MESSAGETYPES[messagetype.id] === undefined){
 		throw (new Error ("Invalid Message Type -- cannot attach functionality"));
 	}
 
 
-	if (this.attachedMessageFunctions[messagetype.id] == undefined ){
-		this.attachedMessageFunctions[messagetype.id] = new Array();
-	}else if ( Array.isArray(this.attachedMessageFunctions[messagetype.id] == false)){
+	if (this.attachedMessageFunctions[messagetype.id] === undefined ){
+		this.attachedMessageFunctions[messagetype.id] = [ ];
+	}else if ( Array.isArray(this.attachedMessageFunctions[messagetype.id] === false)){
 		throw (new Error("this.attachedMessageFunctions must be defined as an array"))
 	} 
 
@@ -181,7 +181,7 @@ MessageHandler.prototype.attachFunctionToMessageType = function ( messagetype , 
 		this.attachedMessageFunctions[messagetype.id].push(arguments[i]);
 	}
 
-}
+};
 
 
 // WARNING WARNING WARNING
@@ -190,11 +190,11 @@ MessageHandler.prototype.attachFunctionToMessageType = function ( messagetype , 
 
 // stop the message handler from calling functions for the message type, and disassociate the functionality
 MessageHandler.prototype.clearAttachedFunctionsForMessageType  = function ( message ){
-	if (message == undefined || message.id == undefined){
+	if (message === undefined || message.id === undefined){
 		throw (new Error ("must define message id parameter"))
 	}
 	this.attachedMessageFunctions[message.id] = undefined;
-}
+};
 
 
 
@@ -205,8 +205,8 @@ MessageHandler.prototype.clearAttachedFunctionsForMessageType  = function ( mess
 MessageHandler.prototype._getFunctionsForMessageBuilder = function ( messagetypename, type , builder){
 
 	var message = builder.message;
-	var names = new Array();
-	var functions = new Array();
+	var names = [ ];
+	var functions = [ ];
 
 	//////////////////////
 	////ADD SOME CODE HERE TO ACTUALLY RIP THE FUNCTIONS
@@ -223,7 +223,7 @@ MessageHandler.prototype._getFunctionsForMessageBuilder = function ( messagetype
 			return builder._public;
 		}
 		
-	}
+	};
 
 	for (var i = 0 ; i < requirements.length ; i++ ){	
 		var functionName = 'set'+requirements[i].charAt(0).toUpperCase()+ requirements[i].slice(1);
@@ -237,8 +237,8 @@ MessageHandler.prototype._getFunctionsForMessageBuilder = function ( messagetype
 	}
 
 	var functionpair = { };
-	functionpair['names'] = names;
-	functionpair['functions'] = functions;
+	functionpair.names = names;
+	functionpair.functions = functions;
 	return functionpair;
 }
 
@@ -250,8 +250,8 @@ MessageHandler.prototype._isValidMessage = function ( message ) {
 
 
 	// make sure main fields are defined
-	if ( message.metadata == undefined || message.body == undefined || 
-				message.messagename == undefined || message.type == undefined){
+	if ( message.metadata === undefined || message.body === undefined || 
+				message.messagename === undefined || message.type === undefined){
 		return false;
 	}
 
@@ -265,7 +265,7 @@ MessageHandler.prototype._isValidMessage = function ( message ) {
 		}
 	}
 
-	if (this._isValidMessageType(message.messagename,message.type) == false){
+	if (this._isValidMessageType(message.messagename,message.type) === false){
 		return false;
 	}
 
