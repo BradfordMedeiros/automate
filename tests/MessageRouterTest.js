@@ -1,17 +1,21 @@
 
-var assert = require("assert");
-var FILEFINDER = '/.files.js';
+	var assert = require("assert");
+	var FILEFINDER = '/.files.js';
+        var files = require(process.env.HOME+FILEFINDER);
+	var messaging = require (files.messaging);
 
 describe ("MessageControl.js test - note: messagecontrol needs a reference to devicestrapper for these things to hold" , function () {
-   
+    var null_network = require (files.abstractnetwork);
+ 
+    
     it ("message control passes CLIENT_DEVICE_INIT message successfully", function(){
-        var mh =  require (require (process.env.HOME+FILEFINDER).messagehandler);
-        var messagehandler = (new mh()).getMessageHandlerInstance();
+        var mh =  new messaging.message_handler;
+        var messagehandler = mh.getMessageHandlerInstance();
         var messagetype = messagehandler.MESSAGETYPES.CLIENT_MESSAGES.CLIENT_DEVICE_INIT;
         var ds = require((require(process.env.HOME+FILEFINDER)).devicestrapper);
         var devicestrapper = new ds();
-        var mcpath = (require(process.env.HOME+FILEFINDER)).messagecontrol;
-        var message_control = (new (require(mcpath))(devicestrapper));
+        var mcpath = (require(process.env.HOME+FILEFINDER)).message_router;
+        var message_control = (new (require(mcpath))(devicestrapper,null_network));
 
         var device_init_message = messagehandler.getMessageBuilder(messagetype).setSubscriptions(['temp','humidity']).setPublications(['width']).build();
         var device_init_message2 = messagehandler.getMessageBuilder(messagetype).setSubscriptions(['humidity']).setPublications(['width']).build();
@@ -73,13 +77,13 @@ describe ("MessageControl.js test - note: messagecontrol needs a reference to de
     });
 
     it ("message control pass REMOVE_DEVICE message to devicestrapper", function() {
-        var mh =  require (require (process.env.HOME+FILEFINDER).messagehandler);
-        var messagehandler = (new mh()).getMessageHandlerInstance();
+        var mh =  new messaging.message_handler;
+        var messagehandler = mh.getMessageHandlerInstance();
         var messagetype = messagehandler.MESSAGETYPES.CLIENT_MESSAGES.CLIENT_DEVICE_INIT;
         var ds = require((require(process.env.HOME+FILEFINDER)).devicestrapper);
         var devicestrapper = new ds();
-        var mcpath = (require(process.env.HOME+FILEFINDER)).messagecontrol;
-        var message_control = (new (require(mcpath))(devicestrapper));
+        var mcpath = (require(process.env.HOME+FILEFINDER)).message_router;
+        var message_control = (new (require(mcpath))(devicestrapper,null_network));
 
         var device_init_message = messagehandler.getMessageBuilder(messagetype).setSubscriptions(['temp','humidity']).setPublications(['width']).build();
         var device_init_message2 = messagehandler.getMessageBuilder(messagetype).setSubscriptions(['humidity']).setPublications(['width']).build();
@@ -103,7 +107,7 @@ describe ("MessageControl.js test - note: messagecontrol needs a reference to de
     });
 
     it ("TOPIC_UPDATE routes topic_update messages to devicestrapper and sends them to messagehandler" , function(){
-        fail();
+    	fail();    
     });
 
 

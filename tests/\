@@ -140,7 +140,6 @@ MessageHandler.prototype.getMessageBuilder  = function (messagetype) {
 // @todo if its not a valid message we should discard it
 MessageHandler.prototype.feedMessage = function ( inbound_message ){
 
-	console.log("Feed message called");
 	if (inbound_message == undefined ){
 		throw (new Error ("message not defined"));
 	}

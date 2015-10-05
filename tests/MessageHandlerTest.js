@@ -1,11 +1,13 @@
 
 var FILEFINDER = '/.files';
 var assert = require("assert");
+var files = require (process.env.HOME+FILEFINDER);
+var messaging = require (files.messaging);
 
 describe ("MessageHandler.js test",function (){
-	mh =  require (require (process.env.HOME+FILEFINDER).messagehandler);
+	mh =  messaging.message_handler;
 	messagehandler = (new mh()).getMessageHandlerInstance();
-
+	//console.log(messagehandler)
 	it ("valid message type function - checks if message type specified is a real message type", function ( ){
 		var isvalid = true;
 		for (message in messagehandler.MESSAGETYPES){
@@ -26,6 +28,7 @@ describe ("MessageHandler.js test",function (){
 
 	it ("valid message function - checks if certain message is a valid message format" , function ( ){
 		message1 = {
+ 		        id : "0000001",
 			messagename:  'CLIENT_STATUS',
 			type: 'client',
 			metadata:{
@@ -41,6 +44,7 @@ describe ("MessageHandler.js test",function (){
 		}
 
 		message2 = {
+			id : "0000001",
 			messagename:  'CLIENT_STATUS',
 			type: 'client',
 			metadata:{

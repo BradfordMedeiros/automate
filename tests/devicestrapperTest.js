@@ -1,6 +1,6 @@
 
 var assert = require("assert");
-var FILEFINDER = '/.files';
+var FILEFINDER = '/.files.js';
 
 var func = function(){
 	var ds = require((require(process.env.HOME+FILEFINDER)).devicestrapper);

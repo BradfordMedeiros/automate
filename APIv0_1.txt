@@ -1,0 +1,115 @@
+goal by tomorrow
+--------------
+be able to run program on a raspberry pi, and another on my pc, and the server on my pc, and things will communicate succesfully.
+
+Test case - API use case
+-------------
+
+1. server running on pc
+2. client running on pc, publishes to "temperature, humidity" incremented values. listens to "brightness"
+3. client running on raspberry pi , listens to "temperature, humdity", and publishes to brightness. 
+
+Stretch goals
+------------------
+1. only listen to humidity/temperature/brightness when over a specific threshold.
+2. make sure serialization works
+3. implement logging  ( just use a library plz )
+4. be able to act when 
+
+
+use cases working by tomorrow
+======================================================================
+	Required - basic topic exchange : publishing & subscribing
+=======================================================================
+
+var automate = require ("automate")( optional_alt_port_in, optional_alt_port_out);
+
+var subscription = new automate.subscription ( ["temperature, humidity" ], function ( topic_update ){
+	console.log( "humdiity:  "   + topic_update["temperature"] );
+	console.log( "temperature: " +topic_update["humdity"] );
+});
+
+var publication = new automate.publication ( "brightness" );
+setInterval ( function (){
+
+	publication.publish ({
+		brightness: 30
+	});
+
+}, 5000);
+
+====================================================================
+Would be nice - extra features : evaluators, max sending rate
+===========================================================
+var available_topics = automate.get_all_topics (); // returns all currently published topics
+
+var subscription = new automate.subscription (["temperature"], function ( topic_ update){
+	console.log( "humdiity:  "   + topic_update.temperature );
+	console.log( "temperature: " + topic_update.humdity );
+}, {  
+	humidity: {
+		evaluator: ">",
+		object: "30"
+	},
+
+	humidity: {
+		evaluator: ">",
+		object: "temperature"
+	}
+		
+}, MAX_SENDING RATE);
+
+// aka
+new automate.subscription ( subscriptions, callback, evaluator_function, )
+===========================================================
+SERVICES -- "I PROMISE TO DO THIS ACTION"
+===========================================================
+
+var automate = require ("automate");
+var service = new automate.service ("open_door");
+
+var available_services = automate.get_all_services ( ) ; // returns all currently available services
+var available_protected_services = automate.get_all_protected_services ( ); // returns all services which are protected, aka you need to lock them to use
+
+automate.use_service ("open_door", {
+	state: "close"
+});
+
+automate.request_protected_service (service_name, callback);
+automate.use_protected_service ( service_name , state );  // throws and error if you do not have the service permission
+//////////////////////
+Maybe features
+///////////////////////
+
+
+okay remember water cooler, we could've done this:
+
+var subscription = new automate.subscription ("temperature", function ( data ){
+	graph_temperature ( data.temperature );  // w/e i dont care
+	send_alert_if_threshold ( data.temperature );
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -29,7 +29,7 @@ var _devicestrapper = function (){
     
     var localStorage = require ('node-localstorage').LocalStorage;  // used so we can save/load to file
     this.local = new localStorage('./data');
-    this.messagehandler = (new (new require((require(process.env.HOME+'/.files.js')).messagehandler))).getMessageHandlerInstance();
+    //this.messagehandler = (new (new require((require(process.env.HOME+'/.files.js')).messagehandler))).getMessageHandlerInstance();
 
     this.serialize_on_quit();                        // start listening to serialize on quit signal
     this._deserializeData();                      // load saved state of the data
@@ -168,7 +168,6 @@ _devicestrapper.prototype.get_update_messages = function ( topics ){
     var client_topics = { };
 
     for ( topic in topics ){
-        console.log('topic is : '+topic);
         var subscriptions = this.subscriptions[topic];  // for topic field name
 
         if (subscriptions == undefined){

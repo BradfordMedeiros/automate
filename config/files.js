@@ -22,9 +22,9 @@ var filelocations = {
 	enumerated_interfaces	: PWD + 'enumerated_interfaces.js',
 	interface		: PWD + 'Interface.js',
 	internet 		: PWD + 'Network/Internet.js',
-	message_router	: PWD + 'MessageRouter.js',
-	messagehandler  : PWD + 'MessageHandler.js', 	
-	messagetypes	: PWD + 'MessageTypes.js',
+	message_router	: PWD + 'message_router.js',
+	messaging 	: PWD + 'messaging/modules.js',
+	
 	options			: PWD +'config/options.js',
 	zigbee			: PWD + 'Zigbee.js',
 

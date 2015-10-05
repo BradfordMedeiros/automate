@@ -32,7 +32,7 @@ var subscription = function ( subscriptions, callback ){
 	This also stops messages from being sent to the device at all.  Messages will not be 
 	sent to this ip.
 **/
-subscription.prototype.terminate = function ( ){
+subscription.prototype.stop = function ( ){
 
 }
 
@@ -56,7 +56,7 @@ publisher.prototype.publish =  function ( topic_content ){
 	The advantage  of calling this is that if other devices want to publish to the topic,
 	and exclusively, this helps them with that. 
 **/
-publisher.prototype.terminate = function ( ){
+publisher.prototype.stop = function ( ){
 
 }
 

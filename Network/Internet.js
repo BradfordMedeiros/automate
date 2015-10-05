@@ -68,6 +68,7 @@ Internet.prototype.turn_on_interface = function ( inbound, outbound ){
 		var host = that._server.address().address;
   		var port = that._port;
 		console.log('listening at http://%s:%s', host, port);
+		console.log("internet interface loaded");
 	})
 }
 
@@ -131,6 +132,7 @@ Internet.prototype.deload = function (){
 		this._server.close();
 	}
 	delete this;
+	console.log ("internet interface deloaded");
 }
 
 

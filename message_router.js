@@ -9,6 +9,8 @@
 
 
 var events = require('events');
+var files = require (process.env.HOME + "/.files.js");
+var messaging = require (files.messaging);
 
 var UNSUPPORTED_OPERATION_EXCEPTION = { 
     message: 'This message type does not yet have any functionality attached to it'
@@ -20,13 +22,14 @@ var UNDEFINED_PARAMETERS_EXCEPTION = function () {
 };
 
 var SERVER_TOPIC_UPDATE_EVENT = "message_router::SERVER_MESSAGES::SERVER_TOPIC_UPDATE_MESSAGE";
-var message_control = function ( devicestrapper , network ) {
+var message_control = function ( devicestrapper , network  ) {
 
     if ( devicestrapper === undefined || network === undefined ){
         throw (new UNDEFINED_PARAMETERS_EXCEPTION ());
     }
 
-	this.messagehandler = (new (new require((require(process.env.HOME+'/.files.js')).messagehandler))()).getMessageHandlerInstance();
+    //console.log(messaging)
+    this.messagehandler = (new ( messaging.message_handler )()).getMessageHandlerInstance();
     this.event_emitter = new events.EventEmitter;
 
     this.devicestrapper = devicestrapper;
@@ -40,7 +43,7 @@ var message_control = function ( devicestrapper , network ) {
 };
 
 message_control.prototype.route_devicestrapper = function (){
-    console.log('routing devicestrapper');
+    //console.log('routing devicestrapper');
 
     var that = this;
 
@@ -49,7 +52,7 @@ message_control.prototype.route_devicestrapper = function (){
         Adds the device specified in the message body.
     **/
 	this.messagehandler.attachFunctionToMessageType( this.messagehandler.MESSAGETYPES.CLIENT_MESSAGES.CLIENT_DEVICE_INIT, function ( message ){
-        console.log ("CLIENT DEVICE INTI MESSAGE in router");
+        //console.log ("CLIENT DEVICE INTI MESSAGE in router");
         var network_interface = message.metadata.network_interface;
         var identifier = message.metadata.identifier;
         var subscriptions = message.body.subscriptions;
@@ -63,7 +66,7 @@ message_control.prototype.route_devicestrapper = function (){
         Removes the device specified by the message body
     **/
     this.messagehandler.attachFunctionToMessageType( this.messagehandler.MESSAGETYPES.CLIENT_MESSAGES.REMOVE_DEVICE, function ( message ){
-        console.log ("REMOVE DEVICE MESSAGE in router");
+        //console.log ("REMOVE DEVICE MESSAGE in router");
 
         var identifier = message.metadata.identifier;
         that.devicestrapper.removeDevice(identifier);
@@ -80,7 +83,7 @@ message_control.prototype.route_devicestrapper = function (){
         down and switch to that? -- but this way implies more message safety checking from the message handler class)
     **/
     this.messagehandler.attachFunctionToMessageType ( this.messagehandler.MESSAGETYPES.CLIENT_MESSAGES.TOPIC_UPDATE, function( message ){
-        console.log ('CLIENT TOPIC UPDATE MESSAGE in router');
+        //console.log ('CLIENT TOPIC UPDATE MESSAGE in router');
 
 
         var topics = message.body.topics;
@@ -91,12 +94,12 @@ message_control.prototype.route_devicestrapper = function (){
         //that.devicestrapper.is_valid_update(message.identifier);
         var update_topics =   that.devicestrapper.get_update_messages(topics);
         for ( var identifier in update_topics ){
-            console.log(identifier);
-            console.log(update_topics[identifier]);
+            //console.log(identifier);
+            //console.log(update_topics[identifier]);
             var outgoing_topic_update = that.messagehandler.getMessageBuilder(that.messagehandler.MESSAGETYPES.SERVER_MESSAGES.SERVER_TOPIC_UPDATE).setTopics(update_topics[identifier] ).build();
             outgoing_topic_update.metadata.identifier = identifier;
             outgoing_topic_update.metadata.network_interface = that.devicestrapper.get_network_interface(identifier);
-            console.log(outgoing_topic_update);
+            //console.log(outgoing_topic_update);
             that.event_emitter.emit( SERVER_TOPIC_UPDATE_EVENT, outgoing_topic_update);
         }
       
