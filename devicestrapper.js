@@ -1,47 +1,49 @@
-// config :config: 
-/*    sourceipaddress:
-    devicename:
-    subscriptions []: 
-    publishers[] : ooo
-    acceptsdata : true/false
-    
-   */ 
 
-/*
-   Class to manage the state of devices connected. 
+/**
+    This class is the central logic and runtime storage of the server program.
+    It keeps track of connected devices and  topics they subscribe to and publish.
+    It may also keep track of various other meta data.
 
-*/
+    This is the place of the program which represents the main state of the devices connected
+**/
    
 var _ = require('underscore');     
 
-
-
-//topicmanager should go in here
 var _devicestrapper = function (){
-    var events = require('events');
 
-    this.devices = { };  // mapping of all the devices to their identifiers, network, subscriptions, publications, etc
-    this.subscriptions  = { }; //  mapping of a subscription to an array of the device identifiers that subscribe to it
+    this.devices = { };         // mapping of all the devices to their identifiers, network, subscriptions, publications, etc
+    this.subscriptions  = { };  //  mapping of a subscription to an array of the device identifiers that subscribe to it
 
-
-
+    // This has various options to the program.  I no longer like this technique as it violates the module structure I want to use.
+   
+    // @todo:refactor:severity:minor
+    // Consider updating this to either reference a file located within this module scope, or just pass in as parameters.
     this.options = require ('./config/options.js');
     
-    var localStorage = require ('node-localstorage').LocalStorage;  // used so we can save/load to file
+    // @todo:consider -- why are we using this over FS exactly?  Why are we saving this value to object state if it's only used twice max during a 
+    // programs lifetime?
+    var localStorage = require ('node-localstorage').LocalStorage;  // used so we can save / load to file
     this.local = new localStorage('./data');
-    //this.messagehandler = (new (new require((require(process.env.HOME+'/.files.js')).messagehandler))).getMessageHandlerInstance();
 
-    this.serialize_on_quit();                        // start listening to serialize on quit signal
-    this._deserializeData();                      // load saved state of the data
+    this.serialize_on_quit();   // start listening to serialize on quit signal
+    this._deserializeData();    // load saved state of the data
+};
 
-
+/**
+{   title:  "devicestrapper.createConfig",
+    description: "This creates a configuration object which is used to add a device.   Feed this to _devicestrapper.addDevice",
+    params: {
+        identifier: "unique id for the device",
+        network_interface: "the interface associated with the config for the device",
+        subscriptions: "topics which the device subscribers to",
+        publications: "topics which the device publishes to"
+    },
+    return: "a config which described the device"
 }
-
-
-
+**/
 _devicestrapper.prototype.createConfig = function ( identifier, network_interface, subscriptions, publications ) {
-    if (identifier == undefined || network_interface == undefined || subscriptions === undefined || publications === undefined || 
-           (!Array.isArray(subscriptions) && subscriptions !=null )|| (!Array.isArray(publications) && publications !=null)){
+    if (identifier === undefined || network_interface === undefined || subscriptions === undefined || publications === undefined || 
+           (!Array.isArray(subscriptions) && subscriptions !==null )|| (!Array.isArray(publications) && publications !=null)){
         throw (new Error('Cannot create config:  arguments defined improperly'))
     }
 
@@ -55,14 +57,24 @@ _devicestrapper.prototype.createConfig = function ( identifier, network_interfac
 }
 
 
-// BASIC EDIT DEVICE OPERATIONS
-{
+/**
+{   title: "devicestrapper.addDevice documentation",
+    description: "This adds a device, specified by a configuration object (creatable by devicestrapper.createConfig) to the object state.
+    It adds to a devices map, which maps the identifier of the device (which what an identifier is can vary, but at the time
+    of writing I use identifiers to be something tied to the network type.  For example, I use IP addresses for those that come
+    in on an internet interface.  It may also use something like a bluetooth identifier for a bluetooth network, for example.
 
+    Also adds to a subscription map.  This is a map of subscription values that point directly to all identifiers which subscribe to it.
+    This makes it so we can quickly find the devices subscribing to a topic.",
+
+    params: "a config which describes properties of the device",
+    return: "void"
+}
+**/
 _devicestrapper.prototype.addDevice = function ( config ){
     if (this.options.DEVICESTRAPPER_VERBOSE){
         console.log("adding device");
     }
-    
     
     if (config.identifier == undefined ){
         throw ( new Error ("SOURCE IP NOT DEFINED") );
@@ -74,8 +86,13 @@ _devicestrapper.prototype.addDevice = function ( config ){
     }
 }
 
-/*
-// removes the device sppecified by the ip address*/
+
+/**
+{   title: "devicestrapper.removeDevice",
+    param: "the identifier associated with the device to remove",
+    return: "void"
+}
+**/
 _devicestrapper.prototype.removeDevice = function ( identifier ){
    if ( this.devices[identifier] == undefined ){
     return;
@@ -87,12 +104,18 @@ _devicestrapper.prototype.removeDevice = function ( identifier ){
         delete this.subscriptions[device_subscriptions[subscription]][identifier];
    }
 }
-
-/*
-
+//-----------------------------------------------------------------------------------
 
 
-// adds subscription to the config file of the device.  Subscriptions can be single element or an array*/
+/**
+{   title: "devicestrapper.addSubscriptions"
+    param: {
+        identifier: "the unique id of the device",
+        subscriptions: "the string of the subscription, or array of subscriptions to add to the device"
+    },
+    return: "void"
+}
+**/
 _devicestrapper.prototype.addSubscriptions = function ( identifier , subscriptions ){
     if (subscriptions == null){
         throw (new Error('subscriptions cannot be null'));
@@ -112,7 +135,66 @@ _devicestrapper.prototype.addSubscriptions = function ( identifier , subscriptio
     }
 }
 
-// returns the network identifier associated with an identifier
+
+/**
+{   title: "devicestapper.addPublications",
+    params: {
+        identifier: "identifier of device to add publications to",
+        publications: "object or array of publications to add"
+    },
+    return: "void"
+}
+**/
+_devicestrapper.prototype.addPublications = function (identifier , publications ){
+    this._addGeneric (identifier, publications, 'publications');
+}
+
+
+/**
+{   title: "devicestapper.removePublications",
+    params: {
+        identifier: "identifier of device to remove publications from",
+        publications: "object or array of publications to remove"
+    },
+    return: "void"
+}
+**/
+_devicestrapper.prototype.removePublications = function (identifier, publications ){
+    if (publications == undefined){
+        publications = this.devices[identifier].publications;   // if publications undefined remove them all
+    }
+    this._removeGeneric (identifier, publications, 'publications');
+}
+
+
+/**
+{   title: "devicestapper.removeSubscriptions",
+    params: {
+        identifier: "identifier of device to remove subscriptions from",
+        subscriptions "object or array of subscriptions to remove"
+    },
+    return: "void"
+}
+**/
+_devicestrapper.prototype.removeSubscriptions = function (identifier , subscriptions){
+    if (subscriptions == undefined){
+        subscriptions = this.devices[identifier].subscriptions;
+    }
+
+    this._removeGeneric(identifier,subscriptions,'subscriptions');
+}
+
+
+//-----------------------------------------------------------------------------------
+
+/**
+{   title: "devicestrapper.get_network_interface",
+    params: {
+        identifier: "the id of the device to get network interface of"
+    },
+    return: "the network interface of the device"
+}
+**/
 _devicestrapper.prototype.get_network_interface = function (identifier){
     if (identifier == undefined){
         throw (new Error("cannot get interface for non-existant device identifier: :"+identifier));
@@ -126,6 +208,13 @@ _devicestrapper.prototype.get_network_interface = function (identifier){
     return network_interface;
 };
 
+
+/**
+{   title: "devicestrapper.get_connected_devices",
+    params: "void",
+    return: "an array of identifiers for connected devices"
+}
+**/
 _devicestrapper.prototype.get_connected_devices = function (){
     var device_identifiers=  [];
     for ( identifier in this.devices ){
@@ -133,33 +222,28 @@ _devicestrapper.prototype.get_connected_devices = function (){
     }
     return device_identifiers;
 }
-_devicestrapper.prototype.addPublications = function (identifier , publications ){
-    this._addGeneric (identifier, publications, 'publications');
+
+
+/**
+    @todo:feature:bug:severitymedium scope:easy -- make topics support single topic name (not as array)
+{   title: "devicestapper.get_update_messages",
+    description: gets the update topic messages to send to clients
+    params: {
+        topics: "a list of topics for which "
+    },
+    return: "a mapping between ips and the topic updates to send them
+      ex  {
+            '192.143.234': {
+                fire: 21,
+                ice: "wet"
+            },
+            "d2:42:34": {
+                fire: 21
+            }
+          }
+    "
 }
-
-_devicestrapper.prototype.removePublications = function (identifier, publications ){
-    if (publications == undefined){
-        publications = this.devices[identifier].publications;   // if publications undefined remove them all
-    }
-    this._removeGeneric (identifier, publications, 'publications');
-}
-
-
-
-_devicestrapper.prototype.removeSubscriptions = function (identifier , subscriptions){
-    if (subscriptions == undefined){
-        subscriptions = this.devices[identifier].subscriptions;
-    }
-
-    this._removeGeneric(identifier,subscriptions,'subscriptions');
-}
-
-
-/*
-    
-*/
-
-//@todo right now
+**/
 _devicestrapper.prototype.get_update_messages = function ( topics ){
 
     var client_to_update = { };
@@ -174,41 +258,34 @@ _devicestrapper.prototype.get_update_messages = function ( topics ){
             console.log('no subscription for topic '+topic);
             continue;
         }
-        /*for ( var i = 0 ; i < subscriptions.length ; i++ ){     // add topic content to each device message
-            console.log('added : '+topics[topic]+" to "+subscriptions[i]);
-        }*/
 
         for ( subscriber in subscriptions ){
-           /* if (client_topics[subscriptions[subscriber]] == undefined){
-                client_topics[subscriptions[subscriber]] = { };
-            }*/
-
             if (client_topics[subscriber] == undefined ){
                 client_topics[subscriber]= { };
             }
-
             client_topics[subscriber][topic] = topics[topic]; // set value in client message for topic field
-            //console.log('added:  '+topics[topic] + 'to ' + subscriptions[subscriber]+ '('+subscriber+')');
         } 
     }
-
-   /* for (topic in client_topics){
-        console.log(client_topics[topic]);
-    }*/
-
-    //var update_message = this.messagehandler.getMessageBuilder(this.messagehandler.MESSAGETYPES.SERVER_MESSAGES.SERVER_TOPIC_UPDATE);
-
     return client_topics; 
-
 }
 
+/**
+@todo:feature
+{   title: "devicestapper.is_valid_update",
+    params: "void",
+    return: "void"
+}
+**/
 _devicestrapper.prototype.is_valid_update = function (){
     console.log("WARNING FUNCTION IS UNCODED.  CODE THIS TO CHECK PUBLICATIONS B4 SENDING");
     return true;
 }
 
-///////////////////////////////////////////////////////////////
-// all methods below are private
+
+//-----------------------------------------------------------------------------------
+// all methods below are private, helper functions for stuff
+//-----------------------------------------------------------------------------------
+
 
 _devicestrapper.prototype._addGeneric = function ( identifier , fields, type ){
 
@@ -290,7 +367,7 @@ _devicestrapper.prototype._removeArraySubset = function (targetArray, subset){
 
 
 
-}
+
 
 
 
@@ -298,7 +375,7 @@ _devicestrapper.prototype._removeArraySubset = function (targetArray, subset){
 /////////SERIALIZATION/////////////////////////////////////////////////
 
 
-{
+
 
 // Starts listening for the quitsignal.  If it gets it serialized data. 
 // Does not end the program
@@ -343,12 +420,6 @@ _devicestrapper.prototype._deserializeData = function (){
 
 }
 
-}
-
-
-_devicestrapper.prototype.getString = function (){
-    return this.devices;
-}
 
 
 module.exports = _devicestrapper;
