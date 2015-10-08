@@ -1,17 +1,52 @@
 // Automatically add interfaces in interface folder
-var INTERFACE_FOLDER = process.env.HOME+'/Documents/automationGIT/Interfaces/'
+var INTERFACE_FOLDER = process.env.HOME+'/Documents/automationGIT/Interfaces/';
 var _ = require('underscore');
 
 
-var _Interface  = function (){
-	this.interfaces = {}
+var interface  = function (){};
 
-}
+/**
+	checks whether or not the object satisfied the interface specified by the file path
+	interfaces should be formatted as a json file like
+	{
+		name: <interface name>,
+		functions:{
+			<function_name0>: [param0, param1, etc],
+			<function_name1>: [param0, etc],
+			<function_name2>: []
+		}	
+	}
+	
+	Recommended to put name the interface interface.json and put it in the same module/directory
+	of whatever will be using that interface
+**/
+interface.prototype.is_valid_interface = function (object, file_path){
+	var local_interface = require (file_path);
+	if ( local_interface.functions === undefined || local_interface.name === undefined){
+		throw (new Error ("interface description defined improperly at "+file_path));
+	}
 
+	var functions = local_interface.functions;
+	var functions_defined = true;
+	for ( var func in functions ){
+		if ( typeof (object[func]) === "function" ){
+			var parameters = this._get_parameter_names(object[func]);
+			if ( ! _.isEqual (parameters, functions[func]) ){
+				functions_defined = false;
+				break;
+			}
+		}else{
+			functions_defined = false;
+			break;
+		}
+	}
+	return functions_defined;
+};
 
-
-
-_Interface.prototype.getParameterNames = function( func ){
+/**
+	Returns as an array the parameter names of the function definition.
+**/
+interface.prototype._get_parameter_names = function( func ){
 	var STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
 	var ARGUMENT_NAMES = /([^\s,]+)/g;	
 
@@ -21,78 +56,6 @@ _Interface.prototype.getParameterNames = function( func ){
   		result = [];
   	}
   	return result;
-}
+};
 
-_Interface.prototype.isValidInterface = function (interface){
-
-	// ensure the file name is not the swap file
-	return ( (interface[interface.length-1] == '~')? false: true);
-}
-
-_Interface.prototype.getInterfaceModules = function ( ){
-	return this.interfaces;
-}
-
-
-_Interface.prototype.refreshInterfaceModules = function (){
-		this.interfaces = { };
-		var fs = require('fs');
-		var interfaceNames = fs.readdirSync( INTERFACE_FOLDER );
-		for (var i = 0; i < interfaceNames.length; i ++){
-			if ( this.isValidInterface(interfaceNames[i]) ){
-				var module = require(INTERFACE_FOLDER+interfaceNames[i]);
-				//this.interfaces[interfaceNames[i]] =(require(INTERFACE_FOLDER+interfaceNames[i]));
-				if (module.name == undefined){
-					throw (new Error("INTERFACES MUST HAVE NAME VALUE"))
-				}
-
-				this.interfaces[module.name] = module;
-
-				
-			}
-		}
-
-
-}
-
-
-//*** _--> SHOULD LOOK IN FOLDER CALLED /INTERFACES
-// load up different interface names and the functions required
-//  put the thing at bottom to support it 
-
-// I like the idea of this being checked in the classes wanting to be in the
-// interface
-
-//--> in the class trying to be part
-// Object._interface = <InterfaceName>
-// Interface.supportInterface(self,)
-
-//@todo --> see if the functions you need are supported
-
-
-
-
-var interfaces = new _Interface();
-interfaces.refreshInterfaceModules();
-
-
-var implementsInterface = function (object, interface){
-	objectInst = new object();
-	var interfaceToCheck = interfaces.interfaces[interface]
-	if (interfaceToCheck == undefined){
-		throw (new Error("Interface undefined"))
-	}
-
-	for (element in interfaceToCheck.functions){	// for every function
-		var parameters = interfaces.getParameterNames(objectInst[element]);	// get paramets of function implementing interface
-		if (! _.isEqual(interfaceToCheck.functions[element],parameters)){
-			throw (new Error("does not implement interface properly"))
-		}
-	}
-	if (objectInst.deload !=undefined){
-		objectInst.deload();
-	}
-}
-
-//module.exports = _Interface;
-module.exports = implementsInterface;
+module.exports = new interface();
