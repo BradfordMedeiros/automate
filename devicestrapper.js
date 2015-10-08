@@ -15,7 +15,6 @@ var _devicestrapper = function (){
     this.subscriptions  = { };  //  mapping of a subscription to an array of the device identifiers that subscribe to it
 
     // This has various options to the program.  I no longer like this technique as it violates the module structure I want to use.
-   
     // @todo:refactor:severity:minor
     // Consider updating this to either reference a file located within this module scope, or just pass in as parameters.
     this.options = require ('./config/options.js');
@@ -104,7 +103,6 @@ _devicestrapper.prototype.removeDevice = function ( identifier ){
         delete this.subscriptions[device_subscriptions[subscription]][identifier];
    }
 }
-//-----------------------------------------------------------------------------------
 
 
 /**
@@ -185,8 +183,7 @@ _devicestrapper.prototype.removeSubscriptions = function (identifier , subscript
 }
 
 
-//-----------------------------------------------------------------------------------
-
+//==========================================================================================================================
 /**
 {   title: "devicestrapper.get_network_interface",
     params: {
@@ -276,7 +273,7 @@ _devicestrapper.prototype.get_update_messages = function ( topics ){
     return: "void"
 }
 **/
-_devicestrapper.prototype.is_valid_update = function (){
+_devicestrapper.prototype.get_is_valid_update = function (){
     console.log("WARNING FUNCTION IS UNCODED.  CODE THIS TO CHECK PUBLICATIONS B4 SENDING");
     return true;
 }
@@ -359,22 +356,7 @@ _devicestrapper.prototype._removeArraySubset = function (targetArray, subset){
 
 
 
-
-
-/*
-        NEED TO DO SAME FOR PUBLICATIONS
-*/
-
-
-
-
-
-
-
-
 /////////SERIALIZATION/////////////////////////////////////////////////
-
-
 
 
 // Starts listening for the quitsignal.  If it gets it serialized data. 

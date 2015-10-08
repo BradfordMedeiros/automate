@@ -72,7 +72,7 @@ Internet.prototype.turn_on_interface = function ( inbound, outbound ){
 	})
 }
 
-Internet.prototype.sendMessage = function(message, identifier ){
+Internet.prototype.send_message = function(message, identifier ){
 	if ( !this.outbound_on ){
 		return;
 	}
@@ -96,18 +96,18 @@ Internet.prototype.sendMessage = function(message, identifier ){
 
 
 
-Internet.prototype.getNetworkID = function (){
+Internet.prototype.get_network_id = function (){
 	return 'internet'
 }
 
-Internet.prototype.setOnMessageReceived = function( func ){
+Internet.prototype.set_on_message_received = function( func ){
 	console.log('setting on message receieved');
 	console.log('on message receieved:  '+func);
 
 	this._onMessageReceived = func;
 }
 
-Internet.prototype.isAvailable = function (){
+Internet.prototype.is_available = function (){
 	return this._interfaceIsAvailable;
 }
 
@@ -134,10 +134,6 @@ Internet.prototype.deload = function (){
 	delete this;
 	console.log ("internet interface deloaded");
 }
-
-
-checkImplementsInterface = require(require(process.env.HOME+FILEFINDER).interface);
-checkImplementsInterface(Internet,'network_interface');
 
 
 module.exports = Internet;

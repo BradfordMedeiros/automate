@@ -1,9 +1,8 @@
-//** THIS IS GLORIED CONFIG FILE used to define the various server and client messages, and the required fields in the messages**/
+/** 
+THIS IS GLORIED CONFIG FILE used to define the various server and client messages, and the required fields in the messages.
 
 /* Messages look  like this: 
---------------------------------------
-
-
+=====================================
 	message : {
 
 		id: ,  <----generated through function call don't populate this on own
@@ -23,18 +22,17 @@
 		}
 
 	}
-----------------------------------------
-
-*/
+=====================================
+**/
 
 var count = 0;
 var RESERVED_STRING = '000000';
 var MESSAGE_TYPES = {
 	
-
-	//fields which should be defined for all messages
-	// to add metadata, use the provided function above. 
-	// this is necessary so we know how to generate the metadata.
+	/*fields which should be defined for all messages
+	  to add metadata, use the provided function above. 
+	  this is necessary so we know how to generate the metadata.
+	*/
 	metadata 						: [ ],
 
 	SERVER_MESSAGES: {
@@ -72,14 +70,6 @@ var MESSAGE_TYPES = {
 			requirements : ['mode','isSlave','ready']		
 		},
 
-
-		/*
-			looks like:
-			topics: {
-				topic1: x.
-				topic2: y etc
-			}
-		*/
 		TOPIC_UPDATE: {
 			type: 'client',
 			messagename  : 'TOPIC_UPDATE',
@@ -103,13 +93,18 @@ var MESSAGE_TYPES = {
 			messagename: 'SERVICE_REQUEST',
 			requirements: ['service','parameters']
 		}
-
-
 	}
 
 }
 
 
+/**
+{   title: "generateId",
+	params: "void",
+	return: "void",
+	description: "generates id numbers for each message type.   Just call this once at the end of this file. It's a necessary field to identify messages"
+}
+**/
 var generateId = function (){
 	MESSAGE_TYPES.idToMessageType = { };
 
@@ -127,7 +122,17 @@ var generateId = function (){
 }
 
 
-var addrequiredmetadata = function (field, creationFunction){
+/**
+{   title: "add_required_metadata",
+	params: {
+		field: "the fieldname of the required metadata",
+		creationFunction: "the function used to create the metadata each time a message is built"
+	},
+	return: "void",
+	description: use this function to add new metadata that will be added to every single message
+}
+**/
+var add_required_metadata = function (field, creationFunction){
 	if (creationFunction == undefined){
 		throw (new Error('must defined a creation function'))
 	}
@@ -144,7 +149,6 @@ var addrequiredmetadata = function (field, creationFunction){
 
 
 
-
 var addRequirementToAllTopics = function( requirement ){
 	for ( type in MESSAGE_TYPES ){
 		for (messagetype in MESSAGE_TYPES[type]){
@@ -156,7 +160,7 @@ var addRequirementToAllTopics = function( requirement ){
 
 // add anything here to enforce constraints on config style.
 // sacrifice nominal savings in runtime here so we don't have to do this later
-var checkFileIntegrity = function ( ){
+var check_file_integrity = function ( ){
 
 	var s_requirements = { };
 	var c_requirements = { };
@@ -201,19 +205,19 @@ var checkFileIntegrity = function ( ){
 
 
 generateId();
-addrequiredmetadata ('identifier', function(){
+add_required_metadata ('identifier', function(){
 	return 'localhost';
 })
 
-addrequiredmetadata ('network_interface', function(){
+add_required_metadata ('network_interface', function(){
 	return  null;
 })
 
-addrequiredmetadata ('timestamp', function(){
+add_required_metadata ('timestamp', function(){
 	return (new Date())	
 })
 
-checkFileIntegrity();
+check_file_integrity();
 
 
 

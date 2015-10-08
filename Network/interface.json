@@ -1,0 +1,14 @@
+
+{
+	"name": "network_interface",
+	"functions": {
+		"get_network_id": [],
+		"send_message" : ["message","identifier"],
+		"set_on_message_received": ["func"],
+		"is_available": [],
+		"turn_on_interface": ["inbound","outbound"],
+		"deload": []
+	}
+
+}
+

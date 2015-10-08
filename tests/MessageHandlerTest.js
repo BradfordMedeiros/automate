@@ -119,7 +119,7 @@ describe ("MessageHandler.js test",function (){
 	});
 
 	it ("attaching functions/as array, statefulness, feeding message", function(){
-		var messagehandler = (new mh()).getMessageHandlerInstance();
+		var messagehandler = messaging.message_handler.getMessageHandlerInstance();
 		var messagetypes = messagehandler.getMessageTypeList();
 		var count = 0;
 
