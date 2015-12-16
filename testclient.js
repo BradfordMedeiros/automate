@@ -1,9 +1,10 @@
  
 
 var FILES = require(process.env.HOME+'/.files');
+var messaging = require (FILES.messaging);
 
 
-var messagehandler = (new (require(FILES.messagehandler))).getMessageHandlerInstance();
+var messagehandler = messaging.message_handler.getMessageHandlerInstance();
 
 
 var network 	   = (new (require(FILES.abstractnetwork))(function(X){console.log(X)},true,true,true));

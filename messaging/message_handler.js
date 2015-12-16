@@ -158,6 +158,7 @@ MessageHandler.prototype.feedMessage = function ( inbound_message ){
 
 // associate functions to the message type
 MessageHandler.prototype.attachFunctionToMessageType = function ( messagetype , func ){
+
 	if (messagetype === undefined || func === undefined){
 		throw (new Error ('undefined parameters'));
 	}

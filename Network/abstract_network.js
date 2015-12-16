@@ -38,6 +38,8 @@ var AbstractNetwork = function ( onMessageReceived ,  interfaces_request, inboun
 	if (outbound_on === undefined){
 		outbound_on = true;
 	}
+
+	console.log(this);
 	this.load_network_interfaces( inbound_on, outbound_on );
 
 	this.sendsMessagesOutbound = outbound_on;
@@ -56,6 +58,7 @@ var AbstractNetwork = function ( onMessageReceived ,  interfaces_request, inboun
 
 // sends message to device defined by device config
 AbstractNetwork.prototype.sendMessage = function ( message, identifier, network_interface ) {
+	console.log("send message called!");
 	if (message === undefined || identifier === undefined || network_interface === undefined){
 		throw (new Error("paramers incorrectly defined in AbstractNetwork::sendMessage"));
 	}

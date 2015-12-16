@@ -42,8 +42,8 @@ var _devicestrapper = function (){
 **/
 _devicestrapper.prototype.createConfig = function ( identifier, network_interface, subscriptions, publications ) {
     if (identifier === undefined || network_interface === undefined || subscriptions === undefined || publications === undefined || 
-           (!Array.isArray(subscriptions) && subscriptions !==null )|| (!Array.isArray(publications) && publications !=null)){
-        throw (new Error('Cannot create config:  arguments defined improperly'))
+           (!Array.isArray(subscriptions) && subscriptions !==null )|| (!Array.isArray(publications) && publications !== null)){
+        throw (new Error('Cannot create config:  arguments defined improperly'));
     }
 
     var config = {
@@ -51,9 +51,9 @@ _devicestrapper.prototype.createConfig = function ( identifier, network_interfac
         network_interface: network_interface,
         subscriptions: subscriptions,
         publications: publications
-    }
+    };
     return config;
-}
+};
 
 
 /**
@@ -75,15 +75,15 @@ _devicestrapper.prototype.addDevice = function ( config ){
         console.log("adding device");
     }
     
-    if (config.identifier == undefined ){
+    if (config.identifier === undefined ){
         throw ( new Error ("SOURCE IP NOT DEFINED") );
     }
     this.devices[config.identifier] = config;
    
-    if (config.subscriptions !=null){
+    if (config.subscriptions !== null){
         this.addSubscriptions(config.identifier,config.subscriptions);
     }
-}
+};
 
 
 /**
@@ -93,16 +93,16 @@ _devicestrapper.prototype.addDevice = function ( config ){
 }
 **/
 _devicestrapper.prototype.removeDevice = function ( identifier ){
-   if ( this.devices[identifier] == undefined ){
+   if ( this.devices[identifier] === undefined ){
     return;
    }
    var device_subscriptions = this.devices[identifier].subscriptions;
 
    delete this.devices[identifier];
-   for ( subscription in device_subscriptions ){
+   for ( var subscription in device_subscriptions ){
         delete this.subscriptions[device_subscriptions[subscription]][identifier];
    }
-}
+};
 
 
 /**
@@ -115,23 +115,23 @@ _devicestrapper.prototype.removeDevice = function ( identifier ){
 }
 **/
 _devicestrapper.prototype.addSubscriptions = function ( identifier , subscriptions ){
-    if (subscriptions == null){
+    if (subscriptions === null){
         throw (new Error('subscriptions cannot be null'));
     }  
 
     this._addGeneric (identifier, subscriptions, 'subscriptions'); 
     if (!Array.isArray(subscriptions)){
         var single_sub = subscriptions;
-        subscriptions = new Array();
+        subscriptions = [ ];
         subscriptions.push(single_sub);
     }  
     for ( var i = 0 ; i < subscriptions.length ; i++ ){
-        if (this.subscriptions[subscriptions[i]] == undefined){
-            this.subscriptions[subscriptions[i]] = { }
+        if (this.subscriptions[subscriptions[i]] === undefined){
+            this.subscriptions[subscriptions[i]] = { };
         }
         this.subscriptions[subscriptions[i]][identifier] = (this.devices[identifier]);
     }
-}
+};
 
 
 /**
@@ -145,7 +145,7 @@ _devicestrapper.prototype.addSubscriptions = function ( identifier , subscriptio
 **/
 _devicestrapper.prototype.addPublications = function (identifier , publications ){
     this._addGeneric (identifier, publications, 'publications');
-}
+};
 
 
 /**
@@ -158,11 +158,11 @@ _devicestrapper.prototype.addPublications = function (identifier , publications 
 }
 **/
 _devicestrapper.prototype.removePublications = function (identifier, publications ){
-    if (publications == undefined){
+    if (publications === undefined){
         publications = this.devices[identifier].publications;   // if publications undefined remove them all
     }
     this._removeGeneric (identifier, publications, 'publications');
-}
+};
 
 
 /**
@@ -175,12 +175,12 @@ _devicestrapper.prototype.removePublications = function (identifier, publication
 }
 **/
 _devicestrapper.prototype.removeSubscriptions = function (identifier , subscriptions){
-    if (subscriptions == undefined){
+    if (subscriptions === undefined){
         subscriptions = this.devices[identifier].subscriptions;
     }
 
     this._removeGeneric(identifier,subscriptions,'subscriptions');
-}
+};
 
 
 //==========================================================================================================================
@@ -193,13 +193,13 @@ _devicestrapper.prototype.removeSubscriptions = function (identifier , subscript
 }
 **/
 _devicestrapper.prototype.get_network_interface = function (identifier){
-    if (identifier == undefined){
+    if (identifier === undefined){
         throw (new Error("cannot get interface for non-existant device identifier: :"+identifier));
     }
 
     var network_interface  = this.devices[identifier].network_interface;
 
-    if (network_interface == undefined){
+    if (network_interface === undefined){
         throw (new Error("no network interface for valid identifier, this shouldn't happen"));
     }
     return network_interface;
@@ -214,11 +214,11 @@ _devicestrapper.prototype.get_network_interface = function (identifier){
 **/
 _devicestrapper.prototype.get_connected_devices = function (){
     var device_identifiers=  [];
-    for ( identifier in this.devices ){
+    for ( var identifier in this.devices ){
         device_identifiers.push(identifier);
     }
     return device_identifiers;
-}
+};
 
 
 /**
@@ -248,23 +248,23 @@ _devicestrapper.prototype.get_update_messages = function ( topics ){
     var client_messages = { };  // message to send to each client]
     var client_topics = { };
 
-    for ( topic in topics ){
+    for ( var topic in topics ){
         var subscriptions = this.subscriptions[topic];  // for topic field name
 
-        if (subscriptions == undefined){
+        if (subscriptions === undefined){
             console.log('no subscription for topic '+topic);
             continue;
         }
 
-        for ( subscriber in subscriptions ){
-            if (client_topics[subscriber] == undefined ){
+        for ( var subscriber in subscriptions ){
+            if (client_topics[subscriber] === undefined ){
                 client_topics[subscriber]= { };
             }
             client_topics[subscriber][topic] = topics[topic]; // set value in client message for topic field
         } 
     }
     return client_topics; 
-}
+};
 
 /**
 @todo:feature
@@ -276,7 +276,7 @@ _devicestrapper.prototype.get_update_messages = function ( topics ){
 _devicestrapper.prototype.get_is_valid_update = function (){
     console.log("WARNING FUNCTION IS UNCODED.  CODE THIS TO CHECK PUBLICATIONS B4 SENDING");
     return true;
-}
+};
 
 
 //-----------------------------------------------------------------------------------
@@ -286,19 +286,19 @@ _devicestrapper.prototype.get_is_valid_update = function (){
 
 _devicestrapper.prototype._addGeneric = function ( identifier , fields, type ){
 
-    if ( this.devices[identifier] == undefined ){
+    if ( this.devices[identifier] === undefined ){
         throw ( new Error ("DEVICE NOT DEFINED: in adding subscriptions:  identifier = "+identifier ));
     }
     
-    if (fields == undefined ){
+    if (fields === undefined ){
         throw ( new Error ("SUBSCRIPTIONS NOT DEFINED: in adding fields: = "+fields) );
     }
     
     var config = this.devices[identifier];
-    if ( config != undefined ){
+    if ( config !== undefined ){
     
-        if (config[type] ==  undefined ){
-            config[type] = new Array();
+        if (config[type] ===  undefined ){
+            config[type] = [];
         }
         
         if (Array.isArray (fields) ){
@@ -313,12 +313,12 @@ _devicestrapper.prototype._addGeneric = function ( identifier , fields, type ){
            }
         }
     }
-}
+};
 
 
 // remove subscription to the config file of the device.  Subscriptions can be single element or an array
 _devicestrapper.prototype._removeGeneric = function ( identifier, fields, type ){
-    if ( this.devices[identifier] == undefined ){
+    if ( this.devices[identifier] === undefined ){
         throw ( new Error ("DEVICE NOT DEFINED: in removing subscriptions:  ip = "+ip) );
     }
     
@@ -326,10 +326,10 @@ _devicestrapper.prototype._removeGeneric = function ( identifier, fields, type )
 
     if (!Array.isArray(fields)){
         var field = fields;
-        fields = new Array();
+        fields = [];
         fields.push(field);
     }
-    this._removeArraySubset(config[type],fields)
+    this._removeArraySubset(config[type],fields);
 
     // remove from the array linking subcriptions to devices
     if (type == 'subscriptions'){
@@ -338,7 +338,7 @@ _devicestrapper.prototype._removeGeneric = function ( identifier, fields, type )
             delete this.subscriptions[fields[i]][identifier];
         }
     }
-}
+};
 
 _devicestrapper.prototype._removeArraySubset = function (targetArray, subset){
     var i = targetArray.length, j = subset.length;
@@ -352,7 +352,7 @@ _devicestrapper.prototype._removeArraySubset = function (targetArray, subset){
              }
         j = subset.length;
      }
-}
+};
 
 
 
@@ -376,7 +376,7 @@ _devicestrapper.prototype.serialize_on_quit = function (){
     
     
 // should call serialize data here
-}
+};
 
 // saves data to file device_config in data folder to restore info about devices 
 _devicestrapper.prototype._serializeData = function (){
@@ -386,12 +386,12 @@ _devicestrapper.prototype._serializeData = function (){
         console.log("Serializing Data: Device Config");
     }
 
-}
+};
 
 // loads device config file in devices
 _devicestrapper.prototype._deserializeData = function (){
     this.devices = JSON.parse(this.local.getItem('device_config')); 
-    if (this.devices == null){
+    if (this.devices === null){
         this.devices = { };
     }
     
@@ -400,7 +400,7 @@ _devicestrapper.prototype._deserializeData = function (){
 
     }
 
-}
+};
 
 
 
