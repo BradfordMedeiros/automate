@@ -74,9 +74,11 @@ var update_topic = function ( topic_update ){
 	var subscription_update = get_subscription_updates(topic_update);
 	for (var subscription_id in subscription_update){
 		var callback = get_subscription_callback(subscription_id);
-		callback(subscription_update[subscription_id]);
+		callback(subscription_update[subscription_id], subscription_update[subscription_id]);
 	}
 }
+
+
 // feedMessage will be called when a message is received
 //var feedMessage = message_handler.feedMessage.bind(message_handler);
 
@@ -139,6 +141,10 @@ function get_id (){
 }
 
 
+function fields_are_from_publisher(){
+	return true;
+}
+
 /**
 	Creates a new subscription to topics.  Callback is called when a new message is passed in.
 **/
@@ -190,7 +196,7 @@ var publisher = function ( publication  ){
 	this._publications = publication;
 
 	for ( var i = 0 ; i < publication.length ; i++){
-		if ( publications.indexOf(publication[i]) > -1 ){
+		if ( publications.indexOf(publication[i]) < 0 ){
 			publications.push(publication[i]);
 		} 
 	}
@@ -202,9 +208,16 @@ var publisher = function ( publication  ){
 **/
 
 //@todo
-publisher.prototype.publish =  function ( topic_content ){
-		//var update_message = message_handler.getMessageBuilder(message_handler.MESSAGETYPES.CLIENT_MESSAGES.TOPIC_UPDATE);
 
+
+publisher.prototype.publish =  function ( topic_update ){
+		//var update_message = message_handler.getMessageBuilder(message_handler.MESSAGETYPES.CLIENT_MESSAGES.TOPIC_UPDATE);
+	if ( !fields_are_from_publisher (topic_update) ){
+		throw (new Error("topic update must be from a publisher with the topics registered"));
+	}
+
+	var update_message = message_handler.getMessageBuilder(message_handler.MESSAGETYPES.CLIENT_MESSAGES.TOPIC_UPDATE).setTopics(topic_update).build();
+	message_handler.feedMessage(update_message);
 };
 
 /**
@@ -212,9 +225,11 @@ publisher.prototype.publish =  function ( topic_content ){
 	The advantage  of calling this is that if other devices want to publish to the topic,
 	and exclusively, this helps them with that. 
 **/
+
+// @broken
 publisher.prototype.stop = function ( ){
 	for ( var i = 0 ; i < this._publications ; i++ ){
-		publications.splice(publications.indexOf(this.publications[i]),1);
+		publications = publications.splice(publications.indexOf(this.publications[i]),1);
 	}
 	send_device_config_update();
 };
@@ -250,8 +265,12 @@ event_emitter.on(CONSTANTS.CLIENT_DEVICE_INIT, function ( message ){
 	network.sendMessage(message, SERVER_IP, "internet");
 });*/
 
-message_handler.attachFunctionToMessageType(message_handler.MESSAGETYPES.SERVER_MESSAGES.SERVER_TOPIC_UPDATE, update_topic);
+var send_topic_update = function ( topic_update_message ){
+	network.sendMessage( topic_update_message, SERVER_IP,"internet");
+};
 
+message_handler.attachFunctionToMessageType(message_handler.MESSAGETYPES.SERVER_MESSAGES.SERVER_TOPIC_UPDATE, update_topic);
+message_handler.attachFunctionToMessageType(message_handler.MESSAGETYPES.CLIENT_MESSAGES.TOPIC_UPDATE, send_topic_update);
 
 automate =  { };
 automate.subscription = subscription;

@@ -32,6 +32,7 @@ var Internet = function ( is_client ){
 		}
 
 		console.log('got a request');
+		console.log(req.body);
 		res.send('OK');
 
 		if (req.body !== undefined && req.body.metadata !==undefined){
