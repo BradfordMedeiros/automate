@@ -15,7 +15,7 @@ var inbound_on = true;
 var outbound_on = true;
 var enabled_interfaces = ['internet']; // this interface must be supported in abstractNetworkClass
 
-var network 	   = new network.abstract_network(feed_message_to_mh, enabled_interfaces, inbound_on, outbound_on);
+var network 	   = new network.abstract_network(feed_message_to_mh, enabled_interfaces, inbound_on, outbound_on, false);
 // we call the function when we get message received
 // and we can call network.sendMessage 
 

@@ -31,7 +31,14 @@ var OPTIONS = {
     },
 
     interface_refresh_speed: 5, // check to see if interfaces are alive every X s -> calls isAvailable()
-    request_port: 3821,      // port used to make message requests
+    
+    // sending messages outbound
+    outbound_request_port_server: 3822,
+    outbound_request_port_client: 3820,
+
+    /// receiving messages
+    request_port_server: 3820,      // port used to make message requests
+    request_port_client: 3822, // port used to listen to message requests on client side (end that connects to server)
     sends_messages_outbound: true,
     trigger_eval_period: 0.002 // how often triggers are evaluated
 

@@ -1,8 +1,11 @@
 FILEFINDER = '/.files';
 
 
-var Internet = function ( ){
+var Internet = function ( is_client ){
 
+	if ( is_client === undefined ){
+		throw (new Error("must define internet as client or not"));
+	}
 
 	var networkCheckingFrequency = require((require(process.env.HOME+FILEFINDER)).options).interface_refresh_speed;
 	this._onMessageReceived = undefined;
@@ -11,6 +14,7 @@ var Internet = function ( ){
 	this._request = require('request');
 	this._express = require('express');
 	this._app = this._express();
+	this._is_client = is_client;
 
 	var bodyParser = require("body-parser");
 	this._app.use(bodyParser());
@@ -18,8 +22,6 @@ var Internet = function ( ){
 	this.outbound_on = undefined;
 
 	var that = this;
-
-	
 
 
 	// this needs to parse the body and get the message out of it, and then pass that up
@@ -39,11 +41,21 @@ var Internet = function ( ){
 		}else{
 			console.log("message discarded, invalid");
 		}
-		
+	
 	});
 	
+	if ( this._is_client ){
+		this._port = require(require(process.env.HOME+FILEFINDER).options).request_port_client;
+	}else{
+		this._port = require(require(process.env.HOME+FILEFINDER).options).request_port_server;
+	}
 
-	this._port = require(require(process.env.HOME+FILEFINDER).options).request_port;
+	if ( this._is_client){
+		this._outbound_request_port = require(require(process.env.HOME+FILEFINDER).options).outbound_request_port_client;
+	}
+	else{
+		this._outbound_request_port = require(require(process.env.HOME+FILEFINDER).options).outbound_request_port_server;
+	}
 	this._server = undefined;
 	this._handle = setInterval( this._checkInterfaceAvailablility.bind(this), 1000* networkCheckingFrequency );
 };	
@@ -80,7 +92,7 @@ Internet.prototype.send_message = function(message, identifier ){
 	if (message === undefined || identifier === undefined){
 		throw (new Error('Parameters incorrectly defined in Internet::sendMessage'));
 	}
-	var ipaddress = 'http://'+identifier+':'+this._port;
+	var ipaddress = 'http://'+identifier+':'+this._outbound_request_port;
 	this._request.post(
 		ipaddress,
     	{ 

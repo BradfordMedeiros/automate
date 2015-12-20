@@ -6,7 +6,8 @@ var interface_checker =  require( (require (process.env.HOME+"/.files.js")).inte
 //interface_checker.isValidInterface(__dirname+"/interface.json");
 
 var AbstractNetwork = function ( onMessageReceived ,  interfaces_request, inbound_on, outbound_on, is_client){
-	
+
+
 	if (onMessageReceived === undefined){
 		throw (new Error("must define a function to call when a message is received"));
 	}
@@ -16,10 +17,13 @@ var AbstractNetwork = function ( onMessageReceived ,  interfaces_request, inboun
         if ( interfaces_request.length === 0){
 		throw (new Error ("interfaces must contain at least one interface, use string 'NO_INTERFACE' to specify no network interfaces"));
 	}
+	if ( is_client === undefined){
+		throw (new Error ("is client must be defined"));
+	}
 
 	this.onMessageReceived = onMessageReceived;
 
-
+	this.is_client = is_client;
 	this.isLoaded = false;
 	this.network_interfaces = { };
 	this.interfaces_request = interfaces_request; // a request to turn on the following interfaces	
@@ -52,7 +56,7 @@ var AbstractNetwork = function ( onMessageReceived ,  interfaces_request, inboun
 			throw (new Error ('client must be true/false/undefined (default to false'));
 		}
 	}else{
-		is_client = false;
+		this.is_client = false;
 	}
 };
 
@@ -81,8 +85,8 @@ AbstractNetwork.prototype._receivedInboundMessage = function (message){
 /**
 	initailizes the network interfaces: saves network Ids, turns then on
 **/
-AbstractNetwork.prototype.load_network_interfaces = function ( inbound_on, outbound_on ){
-	
+AbstractNetwork.prototype.load_network_interfaces = function ( inbound_on, outbound_on){
+
 	console.log('loading interfaces');
  	console.log("attempting to load:  "+JSON.stringify(this.interfaces_request));
 	if (this.isLoaded || this.interfaces_request == "NO_INTERFACE" ){
@@ -91,8 +95,9 @@ AbstractNetwork.prototype.load_network_interfaces = function ( inbound_on, outbo
 
 	var interfaces  = [ ];
 
-        if (this.interfaces_request.indexOf('internet') > -1 ){	
-	    var internet =  new (require("./internet.js"))();
+    if (this.interfaces_request.indexOf('internet') > -1 ){	
+    	console.log("$$$"+this.is_client);
+	    var internet =  new (require("./internet.js"))(this.is_client);
 	    interfaces.push(internet);
 	    console.log("Loading Interface: internet");
 	}

@@ -210,7 +210,7 @@ function convert_to_string_array ( element ){
 	return array;
 }
 
-var network = new network_module.abstract_network(message_handler.feedMessage.bind(message_handler),['internet'],"localhost",true,true)
+var network = new network_module.abstract_network(message_handler.feedMessage.bind(message_handler),['internet'],true,true,true)
 
 event_emitter.on(CONSTANTS.CLIENT_DEVICE_INIT, function ( message ){
 	network.sendMessage(message, SERVER_IP, "internet");
@@ -222,9 +222,7 @@ event_emitter.on(CONSTANTS.CLIENT_DEVICE_INIT, function ( message ){
 });*/
 
 message_handler.attachFunctionToMessageType(message_handler.MESSAGETYPES.SERVER_MESSAGES.SERVER_TOPIC_UPDATE, update_topic);
-message_handler.attachFunctionToMessageType(message_handler.MESSAGETYPES.CLIENT_MESSAGES.CLIENT_DEVICE_INIT, function(){
-	console.log("got the device init message");
-});
+
 
 automate =  { };
 automate.subscription = subscription;
