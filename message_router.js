@@ -117,6 +117,10 @@ message_control.prototype.route_devicestrapper = function (){
 message_control.prototype.route_network = function ( network ){
 
     this.event_emitter.on( SERVER_TOPIC_UPDATE_EVENT, function ( message){
+        console.log("SERVER TOPIC UPDATE ");
+        console.log("sending to ");
+        console.log("identifier:  "+message.metadata.identifier);
+        console.log("interface:   "+message.metadata.network_interface);
         network.sendMessage(message, message.metadata.identifier, message.metadata.network_interface);
     });
 

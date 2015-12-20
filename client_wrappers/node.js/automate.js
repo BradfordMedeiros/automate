@@ -14,6 +14,7 @@ var SERVER_IP = "localhost";
 var subscription_to_id = { } ;
 var subscription_id_to_callback = { } ;
 var subscription_count = 0;
+var publication_count = 0;
 var publications = [ ]
 
 
@@ -137,6 +138,7 @@ function get_id (){
 	return subscription_count++;
 }
 
+
 /**
 	Creates a new subscription to topics.  Callback is called when a new message is passed in.
 **/
@@ -170,14 +172,38 @@ var subscription = function ( subscriptions, callback ){
 	Creates a new publisher to topics.  Allows you to publish to topics.  
 	Throws an error if the topic is set for exclusive access and it fails
 **/
-var publisher = function ( publications  ){
+var publisher = function ( publication  ){
 
+	// convert into array so we can treat the rest of the logic as if array
+	if ( !Array.isArray(publication)){
+		var temp_publication = publication;
+		publication = [ ];
+		publication.push(temp_publication);
+	}
+
+	for ( var i = 0 ; i < publication.length; i++){
+		if (typeof(publication[i]) !== "string"){
+			throw (new Error("publications must all be strings"));
+		}
+	}
+
+	this._publications = publication;
+
+	for ( var i = 0 ; i < publication.length ; i++){
+		if ( publications.indexOf(publication[i]) > -1 ){
+			publications.push(publication[i]);
+		} 
+	}
+	send_device_config_update();
 };
 
 /**
 	Publishes the topics to the main server.
 **/
+
+//@todo
 publisher.prototype.publish =  function ( topic_content ){
+		//var update_message = message_handler.getMessageBuilder(message_handler.MESSAGETYPES.CLIENT_MESSAGES.TOPIC_UPDATE);
 
 };
 
@@ -187,7 +213,10 @@ publisher.prototype.publish =  function ( topic_content ){
 	and exclusively, this helps them with that. 
 **/
 publisher.prototype.stop = function ( ){
-
+	for ( var i = 0 ; i < this._publications ; i++ ){
+		publications.splice(publications.indexOf(this.publications[i]),1);
+	}
+	send_device_config_update();
 };
 
 
