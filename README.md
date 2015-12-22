@@ -3,10 +3,12 @@
 <b>Current Main Functionality </b> <hr> 
 
 Main server is built.  Devices may now subscribe to a topic, and they will receive update messages from any other client who publishes to the device automagically. 
-
 <br>
-<b>Next Main Functionality </b> <hr> 
-Work more on the device side.  Make the client API easy to understand and use.  I want to make something like this from a use case perspective (Node.js support first -- other devices/languages later): 
+The idea is you can subscribe to topics and publish to them from any device.  Communication is facilitated by a common server.  A callback with the new topic update is 
+automatically called when something publishes to that topic.
+
+<b>Usage</b>
+<hr>
 
 <code>
 var automate = require('automate'); </code> <br> <code>
@@ -23,6 +25,9 @@ var publisher = new automate.publisher( &lt;publication topic name(s)&gt; );
 publisher.publish ( &lt;topic_update&gt; );  // will be sent out to all devices
 </code>
 <br> <br>
-So this should be simple enough. This all exists on backend, just needs to be friendly from a programmer perspective. More functionality to come.
+More functionality to come.
+
+<br><hr>
+Next feature:  Implementing a form of logic system where you can say something like -- assuming we have these subscriptions already : "when the <i>temperature > 50</i> and is it night time and the wind_sensor > 20 publish the value "hot breezy night" to topic temperature_description and publish open_door to requested_door_state".  
 <br> <hr>
 <small><i>The ultimate goal is simpler --> GUI based embedded devices development. <!> It will happen <!> </i></small>
