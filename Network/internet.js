@@ -1,5 +1,7 @@
 FILEFINDER = '/.files';
 
+var EXCEPTIONS = { };
+EXCEPTIONS.CANNOT_CONNECT_TO_SERVER_EXCEPTION = "CANNOT CONNECT TO THE SERVER IP WHEN SENDING MESSAGE";
 
 var Internet = function ( is_client ){
 
@@ -94,6 +96,7 @@ Internet.prototype.send_message = function(message, identifier ){
 		throw (new Error('Parameters incorrectly defined in Internet::sendMessage'));
 	}
 	var ipaddress = 'http://'+identifier+':'+this._outbound_request_port;
+
 	this._request.post(
 		ipaddress,
     	{ 
@@ -104,6 +107,10 @@ Internet.prototype.send_message = function(message, identifier ){
         	console.log('error:  '+error);				// should figure out what
         	console.log('response: '+JSON.stringify(response));			// we want to do here
         	console.log('body:  '+body);
+
+        	if ( error !==null){
+        		throw (new Error(EXCEPTIONS.CANNOT_CONNECT_TO_SERVER_EXCEPTION));
+        	}
     	}
 	);
 };

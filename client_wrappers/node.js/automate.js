@@ -15,7 +15,7 @@ var subscription_to_id = { } ;
 var subscription_id_to_callback = { } ;
 var subscription_count = 0;
 var publication_count = 0;
-var publications = [ ]
+var publications = [ ]; 
 
 
 /**
@@ -64,11 +64,11 @@ var get_client_config_update = function  () {
 	config_update_builder.setSubscriptions(get_subscriptions());
 	config_update_builder.setPublications(get_publications());
 	return config_update_builder.build();
-}
+};
 
 var get_subscription_callback = function(subscription_id){
 	return subscription_id_to_callback[subscription_id];
-}
+};
 
 var update_topic = function ( topic_update ){
 	var subscription_update = get_subscription_updates(topic_update);
@@ -76,7 +76,7 @@ var update_topic = function ( topic_update ){
 		var callback = get_subscription_callback(subscription_id);
 		callback(subscription_update[subscription_id], subscription_update[subscription_id]);
 	}
-}
+};
 
 
 // feedMessage will be called when a message is received
@@ -254,10 +254,12 @@ function convert_to_string_array ( element ){
 	return array;
 }
 
-var network = new network_module.abstract_network(message_handler.feedMessage.bind(message_handler),['internet'],true,true,true)
+var network = new network_module.abstract_network(message_handler.feedMessage.bind(message_handler),['internet'],true,true,true);
 
 event_emitter.on(CONSTANTS.CLIENT_DEVICE_INIT, function ( message ){
+
 	network.sendMessage(message, SERVER_IP, "internet");
+	
 });
 
 //internal usage, should use event emitter
@@ -278,10 +280,5 @@ automate.publisher = publisher;
 
 module.exports = {
 	subscription: subscription,
-	publication: publisher,
-	stoid: subscription_to_id,	// should not be in final api
-	update: update_topic, 	// should not be in final api
-	network: network,
-	mh: message_handler,
-	callbacks: subscription_id_to_callback // should not be in final api
+	publication: publisher
 };

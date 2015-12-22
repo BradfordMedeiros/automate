@@ -73,7 +73,8 @@ AbstractNetwork.prototype.sendMessage = function ( message, identifier, network_
 	if (!this.sendsMessagesOutbound){
 		return;
 	}
-	this.network_interfaces[network_interface].send_message(message, identifier, network_interface);
+	var response = this.network_interfaces[network_interface].send_message(message, identifier, network_interface);
+	return response;
 };
 
 // called by attached network interfaces.  They will call this function when they receive a new message.  

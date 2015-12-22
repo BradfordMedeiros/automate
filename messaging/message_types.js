@@ -95,7 +95,7 @@ var MESSAGE_TYPES = {
 		}
 	}
 
-}
+};
 
 
 /**
@@ -108,18 +108,18 @@ var MESSAGE_TYPES = {
 var generateId = function (){
 	MESSAGE_TYPES.idToMessageType = { };
 
-	for ( messagetype in MESSAGE_TYPES){
-		for (message in MESSAGE_TYPES[messagetype]){
+	for ( var messagetype in MESSAGE_TYPES){
+		for ( var message in MESSAGE_TYPES[messagetype]){
 			var id = RESERVED_STRING + count;
 			MESSAGE_TYPES[messagetype][message].id = id;
 			count = count + 1 ;
 			MESSAGE_TYPES[id] = {
  				type: 		 MESSAGE_TYPES[messagetype][message].type,
 				messagename: MESSAGE_TYPES[messagetype][message].messagename
-			}
+			};
 		}
 	}
-}
+};
 
 
 /**
@@ -133,11 +133,11 @@ var generateId = function (){
 }
 **/
 var add_required_metadata = function (field, creationFunction){
-	if (creationFunction == undefined){
-		throw (new Error('must defined a creation function'))
+	if (creationFunction === undefined){
+		throw (new Error('must defined a creation function'));
 	}
 
-	if (MESSAGE_TYPES.createMetadata == undefined){
+	if (MESSAGE_TYPES.createMetadata === undefined){
 		if (MESSAGE_TYPES.metadata.length > 0 ){
 			throw (new Error ("Do not define meta data without calling  add metadata function"));
 		}
@@ -145,17 +145,17 @@ var add_required_metadata = function (field, creationFunction){
 	}
 	MESSAGE_TYPES.metadata.push (field);
 	MESSAGE_TYPES.createMetadata[field] = creationFunction;
-}
+};
 
 
 
 var addRequirementToAllTopics = function( requirement ){
-	for ( type in MESSAGE_TYPES ){
-		for (messagetype in MESSAGE_TYPES[type]){
+	for ( var type in MESSAGE_TYPES ){
+		for ( var messagetype in MESSAGE_TYPES[type]){
 			MESSAGE_TYPES[type][messagetype].requirements.push(requirement);
 		}
 	}
-}
+};
 
 
 // add anything here to enforce constraints on config style.
@@ -165,40 +165,40 @@ var check_file_integrity = function ( ){
 	var s_requirements = { };
 	var c_requirements = { };
 
-	for ( message in MESSAGE_TYPES.SERVER_MESSAGES ){
+	for ( var message in MESSAGE_TYPES.SERVER_MESSAGES ){
 		for (var i = 0 ; i < MESSAGE_TYPES.SERVER_MESSAGES[message].requirements.length ;i ++ ){
 
-			if (s_requirements[MESSAGE_TYPES.SERVER_MESSAGES[message].requirements[i]] !=undefined){
-				throw (new Error("cannot have duplicate requirements:\t"+MESSAGE_TYPES.SERVER_MESSAGES[message].requirements[i]))
+			if (s_requirements[MESSAGE_TYPES.SERVER_MESSAGES[message].requirements[i]] !== undefined){
+				throw (new Error("cannot have duplicate requirements:\t"+MESSAGE_TYPES.SERVER_MESSAGES[message].requirements[i]));
 			}
 
 			s_requirements[MESSAGE_TYPES.SERVER_MESSAGES[message].requirements[i]] = true;
 
-			if (MESSAGE_TYPES.SERVER_MESSAGES[message].requirements[i].length == 0){
-				throw (new Error("field length must be > 0"))
+			if (MESSAGE_TYPES.SERVER_MESSAGES[message].requirements[i].length === 0){
+				throw (new Error("field length must be > 0"));
 			}
 		}
 		s_requirements = { } ;
 
 	}
 
-	for ( message in MESSAGE_TYPES.CLIENT_MESSAGES ){
+	for ( var message in MESSAGE_TYPES.CLIENT_MESSAGES ){
 
 		for (var i = 0 ; i < MESSAGE_TYPES.CLIENT_MESSAGES[message].requirements.length ;i ++ ){
 
-			if (c_requirements[MESSAGE_TYPES.CLIENT_MESSAGES[message].requirements[i]] !=undefined){
-				throw (new Error("cannot have duplicate requirements:\t"+MESSAGE_TYPES.CLIENT_MESSAGES[message].requirements[i]))
+			if (c_requirements[MESSAGE_TYPES.CLIENT_MESSAGES[message].requirements[i]] !== undefined){
+				throw (new Error("cannot have duplicate requirements:\t"+MESSAGE_TYPES.CLIENT_MESSAGES[message].requirements[i]));
 			}
 
 			c_requirements[MESSAGE_TYPES.CLIENT_MESSAGES[message].requirements[i]] = true;
-			if (MESSAGE_TYPES.CLIENT_MESSAGES[message].requirements[i].length == 0){
-				throw (new Error("field length must be > 0"))
+			if (MESSAGE_TYPES.CLIENT_MESSAGES[message].requirements[i].length === 0){
+				throw (new Error("field length must be > 0"));
 			}
 		}
 		c_requirements = { };
 	}
 	
-}
+};
 
 
 
@@ -207,15 +207,15 @@ var check_file_integrity = function ( ){
 generateId();
 add_required_metadata ('identifier', function(){
 	return 'localhost';
-})
+});
 
 add_required_metadata ('network_interface', function(){
 	return  null;
-})
+});
 
 add_required_metadata ('timestamp', function(){
-	return (new Date())	
-})
+	return (new Date());
+});
 
 check_file_integrity();
 
