@@ -7,7 +7,7 @@ This file details the locations of other files.  It you should read this file to
 
 */
 
-var PWD = process.env.HOME + '/Documents/automationGIT/'
+var PWD = "/home/samantha"+ '/Documents/automationGIT/'
 
 var filelocations = {
 

@@ -35,7 +35,9 @@ callbackfunction ( temperature_reference, humidity_reference, other_composite_re
 var DEFAULT_NAME = 'default_name';
 var and_or_tree = function ( ){
 	this.atom_nodes = { };
+	this.composite_nodes = { };
 	this.atom_handle_counter = 0;
+	this.composite_handle_counter = 0;
 }
 
 var atom_node = function( atom_name, eval_function, reference_data , callback){
@@ -53,22 +55,24 @@ atom_node.prototype._classname = 'atom_node';
 
 
 
-var composite_node = function () {
-	this.or_children =  { }; 	
-
+// true if any of the or children are true or all of the and children
+var composite_node = function ( composite_node_name, or_children ) {
+	this.or_children = or_children; // if any of the children are true this is true, this is an array of and lists
 }
+
+
 composite_node.prototype._classname = 'composite_node';
 
 
 
 // @ returns a handle to the atom node
-and_or_tree.prototype.get_atom_node = function ( reference_data, eval_function , callback_on_true,atom_name ){
+and_or_tree.prototype.get_atom_node = function ( reference_data, eval_function , callback_on_true, atom_name){
 	if (eval_function == undefined){
 		throw (new Error('must have a eval function defined'));
 	}
 
 
-	if (atom_name == undefined){
+	if (atom_name === undefined){
 		atom_name = DEFAULT_NAME+this.atom_handle_counter;
 	}
 	var atom = new atom_node(atom_name,eval_function,reference_data, callback_on_true);
@@ -77,10 +81,6 @@ and_or_tree.prototype.get_atom_node = function ( reference_data, eval_function ,
 	return (this.atom_handle_counter-1);
 }
 
-// callback function will fire 
-and_or_tree.prototype.create_composite_node = function ( callback, atom_node1, atom_node2, atom_noden){
-
-}
 
 and_or_tree.prototype.evaluate_atom_nodes = function () {
 	for ( atom_handle in this.atom_nodes ){
@@ -103,6 +103,31 @@ and_or_tree.prototype.clear_atoms = function (){
 	this.atom_nodes = { };
 	this.atom_handle_counter = 0;
 }
+
+// callback function will fire 
+// param or_children should be an array of and nodes
+and_or_tree.prototype.create_composite_node = function ( callback, or_children, composite_node_name ){
+	if (typeof(callback) !== "function"){
+		throw (new Error("callback must be a function"));
+	}
+
+	for ( var list in or_children ){
+		if (!Array.isArray(list)){
+			throw (new Error("element or or_children must be arrays"));
+		}
+	}
+
+	if ( composite_node_name == undefined){
+		composite_node_name = DEFAULT_NAME+this.composite_handle_counter;
+	}
+
+	var composite_node = new composite_node( composite_node_name, or_children );
+	this.composite_nodes[ this.composite_handle_counter] = composite_node;
+	this.composite_handle_counter++;
+	return (this.composite_handle_counter -1);
+}
+
+
 
 and_or_tree.prototype.toString = function(){
 	string = "";

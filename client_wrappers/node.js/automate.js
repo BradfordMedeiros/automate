@@ -6,8 +6,9 @@ var message_handler = require(files.messaging).message_handler.getMessageHandler
 var network_module = require (files.network);
 
 
-var CONSTANTS = { };
-CONSTANTS.CLIENT_DEVICE_INIT = "CLIENT_DEVICE_INIT";
+var CONSTANTS = { 
+	CLIENT_DEVICE_INIT: "CLIENT_DEVICE_INIT"
+};
 
 
 var SERVER_IP = "localhost";
@@ -26,9 +27,6 @@ var publications = [ ];
 **/
 
 
-var route_message = function( ){
-
-};
 
 var get_subscriptions = function(){
 	var subscriptions = [ ];
