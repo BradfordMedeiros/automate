@@ -23,6 +23,7 @@ publication_manager.prototype.get_publications = function(){
 publication_manager.prototype.add_publication = function ( publication  ){
 
 	var publications_array = convert_to_string_array(publication);
+
 	for ( var i = 0 ; i < publications_array.length ; i++){
 		if (this.publications[publications_array[i]] === undefined){
 			this.publications[publications_array[i]] = 0;
@@ -108,6 +109,36 @@ subscription_manager.prototype.get_subscriptions = function (){
 	return subscriptions;
 };
 
+
+subscription_manager.prototype.get_subscription_updates = function(topic_update){
+
+	var subscription_updates = { };
+	for (var field in topic_update){ // for every field such as fire, ice, flames in the update
+		var subscribers_to_field = this.subscription_to_id[field]; // get the ids array of subscriptions subscribing to field in topic_Update
+		//add_subscription_field_update_to_subscriber(subscription_updates, subscribers_to_field);
+		for ( var subscription_id in this.subscribers_to_field){
+			if (subscription_updates[subscription_id] === undefined){
+				subscription_updates[subscription_id] = { };
+			}
+			subscription_updates[subscription_id][field] = topic_update[field];
+		}
+	}
+	return subscription_updates;
+
+};
+
+subscription_manager.prototype.get_subscription_callback = function (subscription_id){
+	return this.subscription_id_to_callback[subscription_id];
+};
+
+subscription_manager.prototype.update_subscriptions = function (topic_update){
+	var subscription_update = this.get_subscription_updates(topic_update);
+	console.log(subscription_update);
+	for (var subscription_id in subscription_update){
+		var callback = this.get_subscription_callback(subscription_id);
+		callback(subscription_update[subscription_id], subscription_update[subscription_id]);
+	}	
+};
 
 
 /**
