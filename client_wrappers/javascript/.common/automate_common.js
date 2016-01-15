@@ -1,11 +1,43 @@
 
+/**
+		This is a common class to be used for the node.js code and javascript code.  Should be converted via browserify.
+		This means WE DO NOT DO ANYTHING IN HERE THAT WONT RUN IN A BROWSER
+
+**/
 
 
-var automate_common = function ( message_handler ){
+var messaging = require("/home/samantha/Documents/automationGIT/messaging/modules.js"); 
+/* I would prefer to use the .files module reference here but browserify apparently resolves
+ by doing some sort of inspection.  Because I resolve the paths at runtime, browserify cannot resolve
+ and I don't feel like wasting my time on some module crap for something that might be resolved by them later
+ slash something that might not matter much.  Maybe use proper npm stuff lol.*/
+
+
+var update_topic = function(x){
+	console.log("$");
+};
+
+var message_handler = messaging.message_handler.getMessageHandlerInstance();
+message_handler.attachFunctionToMessageType(message_handler.MESSAGETYPES.SERVER_MESSAGES.SERVER_TOPIC_UPDATE, update_topic);
+
+
+// sendout(message) should send the message to the server
+// inbound function should be called e
+var automate_common = function ( sendoutfunction, inboundfunction ){
 	this.message_handler = message_handler;
 	this.publication_manager = publication_manager;
 	this.subscription_manager = subscription_manager;
+
+	this.send_message_to_server = sendoutfunction;  // call this function to send messages to the server
 };
+
+/**
+	this function gets called when the client has messages from the server
+**/
+automate_common.feed_message = function(inbound_message){
+
+};
+
 
 var publication_manager = function (){
 	this.publications = { };
@@ -49,6 +81,10 @@ publication_manager.prototype.add_publication = function ( publication  ){
 };
 
 publication_manager.prototype.remove_publication = function (id){
+
+	if (this.id_to_publications[id] === undefined){
+		throw (new Error("Cannot remove a handle that is not a current publication"));
+	}
 	for (var publication in this.id_to_publications[id]){
 		this.publications[this.id_to_publications[id][publication]]--;
 		if (this.publications[this.id_to_publications[id][publication]] === 0){
@@ -74,6 +110,10 @@ subscription_manager.prototype.get_count = function(){
 };
 
 subscription_manager.prototype.add_subscription = function ( subscriptions, callback){
+
+	if (callback === undefined){
+		throw (new Error("Subscription invalid:  Must include a callback"));
+	}
 	var subscriptions_array = [].concat(subscriptions);
 	for ( var subscription in subscriptions_array ){
 		if (this.subscription_to_id[subscriptions_array[subscription]] === undefined){
@@ -81,13 +121,18 @@ subscription_manager.prototype.add_subscription = function ( subscriptions, call
 		}
 		this.subscription_to_id[subscriptions_array[subscription]][this.id_counter] = true;
 	}
-	this.subscription_id_to_callback[this.number_of_subscriptions] = callback;
+	this.subscription_id_to_callback[this.id_counter] = callback;
 	this.number_of_subscriptions++;
 	this.id_counter++;
 	return this.id_counter-1;
 };
 
 subscription_manager.prototype.remove_subscription = function (id){
+
+	if (this.subscription_id_to_callback[id] === undefined){
+		throw (new Error ("Cannot remove a handle that is not a current subscription"));
+	}
+
 	for ( var subscription in this.subscription_to_id ){
 		if (this.subscription_to_id[subscription][id] !== undefined){
 			delete this.subscription_to_id[subscription][id];
@@ -151,17 +196,19 @@ subscription_manager.prototype.update_subscriptions = function (topic_update){
 	}	
 };
 
+//@TODO SHOULD USE THIS TO PRIVATIZE THE FUNCTION
+/*function get_subscription_updates (subscription_manager, topic_update){
 
-/**
-	Helper function: 
-	Converts to an array, or returns the array
-	If the input consists of something which is not a string or array containing only strings, throws an error
-**/
+}*/
+
+
+
 
 
 module.exports = {
 	subscription_manager: subscription_manager,
 	publication_manager: publication_manager,
+	message_handler: message_handler
 
 };
 
