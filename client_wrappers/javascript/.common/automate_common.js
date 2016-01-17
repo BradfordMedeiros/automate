@@ -20,35 +20,53 @@ var update_topic = function(x){
 var message_handler = messaging.message_handler.getMessageHandlerInstance();
 message_handler.attachFunctionToMessageType(message_handler.MESSAGETYPES.SERVER_MESSAGES.SERVER_TOPIC_UPDATE, update_topic);
 
-
 // sendout(message) should send the message to the server
 // inbound function should be called e
-var automate_common = function ( sendoutfunction, inboundfunction ){
-	this.message_handler = message_handler;
-	this.publication_manager = publication_manager;
-	this.subscription_manager = subscription_manager;
+var automate_common = function ( send_to_server_function ){
 
-	this.send_message_to_server = sendoutfunction;  // call this function to send messages to the server
+	if (typeof(send_to_server_function) !== "function"){
+		throw (new Error("must define send_to_server_function"));
+	}
+
+	this.message_handler = message_handler;
+
+	this.send  = send_to_server_function;  // call this function to send messages to the server
+
+	this.publications = { };
+	this.id_to_publications = { };
+	this.publications_count = 0;
+	this.publication_id_counter = 0;
+
+	this.number_of_subscriptions = 0;
+	this.subscription_to_id = { };
+	this.subscription_id_to_callback = { };
+	this.subscription_id_counter = 0;
 };
 
 /**
 	this function gets called when the client has messages from the server
 **/
-automate_common.feed_message = function(inbound_message){
+automate_common.prototype.feed_update_message = function(inbound_update_message){
+	if (inbound_update_message.messagename !== "SERVER_TOPIC_UPDATE"){
+		throw (new Error("feed_update_message only accepts SERVER_TOPIC_UPDATE messages"));	
+	}
+
+	this.subscription_manager.update_subscriptions(inbound_update_message.body);
+};
+
+automate_common.prototype.get_client_device_config_update_message = function(){
+	
+	var client_device_init = this.message_handler.getMessageBuilder(
+		this.message_handler.MESSAGETYPES.CLIENT_MESSAGES.CLIENT_DEVICE_INIT);
+	client_device_init.setSubscriptions(this.subscription_manager.get_subscriptions());
+	client_device_init.setPublications(this.publication_manager.get_publications());
+	return client_device_init.build();
 
 };
 
 
-var publication_manager = function (){
-	this.publications = { };
-	this.id_to_publications = { };
-	this.publications_count = 0;
-	this.id_counter = 0;
-};
 
-
-
-publication_manager.prototype.get_publications = function(){
+automate_common.prototype.get_publications = function(){
 	var publications = [ ];
 	for ( var fields in this.id_to_publications){
 		for (var field in this.id_to_publications[fields]){
@@ -60,11 +78,11 @@ publication_manager.prototype.get_publications = function(){
 	return publications;
 };
 
-publication_manager.prototype.get_count = function(){
+automate_common.prototype.get_publication_count = function(){
 	return this.publications_count;
 };
 
-publication_manager.prototype.add_publication = function ( publication  ){
+automate_common.prototype.add_publication = function ( publication  ){
 
 	var publications_array = [].concat(publication);
 
@@ -74,13 +92,17 @@ publication_manager.prototype.add_publication = function ( publication  ){
 		}
 		this.publications[publications_array[i]]++;
 	}
-	this.id_to_publications[this.id_counter] = publications_array;
+	this.id_to_publications[this.publication_id_counter] = publications_array;
 	this.publications_count++;
-	this.id_counter++;
-	return this.id_counter-1;
+	this.publication_id_counter++;
+
+	//this.send(this.get_client_device_config_update_message());
+
+	return this.publication_id_counter-1;
+
 };
 
-publication_manager.prototype.remove_publication = function (id){
+automate_common.prototype.remove_publication = function (id){
 
 	if (this.id_to_publications[id] === undefined){
 		throw (new Error("Cannot remove a handle that is not a current publication"));
@@ -96,20 +118,14 @@ publication_manager.prototype.remove_publication = function (id){
 };
 
 
-var subscription_manager = function(){
-
-	this.number_of_subscriptions = 0;
-	this.subscription_to_id = { };
-	this.subscription_id_to_callback = { };
-	this.id_counter = 0;
-};
 
 
-subscription_manager.prototype.get_count = function(){
+
+automate_common.prototype.get_subscription_count = function(){
 	return this.number_of_subscriptions;
 };
 
-subscription_manager.prototype.add_subscription = function ( subscriptions, callback){
+automate_common.prototype.add_subscription = function ( subscriptions, callback){
 
 	if (callback === undefined){
 		throw (new Error("Subscription invalid:  Must include a callback"));
@@ -119,15 +135,18 @@ subscription_manager.prototype.add_subscription = function ( subscriptions, call
 		if (this.subscription_to_id[subscriptions_array[subscription]] === undefined){
 			this.subscription_to_id[subscriptions_array[subscription]] = { };
 		}
-		this.subscription_to_id[subscriptions_array[subscription]][this.id_counter] = true;
+		this.subscription_to_id[subscriptions_array[subscription]][this.subscription_id_counter] = true;
 	}
-	this.subscription_id_to_callback[this.id_counter] = callback;
+	this.subscription_id_to_callback[this.subscription_id_counter] = callback;
 	this.number_of_subscriptions++;
-	this.id_counter++;
-	return this.id_counter-1;
+	this.subscription_id_counter++;
+
+	//this.send(this.get_client_device_config_update_message());
+
+	return this.subscription_id_counter-1;
 };
 
-subscription_manager.prototype.remove_subscription = function (id){
+automate_common.prototype.remove_subscription = function (id){
 
 	if (this.subscription_id_to_callback[id] === undefined){
 		throw (new Error ("Cannot remove a handle that is not a current subscription"));
@@ -158,7 +177,7 @@ subscription_manager.prototype.remove_subscription = function (id){
 	Kind of funky because this is the real subscriptions fields that we'll use that we send to the server
 	So might want to consider renaming to show that this is aggregate?
 **/
-subscription_manager.prototype.get_subscriptions = function (){
+automate_common.prototype.get_subscriptions = function (){
 	var subscriptions = [ ];
 	for ( var field in this.subscription_to_id){
 		subscriptions.push(field);
@@ -167,11 +186,11 @@ subscription_manager.prototype.get_subscriptions = function (){
 };
 
 
-subscription_manager.prototype.get_subscription_callback = function (subscription_id){
+automate_common.prototype.get_subscription_callback = function (subscription_id){
 	return this.subscription_id_to_callback[subscription_id];
 };
 
-subscription_manager.prototype.get_subscription_updates = function(topic_update){
+automate_common.prototype.get_subscription_updates = function(topic_update){
 
 	var subscription_updates = { };
 	for (var field in topic_update){ // for every field such as fire, ice, flames in the update
@@ -188,7 +207,7 @@ subscription_manager.prototype.get_subscription_updates = function(topic_update)
 
 };
 
-subscription_manager.prototype.update_subscriptions = function (topic_update){
+automate_common.prototype.update_subscriptions = function (topic_update){
 	var subscription_update = this.get_subscription_updates(topic_update);
 	for (var subscription_id in subscription_update){
 		var callback = this.get_subscription_callback(subscription_id);
@@ -205,11 +224,6 @@ subscription_manager.prototype.update_subscriptions = function (topic_update){
 
 
 
-module.exports = {
-	subscription_manager: subscription_manager,
-	publication_manager: publication_manager,
-	message_handler: message_handler
-
-};
+module.exports = automate_common;
 
 

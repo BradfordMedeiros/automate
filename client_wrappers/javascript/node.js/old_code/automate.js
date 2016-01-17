@@ -277,6 +277,5 @@ automate.subscription = subscription;
 automate.publisher = publisher;
 
 module.exports = {
-	subscription: subscription,
-	publication: publisher
+	automate_common: automate_common
 };
