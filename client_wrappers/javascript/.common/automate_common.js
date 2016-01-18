@@ -13,12 +13,7 @@ var messaging = require("/home/samantha/Documents/automationGIT/messaging/module
  slash something that might not matter much.  Maybe use proper npm stuff lol.*/
 
 
-var update_topic = function(x){
-	console.log("$");
-};
-
 var message_handler = messaging.message_handler.getMessageHandlerInstance();
-message_handler.attachFunctionToMessageType(message_handler.MESSAGETYPES.SERVER_MESSAGES.SERVER_TOPIC_UPDATE, update_topic);
 
 // sendout(message) should send the message to the server
 // inbound function should be called e
@@ -27,8 +22,6 @@ var automate_common = function ( send_to_server_function ){
 	if (typeof(send_to_server_function) !== "function"){
 		throw (new Error("must define send_to_server_function"));
 	}
-
-	this.message_handler = message_handler;
 
 	this.send  = send_to_server_function;  // call this function to send messages to the server
 
@@ -50,20 +43,11 @@ automate_common.prototype.feed_update_message = function(inbound_update_message)
 	if (inbound_update_message.messagename !== "SERVER_TOPIC_UPDATE"){
 		throw (new Error("feed_update_message only accepts SERVER_TOPIC_UPDATE messages"));	
 	}
-
-	this.subscription_manager.update_subscriptions(inbound_update_message.body);
+	if (inbound_update_message.body === undefined || inbound_update_message.body.topics === undefined){
+		throw (new Error("invalid message, body incorrectly defined"));
+	}
+	update_subscriptions(this,inbound_update_message.body.topics);
 };
-
-automate_common.prototype.get_client_device_config_update_message = function(){
-	
-	var client_device_init = this.message_handler.getMessageBuilder(
-		this.message_handler.MESSAGETYPES.CLIENT_MESSAGES.CLIENT_DEVICE_INIT);
-	client_device_init.setSubscriptions(this.subscription_manager.get_subscriptions());
-	client_device_init.setPublications(this.publication_manager.get_publications());
-	return client_device_init.build();
-
-};
-
 
 
 automate_common.prototype.get_publications = function(){
@@ -96,7 +80,7 @@ automate_common.prototype.add_publication = function ( publication  ){
 	this.publications_count++;
 	this.publication_id_counter++;
 
-	//this.send(this.get_client_device_config_update_message());
+	this.send(get_client_device_config_update_message(this));
 
 	return this.publication_id_counter-1;
 
@@ -114,10 +98,36 @@ automate_common.prototype.remove_publication = function (id){
 		}
 	}
 	delete this.id_to_publications[id];
+
+	this.send(get_client_device_config_update_message(this));
 	this.publications_count--;
 };
 
+automate_common.prototype.publish = function(id, topic_update){
 
+	if (id == undefined || topic_update == undefined){
+		throw (new Error("invalid parameters"));
+	}
+
+	var valid = true;
+
+	var publishable_publications = this.id_to_publications[id];
+	for (var publication in topic_update){
+
+		if (publishable_publications.indexOf(publication) < 0){
+			valid = false;
+		}
+	}
+
+	if (!valid){
+		throw (new Error("Publishing a publication to which the publication does not have permission to publish"));
+	}
+
+	var client_update = message_handler.getMessageBuilder(
+		message_handler.MESSAGETYPES.CLIENT_MESSAGES.TOPIC_UPDATE).setTopics(topic_update).build();
+
+	this.send(client_update);
+};
 
 
 
@@ -141,7 +151,7 @@ automate_common.prototype.add_subscription = function ( subscriptions, callback)
 	this.number_of_subscriptions++;
 	this.subscription_id_counter++;
 
-	//this.send(this.get_client_device_config_update_message());
+	this.send(get_client_device_config_update_message(this));
 
 	return this.subscription_id_counter-1;
 };
@@ -168,12 +178,13 @@ automate_common.prototype.remove_subscription = function (id){
 		}
 	}
 	delete this.subscription_id_to_callback[id];
+
+	this.send(get_client_device_config_update_message(this));
+
 	this.number_of_subscriptions--;
 };
 
-
 /**
-	@todo misleading
 	Kind of funky because this is the real subscriptions fields that we'll use that we send to the server
 	So might want to consider renaming to show that this is aggregate?
 **/
@@ -207,21 +218,26 @@ automate_common.prototype.get_subscription_updates = function(topic_update){
 
 };
 
-automate_common.prototype.update_subscriptions = function (topic_update){
-	var subscription_update = this.get_subscription_updates(topic_update);
+
+function update_subscriptions (automate,topic_update){
+
+	console.log("-----------------")
+	console.log(automate);
+	console.log("----------")
+	var subscription_update = automate.get_subscription_updates(topic_update);
 	for (var subscription_id in subscription_update){
-		var callback = this.get_subscription_callback(subscription_id);
+		var callback = automate.get_subscription_callback(subscription_id);
 		callback(subscription_update[subscription_id], subscription_update[subscription_id]);
 	}	
-};
+}
 
-//@TODO SHOULD USE THIS TO PRIVATIZE THE FUNCTION
-/*function get_subscription_updates (subscription_manager, topic_update){
-
-}*/
-
-
-
+function get_client_device_config_update_message (automate_common){
+	var client_device_init = message_handler.getMessageBuilder(
+		message_handler.MESSAGETYPES.CLIENT_MESSAGES.CLIENT_DEVICE_INIT);
+	client_device_init.setSubscriptions(automate_common.get_subscriptions());
+	client_device_init.setPublications(automate_common.get_publications());
+	return client_device_init.build();
+}
 
 
 module.exports = automate_common;

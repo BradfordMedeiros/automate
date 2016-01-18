@@ -4,6 +4,7 @@ var assert = require("assert");
 var files = require(process.env.HOME+"/.files.js");
 
 var messaging = require(files.messaging);
+var message_handler = messaging.message_handler.getMessageHandlerInstance();
 var automate_common = require("../automate_common.js");
 
 describe ("subscription tests",function(){
@@ -95,15 +96,15 @@ describe ("subscription tests",function(){
                 values_other.water = update.water;
             });
 
-            automate.update_subscriptions(update);
+
+            update_message = message_handler.getMessageBuilder(
+                message_handler.MESSAGETYPES.SERVER_MESSAGES.SERVER_TOPIC_UPDATE).setTopics(update).build();
+            automate.feed_update_message(update_message);
 
             assert.equal(values.fire, 145);
             assert.equal(values.ice, 349);
             assert.equal(values_other.fire,145);
             assert.equal(values_other.water,"hello world");
-
-
-
         });
 });
 
@@ -164,10 +165,83 @@ describe("publication tests", function(){
         assert.equal(automate.get_publication_count(),1);  
     });
 
+    it ("publisher publishes the topics to the send function",function(){
+        
+        var send_proxy_called = 0;
+        var send_proxy = function(outbound_message){
+            if (send_proxy_called === 1){
+              assert.equal(outbound_message.messagename,"TOPIC_UPDATE");
+            }
+            send_proxy_called = send_proxy_called + 1;
+        };
+        var automate = new automate_common(send_proxy);
+        var handle = automate.add_publication("fire");
+
+        automate.publish(handle,{fire:10});
+        assert.equal(send_proxy_called,2);
+        
+    });
+
+    it ("throws and error when publisher does not have permission",function(){
+        var automate = new automate_common(function(){});
+        var handle = automate.add_publication("fire");
+
+        var throws_error0 = false;
+        try{
+            automate.publish(handle,{ water: 10});
+        }catch(e){
+            throws_error0 = true;
+        }
+
+        var throws_error1 = false;
+        try{
+            automate.publish(handle,{fire:10});
+        }catch(e){
+            throws_error1 = true;
+        }
+        assert.equal(throws_error0,true);
+        assert.equal(throws_error1, false);
+    });
+
 });
 
-/*
 describe("automate_common device init test", function(){
+    it ("calls the send function when it updates its publications",function(){
+        
+        var count = 0;
+        var send_function = function(){
+            count = count+1;
+        }
 
-});*/
+        var automate = new automate_common(send_function);
+        automate.add_publication("fire");
+        assert.equal(count,1);
+
+    });
+
+    it ("calls the send function when it updates its subscriptions",function(){
+        var count = 0;
+        var send_function = function(){
+            count = count+1;
+        }
+
+        var automate = new automate_common(send_function);
+        automate.add_publication("fire");
+        assert.equal(count,1);
+    });
+
+    it ("sends a client device init message when it update", function(){
+     
+        var called_count = 0;
+        var send_function = function(x){
+            assert.equal(x.messagename,"CLIENT_DEVICE_INIT");
+            called_count = called_count + 1;
+        }
+
+        var automate = new automate_common(send_function);
+        automate.add_publication("fire");
+        automate.add_subscription(["water","liquid"],function(){});
+        assert.equal(called_count, 2);
+    });
+});
                          
