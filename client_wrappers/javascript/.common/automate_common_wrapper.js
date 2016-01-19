@@ -31,10 +31,11 @@ automate_common_wrapper.get_interface = function(sendout_message){
 		automate.publish(this.handle, body);
 	};
 
+	var automate_feed_message = automate.feed_update_message.bind(automate);
 	return {
 		subscription: subscription,
 		publication: publication,
-		feed_update_message: automate.feed_update_message
+		feed_update_message: automate_feed_message
 	};
 };
 

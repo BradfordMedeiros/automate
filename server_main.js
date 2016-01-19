@@ -3,7 +3,6 @@
 var FILES = require(process.env.HOME+'/.files');
 var messaging = require (FILES.messaging);
 var network = require (FILES.network);
-console.log(network)
 
 process.title = 'automate';
 

@@ -7,18 +7,26 @@ var interface_checker =  require( (require (process.env.HOME+"/.files.js")).inte
 
 var AbstractNetwork = function ( onMessageReceived ,  interfaces_request, inbound_on, outbound_on, is_client){
 
+	throw (new Error("I don't like the way this loads interfaces change it"));
+	interfaces_request = [].concat(interfaces_request);
 
 	if (onMessageReceived === undefined){
 		throw (new Error("must define a function to call when a message is received"));
 	}
-        if ( typeof(interfaces_request) != 'string' && !Array.isArray(interfaces_request)){
-		throw (new Error("interfaces defined incorrectly"));
+
+	if (inbound_on !== true && inbound_on !== false){
+		throw (new Error("inbound_on must be defined as true or false"));
 	}
-        if ( interfaces_request.length === 0){
-		throw (new Error ("interfaces must contain at least one interface, use string 'NO_INTERFACE' to specify no network interfaces"));
+
+	if (outbound_on !== true && outbound_on !== false){
+		throw (new Error("outbound_on must be defined as true or false"));
 	}
-	if ( is_client === undefined){
-		throw (new Error ("is client must be defined"));
+       
+    if ( interfaces_request.length === 0){
+		throw (new Error ("interfaces must contain at least one interface"));
+	}
+	if ( is_client !== true && is_client !== false){
+		throw (new Error ("is client must be defined as true or false"));
 	}
 
 	this.onMessageReceived = onMessageReceived;
@@ -33,7 +41,7 @@ var AbstractNetwork = function ( onMessageReceived ,  interfaces_request, inboun
 	}
 
 	// add code here to check that we did not request any interfaces that cannot be turned on 
-	console.log("requesting interfaces:  "+JSON.stringify(this.interfaces_request));
+	//console.log("requesting interfaces:  "+JSON.stringify(this.interfaces_request));
 
 	if (inbound_on === undefined){
 		inbound_on = true;
@@ -43,7 +51,6 @@ var AbstractNetwork = function ( onMessageReceived ,  interfaces_request, inboun
 		outbound_on = true;
 	}
 
-	console.log(this);
 	this.load_network_interfaces( inbound_on, outbound_on );
 
 	this.sendsMessagesOutbound = outbound_on;
@@ -62,9 +69,9 @@ var AbstractNetwork = function ( onMessageReceived ,  interfaces_request, inboun
 
 // sends message to device defined by device config
 AbstractNetwork.prototype.sendMessage = function ( message, identifier, network_interface ) {
-	console.log("send message called!");
+	//console.log("send message called!");
 	if (message === undefined || identifier === undefined || network_interface === undefined){
-		throw (new Error("paramers incorrectly defined in AbstractNetwork::sendMessage"));
+		throw (new Error("parameters incorrectly defined in AbstractNetwork::sendMessage"));
 	}
 	if (message.type != 'server' && this.is_client !== true){
 		throw (new Error ('cannot send client messages outbound'));
@@ -85,25 +92,36 @@ AbstractNetwork.prototype._receivedInboundMessage = function (message){
 
 /**
 	initailizes the network interfaces: saves network Ids, turns then on
+	
+	-- Currently this adds some files from network folder manually
+	   and then it loads the ones defined when created abstract_network
+	   object.  I think it needs to load all that you specify
+
+	   in creating an object, check to make sure file exists
+	   like 'internet' ==> internet.js
+	        'bluetooth' ==> bluetooth.js
+	        'Bluetooth' ==> Bluetooth.js
 **/
 AbstractNetwork.prototype.load_network_interfaces = function ( inbound_on, outbound_on){
 
 	console.log('loading interfaces');
  	console.log("attempting to load:  "+JSON.stringify(this.interfaces_request));
-	if (this.isLoaded || this.interfaces_request == "NO_INTERFACE" ){
+	if (this.isLoaded ){
 		return;
 	}
 
 	var interfaces  = [ ];
 
     if (this.interfaces_request.indexOf('internet') > -1 ){	
-    	console.log("$$$"+this.is_client);
+    	console.log("Is Client: "+this.is_client);
 	    var internet =  new (require("./internet.js"))(this.is_client);
 	    interfaces.push(internet);
 	    console.log("Loading Interface: internet");
 	}
 
 	for (var i = 0 ;i < interfaces.length; i++){
+		console.log("@");
+		console.log(interfaces[i]);
 		if ( !interface_checker.is_valid_interface(interfaces[i],__dirname+"/interface.json")){
 			throw (new Error ("Invalid interface defined"));
 		}
@@ -113,14 +131,14 @@ AbstractNetwork.prototype.load_network_interfaces = function ( inbound_on, outbo
 	}
 
 	this.isLoaded = true;
-	console.log("finished sending requests to load");
+	console.log("Finished sending requests to load all interfaces");
 };
 
 
 
 
 AbstractNetwork.prototype.deload_network_interfaces = function(){
-	if (!this.isLoaded || this.requested_interface === "NO_INTERFACE" ){
+	if (!this.isLoaded  ){
 		return;
 	}
 

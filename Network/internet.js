@@ -122,8 +122,8 @@ Internet.prototype.get_network_id = function (){
 };
 
 Internet.prototype.set_on_message_received = function( func ){
-	console.log('setting on message receieved');
-	console.log('on message receieved:  '+func);
+	//console.log('setting on message receieved');
+	//console.log('on message receieved:  '+func);
 
 	this._onMessageReceived = func;
 };
