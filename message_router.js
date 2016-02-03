@@ -97,18 +97,40 @@ message_control.prototype.route_devicestrapper = function (){
         // initial thoughts are just to discard and send a message saying you did it wrong back
 
         //that.devicestrapper.is_valid_update(message.identifier);
-        var update_topics =   that.devicestrapper.get_update_messages(topics);
-        for ( var identifier in update_topics ){
-            //console.log(identifier);
-            //console.log(update_topics[identifier]);
-            var outgoing_topic_update = that.messagehandler.getMessageBuilder(that.messagehandler.MESSAGETYPES.SERVER_MESSAGES.SERVER_TOPIC_UPDATE).setTopics(update_topics[identifier] ).build();
+        var update_topics_for_device =   that.devicestrapper.update_topics(topics);
+        for ( var identifier in update_topics_for_device ){
+            var outgoing_topic_update = that.messagehandler.getMessageBuilder(
+                    that.messagehandler.MESSAGETYPES.SERVER_MESSAGES.SERVER_TOPIC_UPDATE)
+                    .setTopics(update_topics_for_device[identifier] )
+                    .build();
+
             outgoing_topic_update.metadata.identifier = identifier;
             outgoing_topic_update.metadata.network_interface = that.devicestrapper.get_network_interface(identifier);
-            //console.log(outgoing_topic_update);
             that.event_emitter.emit( SERVER_TOPIC_UPDATE_EVENT, outgoing_topic_update);
         }
       
     });
+
+    this.messagehandler.attachFunctionToMessageType(this.messagehandler.MESSAGETYPES.CLIENT_MESSAGES.
+        
+        VIEW_LAST_UPDATE_FOR_TOPIC, function(message){
+            var topics = message.body.topics;
+            var identifier = message.body.identifier;
+
+            try{
+                var response = that.devicestrapper.get_last_topic_update_received(topics);
+            }catch(error){
+                var response = error;
+            }
+
+            var outbound_message = that.messagehandler.getMessageBuilder(
+                that.messagehandler.MESSAGETYPES.SERVER_MESSAGES.VIEW_TOPIC_RESPONSE)
+                .setTopics(response)
+                .setIdentifier(identifier)
+                .build();
+
+            that.network.sendMessage(outbound_message, message.metadata.identifier, message.metadata.network_interface)
+        });
 
     /**
         @todo Services are not yet implemented.  Complete this when it is added.
@@ -121,6 +143,8 @@ message_control.prototype.route_devicestrapper = function (){
 
 message_control.prototype.route_network = function ( network ){
 
+    // should below be that.network?
+    // @potential bug
     this.event_emitter.on( SERVER_TOPIC_UPDATE_EVENT, function ( message){
         console.log("SERVER TOPIC UPDATE ");
         console.log("sending to ");

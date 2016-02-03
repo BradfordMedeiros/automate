@@ -249,10 +249,10 @@ MessageHandler.prototype._getFunctionsForMessageBuilder = function ( messagetype
 // checks fields in message to make sure all required fields are there
 MessageHandler.prototype._isValidMessage = function ( message ) {
 
-
 	// make sure main fields are defined
 	if ( message.metadata === undefined || message.body === undefined || 
 				message.messagename === undefined || message.type === undefined){
+
 		return false;
 	}
 
@@ -262,16 +262,19 @@ MessageHandler.prototype._isValidMessage = function ( message ) {
 	// ensure all required metadata fields are defined
 	for ( var i = 0 ; i < this.MESSAGETYPES.metadata.length ; i++ ){
 		if (message.metadata[this.MESSAGETYPES.metadata[i] ] === undefined ){
+
 			return false;
 		}
 	}
 
 	if (this._isValidMessageType(message.messagename,message.type) === false){
+
 		return false;
 	}
 
 	var type = message.type;
 	if (type != 'client' && type !='server'){
+
 		return false;
 	}
 
@@ -279,6 +282,7 @@ MessageHandler.prototype._isValidMessage = function ( message ) {
  	var requirements  = this.MESSAGETYPES[accessor][message.messagename].requirements;
  	for (var i = 0 ; i < requirements.length ; i++ ){
  		if (message.body[requirements[i]] === undefined){
+
  			return false;
  		}
  	}

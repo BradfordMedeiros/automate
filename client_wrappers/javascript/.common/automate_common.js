@@ -34,6 +34,9 @@ var automate_common = function ( send_to_server_function ){
 	this.subscription_to_id = { };
 	this.subscription_id_to_callback = { };
 	this.subscription_id_counter = 0;
+
+	this.view_topic_identifier = 0;
+	this.view_topic_requests  = { };
 };
 
 /**
@@ -41,15 +44,17 @@ var automate_common = function ( send_to_server_function ){
 **/
 automate_common.prototype.feed_update_message = function(inbound_update_message){
 
-	if (inbound_update_message.messagename !== "SERVER_TOPIC_UPDATE"){
-		throw (new Error("feed_update_message only accepts SERVER_TOPIC_UPDATE messages"));	
-	}
-	if (inbound_update_message.body === undefined || inbound_update_message.body.topics === undefined){
-		throw (new Error("invalid message, body incorrectly defined"));
-	}
+	switch (inbound_update_message.messagename){
+		case "VIEW_TOPIC_RESPONSE":
+			handle_view_topic_response(this, inbound_update_message);
+			break;
+		case "SERVER_TOPIC_UPDATE":
 
-
-	update_subscriptions(this,inbound_update_message.body.topics);
+			handle_server_topic_update(this, inbound_update_message);
+			break;
+		default: 
+			throw (new Error("Messagetype not supported"));	
+	}
 };
 
 
@@ -187,6 +192,26 @@ automate_common.prototype.remove_subscription = function (id){
 	this.number_of_subscriptions--;
 };
 
+automate_common.prototype.view_topic = function ( topics, callback){
+
+	var array_topics = [].concat(topics);
+	var message = message_handler.getMessageBuilder(message_handler.
+			MESSAGETYPES.CLIENT_MESSAGES.VIEW_LAST_UPDATE_FOR_TOPIC)
+			.setTopics(array_topics)
+			.setIdentifier(this.view_topic_identifier)
+			.build();
+
+	this.view_topic_requests[this.view_topic_identifier] = callback;
+	this.view_topic_identifier = this.view_topic_identifier ;
+	this.view_topic_identifier ++;
+	this.send(message);
+
+};
+
+automate_common.prototype.view_topic_sync = function (topic){
+	throw (new Error("unimplemented function"));
+};
+
 /**
 	Kind of funky because this is the real subscriptions fields that we'll use that we send to the server
 	So might want to consider renaming to show that this is aggregate?
@@ -239,6 +264,14 @@ function get_client_device_config_update_message (automate_common){
 	return client_device_init.build();
 }
 
+function handle_server_topic_update ( automate_common, inbound_update_message){
+	update_subscriptions(automate_common,inbound_update_message.body.topics);
+}
+
+function handle_view_topic_response ( automate_common , inbound_update_message){
+	automate_common.view_topic_requests[inbound_update_message.body.identifier](inbound_update_message.body.topics);
+	delete automate_common.view_topic_requests[inbound_update_message.body.identifier];
+}
 
 module.exports = automate_common;
 

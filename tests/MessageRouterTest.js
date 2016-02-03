@@ -5,7 +5,7 @@
 	var messaging = require (files.messaging);
 
 describe ("MessageControl.js test - note: messagecontrol needs a reference to devicestrapper for these things to hold" , function () {
-    var null_network = new (require (files.network)).abstract_network(function(){},"NO_INTERFACE");
+    var null_network = new (require (files.network)).abstract_network(function(){},"NO_INTERFACE",true,true,true);
  
     
     it ("message control passes CLIENT_DEVICE_INIT message successfully", function(){
@@ -105,7 +105,7 @@ describe ("MessageControl.js test - note: messagecontrol needs a reference to de
     });
 
     it ("TOPIC_UPDATE routes topic_update messages to devicestrapper and sends them to messagehandler" , function(){
-    	fail();    
+    	throw (new Error("unimplemented test"));
     });
 
 

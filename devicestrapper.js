@@ -13,6 +13,7 @@ var _devicestrapper = function (){
 
     this.devices = { };         // mapping of all the devices to their identifiers, network, subscriptions, publications, etc
     this.subscriptions  = { };  //  mapping of a subscription to an array of the device identifiers that subscribe to it
+    this.last_topic_received = { };
 
     // This has various options to the program.  I no longer like this technique as it violates the module structure I want to use.
     // @todo:refactor:severity:minor
@@ -242,13 +243,14 @@ _devicestrapper.prototype.get_connected_devices = function (){
     "
 }
 **/
-_devicestrapper.prototype.get_update_messages = function ( topics ){
 
-    var client_to_update = { };
+_devicestrapper.prototype.update_topics = function ( topics ){
 
     var client_messages = { };  // message to send to each client]
     var client_topics = { };
 
+
+    this.update_last_topic_received (topics);
     for ( var topic in topics ){
         var subscriptions = this.subscriptions[topic];  // for topic field name
 
@@ -266,6 +268,39 @@ _devicestrapper.prototype.get_update_messages = function ( topics ){
     }
     return client_topics; 
 };
+
+_devicestrapper.prototype.update_last_topic_received = function (topics) {
+
+    for (var topic in topics){
+        if (this.last_topic_received[topic] === undefined){
+            this.last_topic_received[topic] = { };
+        }
+        this.last_topic_received[topic].value = topics[topic];
+
+        // Gets UTC time
+        this.last_topic_received[topic].time = new Date().toISOString().replace('T', ' ').substr(0, 19)
+    }
+};
+
+_devicestrapper.prototype.get_last_topic_update_received = function ( topic ){
+    
+    var that = this;
+
+    var topic_array = [].concat(topic);
+    var update = { };
+    topic_array.map(function(the_topic){
+        if (that.last_topic_received[the_topic] === undefined){
+            throw (new Error("topic is undefined: "+the_topic));
+        }
+        update[the_topic] = that.last_topic_received[the_topic];
+    });
+
+    return update;
+};
+
+
+
+
 
 /**
 @todo:feature

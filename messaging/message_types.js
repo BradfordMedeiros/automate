@@ -47,7 +47,9 @@ var MESSAGE_TYPES = {
 			type: 'server',
 			messagename  : 'SERVER_TOPIC_UPDATE',			// sends new topic info to subscribers
 			requirements : ['topics']
-		},
+		}
+
+		,
 
 		INVALID_TOPIC_RECEIVED: {
 			type: 'server',
@@ -59,6 +61,11 @@ var MESSAGE_TYPES = {
 			type: 'server',
 			messagename  : 'DEVICE_INIT_SETUP',				// asks the client to setup new configuration in desired mode (includes config payload)-
 			requirements : ['mode','config']
+		},
+		VIEW_TOPIC_RESPONSE:{
+			type: 'server',
+			messagename : 'VIEW_TOPIC_RESPONSE',      // topics field looks like { topics: { topic_name: x, 
+			requirements: ['topics','identifier']                  //							timestamp_last_update: y }, ...}
 		}
 	}, 
 
@@ -74,6 +81,12 @@ var MESSAGE_TYPES = {
 			type: 'client',
 			messagename  : 'TOPIC_UPDATE',
 			requirements : [ 'topics' ]
+		},
+
+		VIEW_LAST_UPDATE_FOR_TOPIC: {
+			type: 'client',
+			messagename: 'VIEW_LAST_UPDATE_FOR_TOPIC',
+			requirements: ['topics', 'identifier'] // identifier is field used by client to identify the response
 		},
 
 		// mode is used to support non-default methods of operations
@@ -96,7 +109,9 @@ var MESSAGE_TYPES = {
 			type: 'client',
 			messagename: 'SERVICE_REQUEST',
 			requirements: ['service','parameters']
-		}
+		},
+
+
 	}
 
 };
@@ -220,6 +235,7 @@ add_required_metadata ('network_interface', function(){
 add_required_metadata ('timestamp', function(){
 	return (new Date());
 });
+
 
 check_file_integrity();
 

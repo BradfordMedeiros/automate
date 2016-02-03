@@ -17,6 +17,7 @@ var send_network_message = function(outbound_message){
 }
 var _interface = automate_common_wrapper.get_interface(send_network_message);
 message_handler.attachFunctionToMessageType(message_handler.MESSAGETYPES.SERVER_MESSAGES.SERVER_TOPIC_UPDATE,_interface.feed_update_message);
+message_handler.attachFunctionToMessageType(message_handler.MESSAGETYPES.SERVER_MESSAGES.VIEW_TOPIC_RESPONSE,_interface.feed_update_message )
 
 module.exports = _interface;
 

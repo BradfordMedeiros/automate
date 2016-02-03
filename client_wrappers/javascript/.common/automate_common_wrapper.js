@@ -35,6 +35,8 @@ automate_common_wrapper.get_interface = function(sendout_message){
 	return {
 		subscription: subscription,
 		publication: publication,
+		view_topic : automate.view_topic.bind(automate),
+		view_topic_sync : automate.view_topic_sync.bind(automate),
 		feed_update_message: automate_feed_message
 	};
 };
