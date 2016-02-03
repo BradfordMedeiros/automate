@@ -76,10 +76,14 @@ var MESSAGE_TYPES = {
 			requirements : [ 'topics' ]
 		},
 
+		// mode is used to support non-default methods of operations
+		// undefined or null will assume normal two way push on update
+		// mode == pull will signfify to queue outbound messages and wait
+		// for the client to pull them before sending
 		CLIENT_DEVICE_INIT: {
 			type: 'client',
 			messagename : 'CLIENT_DEVICE_INIT',
-			requirements : ['subscriptions','publications']
+			requirements : ['subscriptions','publications','mode']
 		},
 
 		REMOVE_DEVICE: {

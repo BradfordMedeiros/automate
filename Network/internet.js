@@ -25,10 +25,16 @@ var Internet = function ( is_client ){
 
 	var that = this;
 
+	this._app.all('/', function(req, res, next) {
+  		res.header("Access-Control-Allow-Origin", "*");
+  		res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  		next();
+ 	});
 
 	// this needs to parse the body and get the message out of it, and then pass that up
 	this._app.post('/',function(req,res){
 		var func = that.getOnMessageRecieved();
+
 		if (typeof(func) != 'function'){
 			throw (new Error ('func should always be type function: func = ')+func);
 		}
@@ -76,7 +82,7 @@ Internet.prototype.turn_on_interface = function ( inbound, outbound ){
 		return;
 	}
 
-	this._server = this._app.listen(that._port, function (){
+	this._server = this._app.listen(that._port, 'localhost', function (){
 		if (that._server.address() === null){
 			return;
 		}

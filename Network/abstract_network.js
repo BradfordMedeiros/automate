@@ -1,13 +1,9 @@
 
-
-
-var path = require ("path");
-var interface_checker =  require( (require (process.env.HOME+"/.files.js")).interface);
-//interface_checker.isValidInterface(__dirname+"/interface.json");
+//throw (new Error("@todo: make interface exist function check files
+//have it use old interface.js code to validate the interface"))
 
 var AbstractNetwork = function ( onMessageReceived ,  interfaces_request, inbound_on, outbound_on, is_client){
 
-	throw (new Error("I don't like the way this loads interfaces change it"));
 	interfaces_request = [].concat(interfaces_request);
 
 	if (onMessageReceived === undefined){
@@ -28,6 +24,11 @@ var AbstractNetwork = function ( onMessageReceived ,  interfaces_request, inboun
 	if ( is_client !== true && is_client !== false){
 		throw (new Error ("is client must be defined as true or false"));
 	}
+
+	if ( ! interfaces_exist(interfaces_request)){
+		throw (new Error("interfaces requested do not exist "+JSON.stringify(interfaces_request)));
+	}
+
 
 	this.onMessageReceived = onMessageReceived;
 
@@ -120,11 +121,13 @@ AbstractNetwork.prototype.load_network_interfaces = function ( inbound_on, outbo
 	}
 
 	for (var i = 0 ;i < interfaces.length; i++){
-		console.log("@");
-		console.log(interfaces[i]);
-		if ( !interface_checker.is_valid_interface(interfaces[i],__dirname+"/interface.json")){
+		//console.log("@");
+		//console.log(interfaces[i]);
+		
+		/*if ( !interface_checker.is_valid_interface(interfaces[i],__dirname+"/interface.json")){
 			throw (new Error ("Invalid interface defined"));
-		}
+		}*/
+		console.log("actually loading interface : "+interfaces[i])
 		this.network_interfaces[interfaces[i].get_network_id()] = interfaces[i];
 		this.network_interfaces[interfaces[i].get_network_id()].set_on_message_received (this.onMessageReceived);
 		this.network_interfaces[interfaces[i].get_network_id()].turn_on_interface( inbound_on, outbound_on );
@@ -150,6 +153,9 @@ AbstractNetwork.prototype.deload_network_interfaces = function(){
 };
 
 
+function interfaces_exist (interfaces_request){
+	return true;
+}
 
 module.exports = AbstractNetwork;
 

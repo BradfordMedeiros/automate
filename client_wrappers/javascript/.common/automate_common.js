@@ -40,12 +40,15 @@ var automate_common = function ( send_to_server_function ){
 	this function gets called when the client has messages from the server
 **/
 automate_common.prototype.feed_update_message = function(inbound_update_message){
+
 	if (inbound_update_message.messagename !== "SERVER_TOPIC_UPDATE"){
 		throw (new Error("feed_update_message only accepts SERVER_TOPIC_UPDATE messages"));	
 	}
 	if (inbound_update_message.body === undefined || inbound_update_message.body.topics === undefined){
 		throw (new Error("invalid message, body incorrectly defined"));
 	}
+
+
 	update_subscriptions(this,inbound_update_message.body.topics);
 };
 
@@ -221,9 +224,6 @@ automate_common.prototype.get_subscription_updates = function(topic_update){
 
 function update_subscriptions (automate,topic_update){
 
-	console.log("-----------------")
-	console.log(automate);
-	console.log("----------")
 	var subscription_update = automate.get_subscription_updates(topic_update);
 	for (var subscription_id in subscription_update){
 		var callback = automate.get_subscription_callback(subscription_id);

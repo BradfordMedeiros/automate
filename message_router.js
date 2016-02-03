@@ -59,6 +59,11 @@ message_control.prototype.route_devicestrapper = function (){
         var publications = message.body.publications;
         var config = that.devicestrapper.createConfig (identifier, network_interface, subscriptions, publications);
         that.devicestrapper.addDevice(config);
+
+        console.log("adding device")
+        console.log("identifier: ");
+        console.log(message.metadata.identifier)
+
     });
 
     /**
