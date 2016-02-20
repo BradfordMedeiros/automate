@@ -80,7 +80,7 @@ describe ("devicestrapper test" , function(){
 		config2 = devicestrapper.createConfig('192.161.1.3','internet',['temperature','ice','fire','wetness'],['duh']);
 		devicestrapper.addDevice(config1);
 		devicestrapper.addDevice(config2);
-		var updates = devicestrapper.get_update_messages({
+		var updates = devicestrapper.update_topics({
 			temperature: 30,
 			ice: 10
 		});

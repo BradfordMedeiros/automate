@@ -223,6 +223,7 @@ _devicestrapper.prototype.get_connected_devices = function (){
 };
 
 
+
 /**
     @todo:feature:bug:severitymedium scope:easy -- make topics support single topic name (not as array)
 {   title: "devicestapper.get_update_messages",
@@ -250,7 +251,19 @@ _devicestrapper.prototype.update_topics = function ( topics ){
     var client_topics = { };
 
 
-    this.update_last_topic_received (topics);
+    this.update_last_topic_received (topics); // used so we know what was the value of the last topic published
+
+   /* var resolved_topics_map ={} 
+    topics.map(function(topic){
+        this.resolve_topic_identifier_to_topics(resolved_topics).forEach(
+            function(added_topic){
+                resolved_topics[added_topic] = true;
+            });
+
+    });*/
+
+  //  var resolved_topics = Object.keys(resolved_topics_map);
+
     for ( var topic in topics ){
         var subscriptions = this.subscriptions[topic];  // for topic field name
 
@@ -267,6 +280,21 @@ _devicestrapper.prototype.update_topics = function ( topics ){
         } 
     }
     return client_topics; 
+};
+
+/**
+    Handles returning multiple subscriptions for each potential subscription 
+    based upon regex symbols
+**/
+_devicestrapper.prototype.resolve_topic_identifier_to_topics = function(topic_identifier){
+   return Object.keys(this.subscriptions).filter(topic => is_match_subscription(topic_identifier));
+};
+
+
+_devicestrapper.prototype.is_match_subscription = function (expression, subscription){
+     var regex = new RegExp("^"+expression+"$");
+     return regex.test(subscription);
+
 };
 
 _devicestrapper.prototype.update_last_topic_received = function (topics) {
@@ -437,6 +465,7 @@ _devicestrapper.prototype._deserializeData = function (){
     }
 
 };
+
 
 
 
