@@ -265,7 +265,9 @@ _devicestrapper.prototype.update_topics = function ( topics ){
   //  var resolved_topics = Object.keys(resolved_topics_map);
 
     for ( var topic in topics ){
-        var subscriptions = this.subscriptions[topic];  // for topic field name
+        //var subscriptions = this.subscriptions[topic];  // for topic field name
+        var subscriptions = this.resolve_topic_identifier_to_topics(topic)
+
 
         if (subscriptions === undefined){
             console.log('no subscription for topic '+topic);
@@ -279,6 +281,9 @@ _devicestrapper.prototype.update_topics = function ( topics ){
             client_topics[subscriber][topic] = topics[topic]; // set value in client message for topic field
         } 
     }
+
+    console.log("client topic are ")
+    console.log(client_topics)
     return client_topics; 
 };
 
@@ -287,15 +292,36 @@ _devicestrapper.prototype.update_topics = function ( topics ){
     based upon regex symbols
 **/
 _devicestrapper.prototype.resolve_topic_identifier_to_topics = function(topic_identifier){
-   return Object.keys(this.subscriptions).filter(topic => is_match_subscription(topic_identifier));
+   
+   console.log("topic_identifier: "+topic_identifier)
+
+
+   var that = this;
+   var keys = Object.keys(this.subscriptions).filter(topic => is_wildcard_match(topic_identifier,topic));
+   var subscribers = { };
+   console.log("keys are: ");
+   console.log(keys);
+
+   for (var key in keys){
+        var thing = this.subscriptions[keys[key]]
+        console.log("$")
+        console.log(thing);
+        var device = this.subscriptions[keys[key]].valueOf();
+        var device_keys = Object.keys(device);
+        for (var the_key in device_keys){
+            subscribers[device_keys[the_key]] = device[device_keys[key]];
+        }
+        //subscribers = subscribers.concat(this.subscriptions[keys[key]]);
+   }
+   return subscribers;
 };
 
 
-_devicestrapper.prototype.is_match_subscription = function (expression, subscription){
-     var regex = new RegExp("^"+expression+"$");
-     return regex.test(subscription);
 
-};
+
+function is_wildcard_match(str, rule) {
+  return new RegExp("^" + rule.replace("*", ".*") + "$").test(str);
+}
 
 _devicestrapper.prototype.update_last_topic_received = function (topics) {
 

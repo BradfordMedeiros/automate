@@ -231,10 +231,11 @@ automate_common.prototype.get_subscription_callback = function (subscription_id)
 
 automate_common.prototype.get_subscription_updates = function(topic_update){
 
+
 	var subscription_updates = { };
 	for (var field in topic_update){ // for every field such as fire, ice, flames in the update
-		var subscribers_to_field = this.subscription_to_id[field]; // get the ids array of subscriptions subscribing to field in topic_Update
-		//add_subscription_field_update_to_subscriber(subscription_updates, subscribers_to_field);
+		
+		var subscribers_to_field = get_matched_subscriptions(this.subscription_to_id,field);
 		for ( var subscription_id in subscribers_to_field){
 			if (subscription_updates[subscription_id] === undefined){
 				subscription_updates[subscription_id] = { };
@@ -243,8 +244,25 @@ automate_common.prototype.get_subscription_updates = function(topic_update){
 		}
 	}
 	return subscription_updates;
-
 };
+
+function get_matched_subscriptions (subscriptions, field){
+	var subs = { }
+	var keys = Object.keys(subscriptions);
+	for (var key in keys){
+		if (is_wildcard_match(field, keys[key])){
+			var value = subscriptions[keys[key]];
+			for (var id in value){
+				subs[id] = value[id]
+			}
+		}
+	}
+	return subs;
+}
+
+function is_wildcard_match(str, rule) {
+  return new RegExp("^" + rule.replace("*", ".*") + "$").test(str);
+}
 
 
 function update_subscriptions (automate,topic_update){

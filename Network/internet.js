@@ -39,8 +39,8 @@ var Internet = function ( is_client ){
 			throw (new Error ('func should always be type function: func = ')+func);
 		}
 
-		console.log('got a request');
-		console.log(req.body);
+		//console.log('got a request');
+		//console.log(req.body);
 		res.send('OK');
 
 		if (req.body !== undefined && req.body.metadata !==undefined){
@@ -109,10 +109,10 @@ Internet.prototype.send_message = function(message, identifier ){
     		json:  message  
     	},
     	function (error, response, body) {
-    		console.log("callback for send message");
-        	console.log('error:  '+error);				// should figure out what
-        	console.log('response: '+JSON.stringify(response));			// we want to do here
-        	console.log('body:  '+body);
+    		//console.log("callback for send message");
+        	//console.log('error:  '+error);				// should figure out what
+        	//console.log('response: '+JSON.stringify(response));			// we want to do here
+        	//console.log('body:  '+body);
 
         	if ( error !==null){
         		throw (new Error(EXCEPTIONS.CANNOT_CONNECT_TO_SERVER_EXCEPTION));

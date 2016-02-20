@@ -87,7 +87,7 @@ AbstractNetwork.prototype.sendMessage = function ( message, identifier, network_
 
 // called by attached network interfaces.  They will call this function when they receive a new message.  
 AbstractNetwork.prototype._receivedInboundMessage = function (message){
-	console.log('got message \n  '+message);
+	//console.log('got message \n  '+message);
 	this.onMessageReceived(message);
 };
 
@@ -105,8 +105,8 @@ AbstractNetwork.prototype._receivedInboundMessage = function (message){
 **/
 AbstractNetwork.prototype.load_network_interfaces = function ( inbound_on, outbound_on){
 
-	console.log('loading interfaces');
- 	console.log("attempting to load:  "+JSON.stringify(this.interfaces_request));
+	//console.log('loading interfaces');
+ 	//console.log("attempting to load:  "+JSON.stringify(this.interfaces_request));
 	if (this.isLoaded ){
 		return;
 	}
