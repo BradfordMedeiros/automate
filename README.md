@@ -18,7 +18,7 @@ var subscriptions = new automate.subscription( &lt;subscription name(s)&gt;, &lt
 <hr>
 Alternatively you can view the current state of the topic without subscribing by using:
 <code>
-automate.view_topic(<topic_name>, <callback(x)>) 
+automate.view_topic(topic_name, callback(x)) 
 </code>
 where the callback is called passing in the current state of the topic as x.  
 and for publishing: 
