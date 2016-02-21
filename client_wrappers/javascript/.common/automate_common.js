@@ -236,14 +236,16 @@ automate_common.prototype.get_subscription_updates = function(topic_update){
 	for (var field in topic_update){ // for every field such as fire, ice, flames in the update
 		
 		var subscribers_to_field = get_matched_subscriptions(this.subscription_to_id,field);
+		var wildcards = get_wildcards_for_subscriptions(this.subscription_to_id,field);
 		for ( var subscription_id in subscribers_to_field){
 			if (subscription_updates[subscription_id] === undefined){
 				subscription_updates[subscription_id] = { };
 			}
 			subscription_updates[subscription_id][field] = topic_update[field];
+
 		}
 	}
-	return subscription_updates;
+	return {subscription_updates: subscription_updates,wildcards:wildcards};
 };
 
 function get_matched_subscriptions (subscriptions, field){
@@ -257,15 +259,43 @@ function get_matched_subscriptions (subscriptions, field){
 			}
 		}
 	}
+
 	return subs;
 }
 
+function get_wildcards_for_subscriptions (subscriptions, field){
+	var subs = { }
+	var keys = Object.keys(subscriptions);
+	for (var key in keys){
+		if (is_wildcard_match(field, keys[key])){
+			var value = subscriptions[keys[key]];
+			for (var id in value){
+				subs[id] = get_wildcard_values(field,keys[key]);
+			}
+		}
+	}
+	return subs;
+}
+
+function get_wildcard_values(str, rule){
+	var exec_values =  globStringToRegex(rule).exec(str);
+	values = [ ];
+	for (var field in exec_values){
+		if (field === 'index'){
+			break;
+		}
+		values.push(exec_values[field]);
+	}
+	return values.slice(1);
+}
+
 function is_wildcard_match(str, rule) {
+
   return globStringToRegex(rule).test(str);
 }
 
 function globStringToRegex(str) {
-    return new RegExp(preg_quote(str).replace(/\\\*/g, '.*').replace(/\\\?/g, '.'), 'g');
+    return new RegExp(preg_quote(str).replace(/\\\*/g, '(.*)').replace(/\\\?/g, '(.)'), 'g');
 }
 function preg_quote (str, delimiter) {
     // http://kevin.vanzonneveld.net
@@ -286,10 +316,16 @@ function preg_quote (str, delimiter) {
 
 function update_subscriptions (automate,topic_update){
 
-	var subscription_update = automate.get_subscription_updates(topic_update);
+	var update = automate.get_subscription_updates(topic_update);
+	var subscription_update = update.subscription_updates;
+	var wildcards = update.wildcards;
+
 	for (var subscription_id in subscription_update){
 		var callback = automate.get_subscription_callback(subscription_id);
-		callback(subscription_update[subscription_id], subscription_update[subscription_id]);
+		var update = subscription_update[subscription_id];
+		var wildcard= wildcards[subscription_id];
+		callback.apply(callback,[update].concat(wildcard))
+
 	}	
 }
 
