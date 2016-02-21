@@ -18,11 +18,13 @@ var subscriptions = new automate.subscription( &lt;subscription name(s)&gt;, &lt
 <br>
 You can also do somthing like:
 <code>
-var subscriptions = new automate.subscription("/room*/temperature", &lt;callback function&gt; );  or 
-var subscriptions = new automate.subscription("/room?/temperature", &lt;callback function&gt; );  
+var subscriptions = new automate.subscription("/room*/temperature", &lt;callback function(topic_update,first_param&gt; );  or 
+var subscriptions = new automate.subscription("/room?/temperature", &lt;callback function(topic_update, first_param)&gt; );  
 and you will get all things publishing which complete the wildcard string.  This also means we don't support *s or ? marks in topic names.   The values passed into x will be as if you had subscribed to the actual topics so be careful to parse the object correctly.
 </code>
 <br>
+
+
 
 <hr>
 Alternatively you can view the current state of the topic without subscribing by using:
