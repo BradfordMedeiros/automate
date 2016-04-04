@@ -1,6 +1,6 @@
 <h1>Welcome to the automate !</h1>
 
-<b>Current Main Functionality </b> <hr> 
+<b>Current Main Functionality (Details below are valid, but documentaion needs to be added to reflect current features)</b> <hr> 
 
 Main server is built.  Devices may now subscribe to a topic, and they will receive update messages from any other client who publishes to the device automagically. 
 <br>
