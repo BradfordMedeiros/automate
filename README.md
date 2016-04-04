@@ -1,4 +1,4 @@
-<h1>Welcome to the automate !</h1>
+<h1>Welcome to the automate ! (OUT OF DATE)</h1>
 
 <b>Current Main Functionality (Details below are valid, but documentaion needs to be added to reflect current features)</b> <hr> 
 
